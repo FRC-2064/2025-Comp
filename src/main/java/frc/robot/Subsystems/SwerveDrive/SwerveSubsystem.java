@@ -1,5 +1,6 @@
 package frc.robot.Subsystems.SwerveDrive;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meter;
 
 import java.io.File;
@@ -21,6 +22,7 @@ import com.pathplanner.lib.util.DriveFeedforwards;
 import com.pathplanner.lib.util.swerve.SwerveSetpoint;
 import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
 
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -29,12 +31,16 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.AngularVelocityUnit;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.LimelightHelpers;
+import frc.robot.Robot;
+import frc.robot.Constants.VisionConstants;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.math.SwerveMath;
@@ -45,8 +51,6 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 public class SwerveSubsystem extends SubsystemBase {
     private final SwerveDrive swerveDrive;
-    private final boolean visionDriveTest = false;
-    
     public SwerveSubsystem(File directory) {
         SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
 
@@ -74,10 +78,42 @@ public class SwerveSubsystem extends SubsystemBase {
             true,
             1);
         swerveDrive.pushOffsetsToEncoders();
-        if (visionDriveTest) {
-            // add vision stuff here
-        }
+
+
+        LimelightHelpers.setCameraPose_RobotSpace(
+            VisionConstants.LIMELIGHT_NAME, 
+            VisionConstants.FORWARD_OFFSET,    // Forward offset (meters)
+            VisionConstants.SIDE_OFFSET,    // Side offset (meters)
+            VisionConstants.HEIGHT_OFFSET,    // Height offset (meters)
+            VisionConstants.ROLL_OFFSET,    // Roll (degrees)
+            VisionConstants.PITCH_OFFSET,   // Pitch (degrees)
+            VisionConstants.YAW_OFFSET     // Yaw (degrees)
+        );
         
+    }
+
+    @Override
+    public void periodic() {
+        if (Robot.isReal()) {
+            swerveDrive.updateOdometry();
+            boolean doRejectUpdate = false;
+            LimelightHelpers.SetRobotOrientation(
+                VisionConstants.LIMELIGHT_NAME, 
+                swerveDrive.getYaw().getDegrees(),  
+                0, 0, 0, 0, 0);
+    
+            LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(
+                VisionConstants.LIMELIGHT_NAME);
+            if (mt2.tagCount == 0)
+            {
+                doRejectUpdate = true;
+            }
+            if (!doRejectUpdate)
+            {
+                swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(0.7,0.7,9999999));
+                swerveDrive.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
+            }   
+        }
     }
 
     public void setupPathPlanner() {

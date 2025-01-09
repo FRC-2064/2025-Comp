@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD:vendordeps/PathplannerLib.json
-    "fileName": "PathplannerLib.json",
-=======
     "fileName": "PathplannerLib-2025.1.1.json",
->>>>>>> 5b23aee952bb09c2ae8d5465468554989f00128c:vendordeps/PathplannerLib-2025.1.1.json
     "name": "PathplannerLib",
     "version": "2025.1.1",
     "uuid": "1b42324f-17c6-4875-8e77-1c312bc8c786",
