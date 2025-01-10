@@ -76,7 +76,7 @@ public class RobotContainer {
 
   private void configureBindings() {
     drivebase.setDefaultCommand(
-      !Robot.isSimulation() ? driveFieldOrientedDirectAngle : driveFieldOrientedDirectAngleSim
+      !Robot.isSimulation() ? driveFieldOrientedAnglularVelocity : driveFieldOrientedDirectAngleSim
       );
   }
 

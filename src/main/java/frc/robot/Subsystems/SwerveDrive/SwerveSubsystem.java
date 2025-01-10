@@ -94,26 +94,36 @@ public class SwerveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (Robot.isReal()) {
-            swerveDrive.updateOdometry();
-            boolean doRejectUpdate = false;
-            LimelightHelpers.SetRobotOrientation(
-                VisionConstants.LIMELIGHT_NAME, 
-                swerveDrive.getYaw().getDegrees(),  
-                0, 0, 0, 0, 0);
-    
-            LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(
-                VisionConstants.LIMELIGHT_NAME);
-            if (mt2.tagCount == 0)
-            {
-                doRejectUpdate = true;
-            }
-            if (!doRejectUpdate)
-            {
-                swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(0.7,0.7,9999999));
-                swerveDrive.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
-            }   
+        // In your periodic function:
+        LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+        if (limelightMeasurement.tagCount >= 1) {  // Only trust measurement if we see multiple tags
+        swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 9999999));
+        swerveDrive.addVisionMeasurement(
+            limelightMeasurement.pose,
+            limelightMeasurement.timestampSeconds
+        );
         }
+
+        // if (Robot.isReal()) {
+        //     swerveDrive.updateOdometry();
+        //     boolean doRejectUpdate = false;
+        //     LimelightHelpers.SetRobotOrientation(
+        //         VisionConstants.LIMELIGHT_NAME, 
+        //         swerveDrive.getYaw().getDegrees(),  
+        //         0, 0, 0, 0, 0);
+    
+        //     LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(
+        //         VisionConstants.LIMELIGHT_NAME);
+        //     if (mt2.tagCount == 0)
+        //     {
+        //         doRejectUpdate = true;
+        //     }
+        //     if (!doRejectUpdate)
+        //     {
+        //         swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(0.7,0.7,9999999));
+        //         swerveDrive.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
+        //     }   
+        // }
     }
 
     public void setupPathPlanner() {
