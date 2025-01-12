@@ -1,6 +1,5 @@
 package frc.robot.Subsystems.SwerveDrive;
 
-import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meter;
 
 import java.io.File;
@@ -31,9 +30,9 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.AngularVelocityUnit;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -89,43 +88,79 @@ public class SwerveSubsystem extends SubsystemBase {
             VisionConstants.PITCH_OFFSET,   // Pitch (degrees)
             VisionConstants.YAW_OFFSET     // Yaw (degrees)
         );
+
+        setupPathPlanner();
         
     }
 
     @Override
     public void periodic() {
         if (Robot.isReal()) {
-            LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
-            if (limelightMeasurement.tagCount >= 1) {  // Only trust measurement if we see multiple tags
-            swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 9999999));
-            swerveDrive.addVisionMeasurement(
-                limelightMeasurement.pose,
-                limelightMeasurement.timestampSeconds
-            );
+            // LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+            // if (limelightMeasurement.tagCount >= 1) {  // Only trust measurement if we see multiple tags
+            // swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 9999999));
+            // swerveDrive.addVisionMeasurement(
+            //     limelightMeasurement.pose,
+            //     limelightMeasurement.timestampSeconds
+            // );
+            SmartDashboard.putNumber("fed speed val", Constants.MAX_SPEED);
+        
+            SmartDashboard.putNumber("Max chassis vel", swerveDrive.getMaximumChassisVelocity());
+            SmartDashboard.putNumber("Max angle vel", swerveDrive.getMaximumChassisAngularVelocity());
+            
+            
+            swerveDrive.updateOdometry();
+            boolean doRejectUpdate = false;
+            LimelightHelpers.SetRobotOrientation(
+                VisionConstants.LIMELIGHT_NAME, 
+                swerveDrive.getYaw().getDegrees(),  
+                0, 0, 0, 0, 0);
+    
+            LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(
+                VisionConstants.LIMELIGHT_NAME);
+            if (mt2 == null) {
+                return;
             }
+            if (mt2.tagCount == 0)
+            {
+                doRejectUpdate = true;
+            }
+            if (!doRejectUpdate)
+            {
+                swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(0.7,0.7,9999999));
+                swerveDrive.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
+            }   
+        }
     }
 
-        // if (Robot.isReal()) {
-        //     swerveDrive.updateOdometry();
-        //     boolean doRejectUpdate = false;
-        //     LimelightHelpers.SetRobotOrientation(
-        //         VisionConstants.LIMELIGHT_NAME, 
-        //         swerveDrive.getYaw().getDegrees(),  
-        //         0, 0, 0, 0, 0);
-    
-        //     LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(
-        //         VisionConstants.LIMELIGHT_NAME);
-        //     if (mt2.tagCount == 0)
-        //     {
-        //         doRejectUpdate = true;
-        //     }
-        //     if (!doRejectUpdate)
-        //     {
-        //         swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(0.7,0.7,9999999));
-        //         swerveDrive.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
-        //     }   
-        // }
+    public void driveFieldOrientedold(ChassisSpeeds velocity)
+    {
+      swerveDrive.driveFieldOriented(velocity);
     }
+    public void driveold(ChassisSpeeds velocity)
+    {
+      swerveDrive.drive(velocity);
+    }
+    public void driveold(Translation2d translation, double rotation, boolean fieldRelative)
+    {
+      swerveDrive.drive(translation,
+                        rotation,
+                        fieldRelative,
+                        false); // Open loop is disabled since it shouldn't be used most of the time.
+    }
+
+    public Command driveCommandold(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier angularRotationX)
+    {
+      return run(() -> {
+        // Make the robot move
+        swerveDrive.drive(new Translation2d(Math.pow(translationX.getAsDouble(), 3) * swerveDrive.getMaximumChassisVelocity(),
+                                            Math.pow(translationY.getAsDouble(), 3) * swerveDrive.getMaximumChassisVelocity()),
+                          Math.pow(angularRotationX.getAsDouble(), 3) * swerveDrive.getMaximumChassisAngularVelocity(),
+                          true,
+                          true);
+      });
+    }
+  
 
     public void setupPathPlanner() {
         RobotConfig config;
@@ -265,7 +300,7 @@ public class SwerveSubsystem extends SubsystemBase {
                         translationX.getAsDouble() * swerveDrive.getMaximumChassisVelocity(),
                         translationY.getAsDouble() * swerveDrive.getMaximumChassisVelocity()
                     ), 
-                    0.8
+                    1
                 ),
                 Math.pow(angularRotationX.getAsDouble(), 3) * swerveDrive.getMaximumChassisAngularVelocity(),
                 true,
