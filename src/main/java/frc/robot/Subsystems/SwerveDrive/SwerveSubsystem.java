@@ -136,6 +136,34 @@ public class SwerveSubsystem extends SubsystemBase {
         }
     }
 
+    public Command driveCommandTest(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier headingX,
+    DoubleSupplier headingY)
+{
+// swerveDrive.setHeadingCorrection(true); // Normally you would want heading correction for this kind of control.
+return run(() -> {
+
+Translation2d scaledInputs = SwerveMath.scaleTranslation(new Translation2d(translationX.getAsDouble(),
+                                                       translationY.getAsDouble()), 0.8);
+
+// Make the robot move
+driveFieldOrientedtest(swerveDrive.swerveController.getTargetSpeeds(scaledInputs.getX(), scaledInputs.getY(),
+                                            headingX.getAsDouble(),
+                                            headingY.getAsDouble(),
+                                            swerveDrive.getOdometryHeading().getRadians(),
+                                            swerveDrive.getMaximumChassisVelocity()));
+});
+}
+
+/**
+* Drive the robot given a chassis field oriented velocity.
+*
+* @param velocity Velocity according to the field.
+*/
+public void driveFieldOrientedtest(ChassisSpeeds velocity)
+{
+swerveDrive.driveFieldOriented(velocity);
+}
+
     public void driveFieldOrientedold(ChassisSpeeds velocity)
     {
       swerveDrive.driveFieldOriented(velocity);

@@ -26,6 +26,18 @@ public class RobotContainer {
     )
   );
 
+
+    // Applies deadbands and inverts controls because joysticks
+    // are back-right positive while robot
+    // controls are front-left positive
+    // left stick controls translation
+    // right stick controls the desired angle NOT angular rotation
+    Command driveFieldOrientedDirectAngle = drivebase.driveCommandTest(
+        () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+        () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.DEADBAND),
+        () -> driverXbox.getRightX(),
+        () -> driverXbox.getRightY());
+        
   AbsoluteFieldDrive absfield = new AbsoluteFieldDrive(
     drivebase,
     () -> -MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
@@ -87,7 +99,8 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    drivebase.setDefaultCommand(absfield);
+    drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
+    //drivebase.setDefaultCommand(absfield);
     // drivebase.setDefaultCommand(drivebase.driveCommandold(
     //   () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
     //   () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.DEADBAND), 
