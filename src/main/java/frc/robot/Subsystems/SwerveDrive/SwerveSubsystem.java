@@ -37,9 +37,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.LimelightHelpers;
 import frc.robot.Robot;
-import frc.robot.Constants.VisionConstants;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.math.SwerveMath;
@@ -108,9 +108,12 @@ public class SwerveSubsystem extends SubsystemBase {
             SmartDashboard.putNumber("Max chassis vel", swerveDrive.getMaximumChassisVelocity());
             SmartDashboard.putNumber("Max angle vel", swerveDrive.getMaximumChassisAngularVelocity());
             
+            SmartDashboard.putNumber("limelight tx value", LimelightHelpers.getTX(VisionConstants.LIMELIGHT_NAME));
+            
             
             swerveDrive.updateOdometry();
             boolean doRejectUpdate = false;
+
             LimelightHelpers.SetRobotOrientation(
                 VisionConstants.LIMELIGHT_NAME, 
                 swerveDrive.getYaw().getDegrees(),  
@@ -464,4 +467,16 @@ public class SwerveSubsystem extends SubsystemBase {
         return swerveDrive;
     }
 
+    public Command lineUpWithTag(DoubleSupplier tx){
+        SmartDashboard.putNumber("TX in Func", tx.getAsDouble());
+        return run(() ->
+        swerveDrive.drive(
+        new Translation2d(0, -tx.getAsDouble()),
+        0,
+        false,
+        false
+        ));
+    }
+
 }
+

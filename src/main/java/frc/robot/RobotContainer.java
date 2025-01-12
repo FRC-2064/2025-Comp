@@ -9,9 +9,12 @@ import java.io.File;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Commands.SwerveDrive.AbsoluteFieldDrive;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.Subsystems.SwerveDrive.SwerveSubsystem;
 
 public class RobotContainer {
@@ -91,7 +94,11 @@ public class RobotContainer {
       () -> -MathUtil.applyDeadband(driverXbox.getRightX(), OperatorConstants.RIGHT_X_DEADBAND)
     )
     );
-     }
+    
+    // driverXbox.a().whileTrue(drivebase.lineUpWithTag(LimelightHelpers.getTX(VisionConstants.LIMELIGHT_NAME)));
+    driverXbox.a().whileTrue(
+    drivebase.lineUpWithTag(() -> LimelightHelpers.getTX(VisionConstants.LIMELIGHT_NAME)));     
+  }
 
   public Command getAutonomousCommand() {
     return drivebase.getAutonomousCommand("New Auto");
