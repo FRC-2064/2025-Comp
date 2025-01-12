@@ -467,15 +467,33 @@ public class SwerveSubsystem extends SubsystemBase {
         return swerveDrive;
     }
 
-    public Command lineUpWithTag(DoubleSupplier tx){
-        SmartDashboard.putNumber("TX in Func", tx.getAsDouble());
-        return run(() ->
-        swerveDrive.drive(
-        new Translation2d(0, -tx.getAsDouble()),
-        0,
-        false,
-        false
-        ));
+    // public Command lineUpWithTag(DoubleSupplier tx){
+    //     SmartDashboard.putNumber("TX in Func", tx.getAsDouble());
+    //     return run(() ->
+    //     swerveDrive.drive(
+    //     new Translation2d(0, -tx.getAsDouble()),
+    //     0,
+    //     false,
+    //     false
+    //     ));
+    // }
+
+    public Command lineUpWithTag(DoubleSupplier tx) {
+        return run(() -> {
+            double txValue = tx.getAsDouble();
+            if (Math.abs(txValue) <= 0.1) { 
+                txValue = 0;
+            }
+
+            SmartDashboard.putNumber("TX in Func", txValue);
+
+            swerveDrive.drive(
+                new Translation2d(0, -txValue),
+                0,
+                false,
+                false
+            );
+        });
     }
 
 }
