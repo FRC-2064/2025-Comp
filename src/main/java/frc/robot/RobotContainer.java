@@ -15,7 +15,9 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Commands.SwerveDrive.AbsoluteFieldDrive;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.Subsystems.SwerveDrive.ShovelSubsystem;
 import frc.robot.Subsystems.SwerveDrive.SwerveSubsystem;
+import swervelib.SwerveInputStream;
 
 public class RobotContainer {
   final CommandXboxController driverXbox = new CommandXboxController(0);
@@ -56,14 +58,17 @@ public class RobotContainer {
   // );
 
 
-  // SwerveInputStream driveAngularVelocity = SwerveInputStream.of(
-  //     drivebase.getSwerveDrive(),
-  //     () -> driverXbox.getLeftY() * -1,
-  //     () -> driverXbox.getLeftX() * -1
-  // ).withControllerRotationAxis(driverXbox::getRightX)
-  //  .deadband(OperatorConstants.DEADBAND)
-  //  .scaleTranslation(0.8)
-  //  .allianceRelativeControl(true);
+  SwerveInputStream driveAngularVelocity = SwerveInputStream.of(
+      drivebase.getSwerveDrive(),
+      () -> driverXbox.getLeftY() * -1,
+      () -> driverXbox.getLeftX() * -1
+  ).withControllerRotationAxis(driverXbox::getRightX)
+   .deadband(OperatorConstants.DEADBAND)
+   .scaleTranslation(0.8)
+   .allianceRelativeControl(true);
+
+  ShovelSubsystem sm = new ShovelSubsystem();
+
 
   //  SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(
   //     driverXbox::getRightX,
@@ -71,7 +76,7 @@ public class RobotContainer {
   //   ).headingWhile(true);
 
   //   Command driveFieldOrientedDirectAngle = drivebase.driveFieldOriented(driveDirectAngle);
-  //   Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
+    Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
   
   
 
@@ -99,8 +104,9 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
+    // drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
     //drivebase.setDefaultCommand(absfield);
+    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
     // drivebase.setDefaultCommand(drivebase.driveCommandold(
     //   () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
     //   () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.DEADBAND), 
@@ -109,8 +115,12 @@ public class RobotContainer {
     // );
     
     // driverXbox.a().whileTrue(drivebase.lineUpWithTag(LimelightHelpers.getTX(VisionConstants.LIMELIGHT_NAME)));
-    driverXbox.a().whileTrue(
-    drivebase.lineUpWithTag(() -> LimelightHelpers.getTX(VisionConstants.LIMELIGHT_NAME)));     
+    // driverXbox.a().whileTrue(
+    // drivebase.lineUpWithTag(() -> LimelightHelpers.getTX(VisionConstants.LIMELIGHT_NAME)));  
+    driverXbox.b().onTrue(new InstantCommand(drivebase::zeroGyro));  
+    driverXbox.a().onTrue(new InstantCommand(sm::pickUp));
+    driverXbox.x().onTrue(new InstantCommand(sm::carry));
+    driverXbox.y().onTrue(new InstantCommand(sm::dump));     
   }
 
   public Command getAutonomousCommand() {
