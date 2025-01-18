@@ -124,7 +124,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return drivebase.getAutonomousCommand("New Auto");
+    return drivebase.getAutonomousCommand("Straight");
   }
   public void setDriveMode()
   {
