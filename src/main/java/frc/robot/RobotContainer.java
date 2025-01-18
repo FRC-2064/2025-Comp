@@ -38,10 +38,10 @@ public class RobotContainer {
     // left stick controls translation
     // right stick controls the desired angle NOT angular rotation
     Command driveFieldOrientedDirectAngle = drivebase.driveCommandTest(
-        () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.DEADBAND),
-        () -> driverXbox.getRightX(),
-        () -> driverXbox.getRightY());
+        () -> MathUtil.applyDeadband(-driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+        () -> MathUtil.applyDeadband(-driverXbox.getLeftX(), OperatorConstants.DEADBAND),
+        () -> -driverXbox.getRightX(),
+        () -> -driverXbox.getRightY());
         
   AbsoluteFieldDrive absfield = new AbsoluteFieldDrive(
     drivebase,
@@ -104,8 +104,8 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
-    // drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
+    //drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+    drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
     //drivebase.setDefaultCommand(absfield);
     
     //OLD DRIVING METHOD
@@ -122,11 +122,13 @@ public class RobotContainer {
     // drivebase.lineUpWithTag(() -> LimelightHelpers.getTX(VisionConstants.LIMELIGHT_NAME)));  
 
 
-    driverXbox.b().onTrue(new InstantCommand(drivebase::zeroGyro));  
+    driverXbox.back().onTrue(new InstantCommand(drivebase::zeroGyro));  
     // SHOVEL BINDINGS 
     driverXbox.a().onTrue(new InstantCommand(sm::pickUp));
     driverXbox.x().onTrue(new InstantCommand(sm::carry));
-    driverXbox.y().onTrue(new InstantCommand(sm::dump));     
+    driverXbox.y().onTrue(new InstantCommand(sm::dump));   
+    driverXbox.start().onTrue(new InstantCommand(drivebase::setPredefinedOdom));
+    driverXbox.b().onTrue(drivebase.driveToPose());  
   }
 
   public Command getAutonomousCommand() {

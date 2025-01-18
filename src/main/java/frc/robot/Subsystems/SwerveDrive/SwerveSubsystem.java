@@ -95,6 +95,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("gyro", swerveDrive.getYaw().getDegrees());
         if (Robot.isReal()) {
 
             // LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
@@ -140,7 +141,7 @@ public class SwerveSubsystem extends SubsystemBase {
     public Command driveCommandTest(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier headingX,
     DoubleSupplier headingY)
 {
-// swerveDrive.setHeadingCorrection(true); // Normally you would want heading correction for this kind of control.
+  swerveDrive.setHeadingCorrection(true); // Normally you would want heading correction for this kind of control.
 return run(() -> {
 
 Translation2d scaledInputs = SwerveMath.scaleTranslation(new Translation2d(translationX.getAsDouble(),
@@ -200,7 +201,7 @@ swerveDrive.driveFieldOriented(velocity);
         try {
             config = RobotConfig.fromGUISettings();
             
-            final boolean enableFeedForward = true;
+            final boolean enableFeedForward = false;
             AutoBuilder.configure(
                 this::getPose,
                 this::resetOdometry,
@@ -219,8 +220,8 @@ swerveDrive.driveFieldOriented(velocity);
                   }
                 }, 
                 new PPHolonomicDriveController(
-                    new PIDConstants(5.0, 0.0, 0.0),
-                    new PIDConstants(5.0, 0.0, 0.0)
+                    new PIDConstants(0.0, 0.0, 0.0),
+                    new PIDConstants(0.0, 0.0, 0.0)
                     ),
                      config, 
                      () -> {
@@ -243,7 +244,8 @@ swerveDrive.driveFieldOriented(velocity);
         return new PathPlannerAuto(pathName);
     }
 
-    public Command driveToPose(Pose2d pose) {
+    public Command driveToPose() {
+        Pose2d pose = new Pose2d(2.0, 2.0, new Rotation2d());
         PathConstraints constraints = new PathConstraints(
             swerveDrive.getMaximumChassisVelocity(),
             4.0,
@@ -494,6 +496,11 @@ swerveDrive.driveFieldOriented(velocity);
 
     public SwerveDrive getSwerveDrive() {
         return swerveDrive;
+    }
+
+    public void setPredefinedOdom() {
+        Pose2d resetPose = new Pose2d(2.0, 2.0, new Rotation2d());
+        swerveDrive.resetOdometry(resetPose);
     }
 
     // public Command lineUpWithTag(DoubleSupplier tx){
