@@ -28,6 +28,9 @@ public class RobotContainer {
     )
   );
 
+  ShovelSubsystem sm = new ShovelSubsystem();
+
+
 
     // Applies deadbands and inverts controls because joysticks
     // are back-right positive while robot
@@ -46,6 +49,7 @@ public class RobotContainer {
     () -> -MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.DEADBAND), 
     () -> -MathUtil.applyDeadband(driverXbox.getRightX(), OperatorConstants.RIGHT_X_DEADBAND)
     );
+    
   // AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(
   //   drivebase,
   //   () -> -MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
@@ -67,7 +71,6 @@ public class RobotContainer {
    .scaleTranslation(0.8)
    .allianceRelativeControl(true);
 
-  ShovelSubsystem sm = new ShovelSubsystem();
 
 
   //  SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(
@@ -78,10 +81,8 @@ public class RobotContainer {
   //   Command driveFieldOrientedDirectAngle = drivebase.driveFieldOriented(driveDirectAngle);
     Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
   
-  
 
-    // Command driveSetpointGen = drivebase.driveWithSetpointGeneratorFieldRelative(driveDirectAngle);
-
+    // SIM DRIVING
     // SwerveInputStream driveAngularVelocitySim = SwerveInputStream.of(
     //   drivebase.getSwerveDrive(),
     //   () -> -driverXbox.getLeftY(),
@@ -97,27 +98,32 @@ public class RobotContainer {
     //   ).headingWhile(true);
 
     // Command driveFieldOrientedDirectAngleSim = drivebase.driveFieldOriented(driveDirectAngleSim);
-    // Command driveSetpointGenSim = drivebase.driveWithSetpointGeneratorFieldRelative(driveDirectAngleSim);
 
   public RobotContainer() {
     configureBindings();
   }
 
   private void configureBindings() {
+    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
     // drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
     //drivebase.setDefaultCommand(absfield);
-    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+    
+    //OLD DRIVING METHOD
     // drivebase.setDefaultCommand(drivebase.driveCommandold(
     //   () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
     //   () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.DEADBAND), 
     //   () -> -MathUtil.applyDeadband(driverXbox.getRightX(), OperatorConstants.RIGHT_X_DEADBAND)
     // )
     // );
-    
+
+    // LINE UP WITH TAG - TESTING
     // driverXbox.a().whileTrue(drivebase.lineUpWithTag(LimelightHelpers.getTX(VisionConstants.LIMELIGHT_NAME)));
     // driverXbox.a().whileTrue(
     // drivebase.lineUpWithTag(() -> LimelightHelpers.getTX(VisionConstants.LIMELIGHT_NAME)));  
+
+
     driverXbox.b().onTrue(new InstantCommand(drivebase::zeroGyro));  
+    // SHOVEL BINDINGS 
     driverXbox.a().onTrue(new InstantCommand(sm::pickUp));
     driverXbox.x().onTrue(new InstantCommand(sm::carry));
     driverXbox.y().onTrue(new InstantCommand(sm::dump));     
