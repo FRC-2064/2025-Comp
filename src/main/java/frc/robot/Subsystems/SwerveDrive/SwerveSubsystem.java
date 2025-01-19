@@ -28,7 +28,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.VisionConstants;
+import frc.robot.Constants.Limelight1Constants;
+import frc.robot.Constants.Limelight2Constants;
 import frc.robot.LimelightHelpers;
 import frc.robot.Robot;
 import swervelib.SwerveController;
@@ -72,13 +73,23 @@ public class SwerveSubsystem extends SubsystemBase {
 
 
         LimelightHelpers.setCameraPose_RobotSpace(
-            VisionConstants.LIMELIGHT_NAME, 
-            VisionConstants.FORWARD_OFFSET,    // Forward offset (meters)
-            VisionConstants.SIDE_OFFSET,    // Side offset (meters)
-            VisionConstants.HEIGHT_OFFSET,    // Height offset (meters)
-            VisionConstants.ROLL_OFFSET,    // Roll (degrees)
-            VisionConstants.PITCH_OFFSET,   // Pitch (degrees)
-            VisionConstants.YAW_OFFSET     // Yaw (degrees)
+            Limelight1Constants.LIMELIGHT_NAME, 
+            Limelight1Constants.FORWARD_OFFSET,    // Forward offset (meters)
+            Limelight1Constants.SIDE_OFFSET,    // Side offset (meters)
+            Limelight1Constants.HEIGHT_OFFSET,    // Height offset (meters)
+            Limelight1Constants.ROLL_OFFSET,    // Roll (degrees)
+            Limelight1Constants.PITCH_OFFSET,   // Pitch (degrees)
+            Limelight1Constants.YAW_OFFSET     // Yaw (degrees)
+        );
+
+        LimelightHelpers.setCameraPose_RobotSpace(
+            Limelight2Constants.LIMELIGHT_NAME, 
+            Limelight2Constants.FORWARD_OFFSET,    // Forward offset (meters)
+            Limelight2Constants.SIDE_OFFSET,    // Side offset (meters)
+            Limelight2Constants.HEIGHT_OFFSET,    // Height offset (meters)
+            Limelight2Constants.ROLL_OFFSET,    // Roll (degrees)
+            Limelight2Constants.PITCH_OFFSET,   // Pitch (degrees)
+            Limelight2Constants.YAW_OFFSET     // Yaw (degrees)
         );
 
         setupPathPlanner();
@@ -92,12 +103,12 @@ public class SwerveSubsystem extends SubsystemBase {
             boolean doRejectUpdate = false;
 
             LimelightHelpers.SetRobotOrientation(
-                VisionConstants.LIMELIGHT_NAME, 
+                Limelight1Constants.LIMELIGHT_NAME, 
                 swerveDrive.getYaw().getDegrees(),  
                 0, 0, 0, 0, 0);
     
             LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(
-                VisionConstants.LIMELIGHT_NAME);
+                Limelight1Constants.LIMELIGHT_NAME);
             if (mt2 == null) {
                 return;
             }
@@ -348,14 +359,15 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
 
-    public void lineUpWithTag(Double tx) {
-        if (Math.abs(tx) <= 0.1) { 
+    public void lineUpWithTag() {
+        double ltx = LimelightHelpers.getTX(Limelight1Constants.LIMELIGHT_NAME);
+        if (Math.abs(ltx) <= 0.1) { 
             return;
         }
 
-        SmartDashboard.putNumber("TX in Func", tx);
+        SmartDashboard.putNumber("TX in Func", ltx);
         swerveDrive.drive(
-            new Translation2d(0, -tx),
+            new Translation2d(0, -ltx),
             0,
             false,
             false

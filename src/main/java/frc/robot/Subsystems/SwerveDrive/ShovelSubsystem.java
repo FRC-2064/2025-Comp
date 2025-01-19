@@ -20,7 +20,7 @@ public class ShovelSubsystem extends SubsystemBase{
 
     public double shovelTargetAngle;
     public double shovelTarget;
-    private boolean referenceSet = true;
+    private boolean updatedTarget = true;
 
     public ShovelSubsystem(){
         shovelMotor = new SparkMax(Constants.ShovelConstants.shovelRotatorID, SparkLowLevel.MotorType.kBrushless);
@@ -49,14 +49,14 @@ public class ShovelSubsystem extends SubsystemBase{
     public void setShovelAngle(double target){
         shovelTargetAngle = target;
         shovelTarget = target / 360;
-        referenceSet = false;
+        updatedTarget = false;
     }
 
     @Override
     public void periodic(){
-        if (!referenceSet) {
+        if (!updatedTarget) {
             motionController.setReference(shovelTargetAngle, ControlType.kPosition);
-            referenceSet = true;
+            updatedTarget = true;
         }
     }
 }
