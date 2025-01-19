@@ -29,7 +29,10 @@ public class Constants {
         public static final double YAW_OFFSET = 0.0;
 
     }
-    public class kShovelSubsystem{
+    public class ShovelConstants{
         public static final int shovelRotatorID = 25;
+
+        public static final double INTAKE_ANGLE = 15;
+        public static final double DUMP_ANGLE = -15;
     }
 }
