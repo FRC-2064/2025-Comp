@@ -39,11 +39,32 @@ public class Constants {
         public static final double YAW_OFFSET = 0.0;
     }
 
-
-    public class ShovelConstants{
+    public class ShovelConstants {
         public static final int shovelRotatorID = 25;
-
         public static final double INTAKE_ANGLE = 15;
         public static final double DUMP_ANGLE = -15;
+    }
+
+    public class ArmConstants {
+        //ARM
+        public static final int ARM_LEADER_ID = 26;
+        public static final int ARM_FOLLOWER_ID = 27;
+        
+        public static final double HOME_ANGLE = 10.0;
+        public static final double TROUGH_ANGLE = 40.0;
+        public static final double FEEDER_ANGLE = 40.0;
+        public static final double LOW_ALGAE_REMOVAL_ANGLE = 40.0;
+        public static final double HIGH_ALGAE_REMOVAL_ANGLE = 40.0;
+        public static final double ALGEA_CARRY_ANGLE = 40.0;
+
+        //INTAKE
+        public static final int INTAKE_TOP_ID = 28;
+        public static final int INTAKE_BOTTOM_ID = 29;
+        public static final int INTAKE_LIMIT_ID = 1;
+
+        //CLIMB
+        public static final int CLIMB_ID = 35;
+
+        public static final double CLIMB_ANGLE = 40.0;
     }
 }

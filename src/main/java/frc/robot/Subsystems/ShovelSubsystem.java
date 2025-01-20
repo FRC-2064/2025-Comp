@@ -1,4 +1,4 @@
-package frc.robot.Subsystems.SwerveDrive;
+package frc.robot.Subsystems;
 
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel;
@@ -20,20 +20,18 @@ public class ShovelSubsystem extends SubsystemBase{
 
     public double shovelTargetAngle;
     public double shovelTarget;
-    private boolean updatedTarget = true;
+    private boolean newTarget = false;
 
     public ShovelSubsystem(){
         shovelMotor = new SparkMax(Constants.ShovelConstants.shovelRotatorID, SparkLowLevel.MotorType.kBrushless);
-        motionController = shovelMotor.getClosedLoopController();
-
+        
         shovelConfig = new SparkMaxConfig();
         shovelConfig.closedLoop
-            .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-            .pid(1.0, 0.0, 0.1)
-            .positionWrappingEnabled(true)
-            .positionWrappingInputRange(0, 1)
-            .feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
-
+        .pid(1.0, 0.0, 0.1)
+        .positionWrappingEnabled(true)
+        .positionWrappingInputRange(0, 1)
+        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
+        
         shovelConfig.closedLoop.maxMotion
         .maxVelocity(20)
         .maxAcceleration(20)
@@ -42,21 +40,22 @@ public class ShovelSubsystem extends SubsystemBase{
         
         shovelConfig.absoluteEncoder.inverted(true);
         shovelConfig.inverted(true);
-
+        
         shovelMotor.configure(shovelConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        motionController = shovelMotor.getClosedLoopController();
     }
 
     public void setShovelAngle(double target){
         shovelTargetAngle = target;
         shovelTarget = target / 360;
-        updatedTarget = false;
+        newTarget = true;
     }
 
     @Override
     public void periodic(){
-        if (!updatedTarget) {
+        if (!newTarget) {
             motionController.setReference(shovelTargetAngle, ControlType.kPosition);
-            updatedTarget = true;
+            newTarget = false;
         }
     }
 }
