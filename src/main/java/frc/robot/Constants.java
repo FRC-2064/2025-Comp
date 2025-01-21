@@ -42,7 +42,8 @@ public class Constants {
     public class ShovelConstants {
         public static final int shovelRotatorID = 25;
         public static final double INTAKE_ANGLE = 15;
-        public static final double DUMP_ANGLE = -15;
+        public static final double DUMP_ANGLE = 45;
+        public static final double CARRY_ANGLE = 120;
     }
 
     public class ArmConstants {
