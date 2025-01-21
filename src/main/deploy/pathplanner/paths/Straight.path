@@ -54,24 +54,24 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "dump",
+      "name": "Dump",
       "waypointRelativePos": 1.010169491525424,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "dump"
+          "name": "Dump"
         }
       }
     },
     {
-      "name": "intake",
+      "name": "Intake",
       "waypointRelativePos": 1.4033898305084687,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "intake"
+          "name": "Intake"
         }
       }
     }

@@ -75,8 +75,8 @@ public class RobotContainer {
     driverXbox.start().onTrue(new InstantCommand(drivebase::setPredefinedOdom));
     driverXbox.b().onTrue(drivebase.driveToPose(new Pose2d(2,2,new Rotation2d())));
 
-    //drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
-    drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
+    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+    // drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
   }
 
   public Command getAutonomousCommand() {

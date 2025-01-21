@@ -53,9 +53,7 @@ public class ShovelSubsystem extends SubsystemBase{
 
     @Override
     public void periodic(){
-        if (!newTarget) {
-            motionController.setReference(shovelTargetAngle, ControlType.kPosition);
-            newTarget = false;
-        }
+        motionController.setReference(shovelTarget, ControlType.kMAXMotionPositionControl);
+
     }
 }
