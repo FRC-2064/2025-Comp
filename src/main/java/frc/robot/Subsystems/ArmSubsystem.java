@@ -11,6 +11,7 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.MAXMotionConfig.MAXMotionPositionMode;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 
@@ -22,12 +23,16 @@ public class ArmSubsystem extends SubsystemBase {
     private SparkMax climbClamp;
 
     private SparkClosedLoopController armController;
+    private SparkClosedLoopController climbClampController;
 
     private SparkFlexConfig armLeaderConfig;
     private SparkFlexConfig armFollowerConfig;
+    private SparkFlexConfig climbClampConfig;
 
     private double armTargetAngle;
     private double armTarget;
+
+    private double climbClampTargetAngle;
     
     private boolean newTarget = false;
     public boolean hasCoral = false;
@@ -66,14 +71,33 @@ public class ArmSubsystem extends SubsystemBase {
         
         //CLIMB
         climbClamp = new SparkMax(ArmConstants.CLIMB_ID, MotorType.kBrushless);
+
+        climbClampConfig = new SparkFlexConfig();
+        climbClampConfig.closedLoop
+        .pid(0, 0, 0)
+        .positionWrappingEnabled(true)
+        .positionWrappingInputRange(0, 1)
+        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
+
+        //CHECK IF NEEDS TO BE INVERTED OR NOT
+        climbClampConfig.absoluteEncoder.inverted(true);
+
+        climbClamp.configure(climbClampConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        climbClampController = climbClamp.getClosedLoopController();
+
+
+
     }
 
     @Override
     public void periodic() {
-        if (newTarget) {
-            armController.setReference(armTarget, ControlType.kPosition);
-            newTarget = false;
-        }
+        armController.setReference(armTarget, ControlType.kPosition);
+        SmartDashboard.putNumber("arm target angle", armTarget);
+        SmartDashboard.putNumber("arm angle", (armLeader.getEncoder().getPosition())*360);
+        // if (newTarget) {
+        //     newTarget = false;
+        // }
     }
 
     public void setTargetAngle(double angle) {
@@ -83,13 +107,13 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void intakeCoral() {
-        intakeTop.set(1);
-        intakeBottom.set(-1);
+        intakeTop.set(-0.5);
+        intakeBottom.set(-0.5);
     }
 
     public void outtakeCoral() {
-        intakeTop.set(-1);
-        intakeBottom.set(1);
+        intakeTop.set(0.5);
+        intakeBottom.set(0.5);
     }
 
     public void removeAlgaeLow() {
@@ -104,5 +128,16 @@ public class ArmSubsystem extends SubsystemBase {
         intakeTop.set(0);
         intakeBottom.set(0);
     }
+
+
+
+    public void setClimbClampAngle(double angle){
+        climbClampTargetAngle = angle;
+        
+
+    }
+
+
+
 
 }

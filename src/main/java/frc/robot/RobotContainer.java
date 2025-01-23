@@ -14,8 +14,10 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.ShovelConstants;
+import frc.robot.Subsystems.ArmSubsystem;
 import frc.robot.Subsystems.ShovelSubsystem;
 import frc.robot.Subsystems.SwerveDrive.SwerveSubsystem;
 import swervelib.SwerveInputStream;
@@ -23,6 +25,7 @@ import swervelib.SwerveInputStream;
 public class RobotContainer {
   final CommandXboxController driverXbox = new CommandXboxController(0);
   final ShovelSubsystem shovel = new ShovelSubsystem();
+  final ArmSubsystem arm = new ArmSubsystem();
   private final SwerveSubsystem drivebase = new SwerveSubsystem(
     new File(
       Filesystem.getDeployDirectory(), 
@@ -33,6 +36,10 @@ public class RobotContainer {
   // SHOVEL COMMANDS
   Command dump = new InstantCommand(() -> shovel.setShovelAngle(ShovelConstants.DUMP_ANGLE));
   Command intake = new InstantCommand(() -> shovel.setShovelAngle(ShovelConstants.INTAKE_ANGLE));
+
+  // ARM COMMANDS
+  Command homeArm = new InstantCommand(() -> arm.setTargetAngle(ArmConstants.HOME_ANGLE));
+  Command lowAlgae = new InstantCommand(() -> arm.setTargetAngle(ArmConstants.LOW_ALGAE_REMOVAL_ANGLE));
 
   // VISION COMMANDS
   Command lineupWithTag = new InstantCommand(drivebase::lineUpWithTag);
@@ -64,16 +71,24 @@ public class RobotContainer {
 
   private void configureBindings() {
     // SHOVEL BINDINGS 
-    driverXbox.a().onTrue(dump);
-    driverXbox.x().onTrue(intake);
+    // driverXbox.a().onTrue(dump);
+    // driverXbox.x().onTrue(intake);
 
     // VISION BINDINGS
-    driverXbox.y().onTrue(lineupWithTag);
+    // driverXbox.y().onTrue(lineupWithTag);
     
     // DRIVE BINDINGS
     driverXbox.back().onTrue(new InstantCommand(drivebase::zeroGyro));  
     driverXbox.start().onTrue(new InstantCommand(drivebase::setPredefinedOdom));
-    driverXbox.b().onTrue(drivebase.driveToPose(new Pose2d(2,2,new Rotation2d())));
+    // driverXbox.b().onTrue(drivebase.driveToPose(new Pose2d(2,2,new Rotation2d())));
+    driverXbox.b().onTrue(homeArm);
+
+    driverXbox.a().onTrue(new InstantCommand(arm::intakeCoral));
+    driverXbox.a().onFalse(new InstantCommand(arm::stopIntakeMotors));
+    driverXbox.x().onTrue(new InstantCommand(arm::outtakeCoral));
+    driverXbox.x().onFalse(new InstantCommand(arm::stopIntakeMotors));
+    
+    driverXbox.y().onTrue(new InstantCommand(arm::stopIntakeMotors));
 
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
     // drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
