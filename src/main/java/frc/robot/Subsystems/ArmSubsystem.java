@@ -10,6 +10,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.MAXMotionConfig.MAXMotionPositionMode;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -47,18 +48,23 @@ public class ArmSubsystem extends SubsystemBase {
         armLeaderConfig = new SparkFlexConfig();
         armFollowerConfig = new SparkFlexConfig();
         
-        armLeaderConfig.closedLoop
+        armLeaderConfig
+        .smartCurrentLimit(40)
+        .inverted(true)
+        .idleMode(IdleMode.kBrake)
+        .closedLoop
         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-        .pid(0, 0, 0);
+        .pid(10, 0, 0);
         
-        armLeaderConfig.closedLoop.maxMotion
+        armLeaderConfig
+        .idleMode(IdleMode.kBrake)
+        .closedLoop.maxMotion
         .maxVelocity(20)
         .maxAcceleration(20)
         .allowedClosedLoopError(0.01)
         .positionMode(MAXMotionPositionMode.kMAXMotionTrapezoidal);
         
-        armFollowerConfig.follow(ArmConstants.ARM_LEADER_ID)
-        .inverted(true);
+        armFollowerConfig.follow(ArmConstants.ARM_LEADER_ID, true);
         
         armLeader.configure(armLeaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         armFollower.configure(armFollowerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -73,8 +79,11 @@ public class ArmSubsystem extends SubsystemBase {
         climbClamp = new SparkMax(ArmConstants.CLIMB_ID, MotorType.kBrushless);
 
         climbClampConfig = new SparkFlexConfig();
-        climbClampConfig.closedLoop
-        .pid(0, 0, 0)
+        climbClampConfig
+        .smartCurrentLimit(20)
+        .closedLoop
+        .pid(1, 0, 0)
+        // .outputRange(0, 0.21)
         .positionWrappingEnabled(true)
         .positionWrappingInputRange(0, 1)
         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
@@ -92,18 +101,16 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        armController.setReference(armTarget, ControlType.kPosition);
         SmartDashboard.putNumber("arm target angle", armTarget);
-        SmartDashboard.putNumber("arm angle", (armLeader.getEncoder().getPosition())*360);
-        // if (newTarget) {
-        //     newTarget = false;
-        // }
-    }
+        SmartDashboard.putNumber("arm angle", (armLeader.getAbsoluteEncoder().getPosition()));
+        SmartDashboard.putBoolean("follower is follower", armFollower.isFollower());
 
+
+    }
+        
     public void setTargetAngle(double angle) {
-        armTargetAngle = angle;
-        armTarget = angle / 360;
-        newTarget = true;
+        armTarget = angle/360;
+        armController.setReference(armTarget, ControlType.kPosition);
     }
 
     public void intakeCoral() {
@@ -132,9 +139,7 @@ public class ArmSubsystem extends SubsystemBase {
 
 
     public void setClimbClampAngle(double angle){
-        climbClampTargetAngle = angle;
-        
-
+        climbClampController.setReference(angle/360, ControlType.kPosition);
     }
 
 

@@ -40,6 +40,11 @@ public class RobotContainer {
   // ARM COMMANDS
   Command homeArm = new InstantCommand(() -> arm.setTargetAngle(ArmConstants.HOME_ANGLE));
   Command lowAlgae = new InstantCommand(() -> arm.setTargetAngle(ArmConstants.LOW_ALGAE_REMOVAL_ANGLE));
+  
+
+  //CLIMB CLAMP COMMANDS
+  Command hookClamp = new InstantCommand(() -> arm.setClimbClampAngle(ArmConstants.CLIMB_CLAMP_ANGLE));
+  Command unhookClamp = new InstantCommand(() -> arm.setClimbClampAngle(ArmConstants.HOME_CLAMP_ANGLE));
 
   // VISION COMMANDS
   Command lineupWithTag = new InstantCommand(drivebase::lineUpWithTag);
@@ -81,14 +86,16 @@ public class RobotContainer {
     driverXbox.back().onTrue(new InstantCommand(drivebase::zeroGyro));  
     driverXbox.start().onTrue(new InstantCommand(drivebase::setPredefinedOdom));
     // driverXbox.b().onTrue(drivebase.driveToPose(new Pose2d(2,2,new Rotation2d())));
-    driverXbox.b().onTrue(homeArm);
+    driverXbox.b().onTrue(lowAlgae);
+    driverXbox.y().onTrue(homeArm);
+    driverXbox.rightTrigger().onTrue(hookClamp);
+    driverXbox.leftBumper().onTrue(unhookClamp);
 
     driverXbox.a().onTrue(new InstantCommand(arm::intakeCoral));
     driverXbox.a().onFalse(new InstantCommand(arm::stopIntakeMotors));
     driverXbox.x().onTrue(new InstantCommand(arm::outtakeCoral));
     driverXbox.x().onFalse(new InstantCommand(arm::stopIntakeMotors));
-    
-    driverXbox.y().onTrue(new InstantCommand(arm::stopIntakeMotors));
+  
 
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
     // drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
