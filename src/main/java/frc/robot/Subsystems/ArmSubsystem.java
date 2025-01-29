@@ -90,7 +90,6 @@ public class ArmSubsystem extends SubsystemBase {
         .positionWrappingInputRange(0, 1)
         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
 
-        //CHECK IF NEEDS TO BE INVERTED OR NOT
         climbClampConfig.absoluteEncoder.inverted(true);
 
         climbClamp.configure(climbClampConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -107,8 +106,7 @@ public class ArmSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("arm angle", (armLeader.getAbsoluteEncoder().getPosition()));
         SmartDashboard.putBoolean("follower is follower", armFollower.isFollower());
         SmartDashboard.putNumber("Intake current", intakeTop.getOutputCurrent());
-
-        
+        updateGamePieceState();
 
     }
         
@@ -120,7 +118,8 @@ public class ArmSubsystem extends SubsystemBase {
     public void intakeCoral() {
         intakeTop.set(-0.5);
         intakeBottom.set(-0.5);
-        updateGamePieceState();
+        System.out.println("Inside intakeCoral function:"+intakeTop.getOutputCurrent());
+        // updateGamePieceState();
     }
 
     public void outtakeCoral() {
@@ -143,12 +142,15 @@ public class ArmSubsystem extends SubsystemBase {
 
     private void updateGamePieceState() {
     double currentOutput = intakeTop.getOutputCurrent();
-
-    if (currentOutput > 22) {
+    System.out.println("Inside update game piece");
+    System.out.println(intakeTop.getOutputCurrent());
+    if (currentOutput > 5) {
+        System.out.println("Inside if condition");
         if (!hasCoral) {
             hasCoral = true;
             SmartDashboard.putBoolean("Has Coral", hasCoral);
             stopIntakeMotors();
+            System.out.println("stopped intake motors");
         }
     } else {
         

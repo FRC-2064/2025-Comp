@@ -92,9 +92,9 @@ public class RobotContainer {
     driverXbox.leftBumper().onTrue(unhookClamp);
 
     driverXbox.a().onTrue(new InstantCommand(arm::intakeCoral));
-    driverXbox.a().onFalse(new InstantCommand(arm::stopIntakeMotors));
-    driverXbox.x().onTrue(new InstantCommand(arm::outtakeCoral));
-    driverXbox.x().onFalse(new InstantCommand(arm::stopIntakeMotors));
+    // driverXbox.a().onFalse(new InstantCommand(arm::stopIntakeMotors));
+    // driverXbox.x().onTrue(new InstantCommand(arm::outtakeCoral));
+    driverXbox.x().onTrue(new InstantCommand(arm::stopIntakeMotors));
   
 
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
