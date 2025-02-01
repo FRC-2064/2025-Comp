@@ -19,8 +19,6 @@ import frc.robot.Constants.ArmConstants;
 public class ArmSubsystem extends SubsystemBase {
     private SparkFlex armLeader;
     private SparkFlex armFollower;
-    private SparkMax intakeTop;
-    private SparkMax intakeBottom;
     private SparkMax climbClamp;
 
     private SparkClosedLoopController armController;
@@ -30,12 +28,8 @@ public class ArmSubsystem extends SubsystemBase {
     private SparkFlexConfig armFollowerConfig;
     private SparkFlexConfig climbClampConfig;
 
-    private double armTargetAngle;
     private double armTarget;
 
-    private double climbClampTargetAngle;
-    
-    private boolean newTarget = false;
     public boolean hasCoral = false;
     public boolean hasAlgae = false;
 
@@ -73,9 +67,6 @@ public class ArmSubsystem extends SubsystemBase {
         
         armController = armLeader.getClosedLoopController();
         
-        //INTAKE
-        intakeTop = new SparkMax(ArmConstants.INTAKE_TOP_ID, MotorType.kBrushless);
-        intakeBottom = new SparkMax(ArmConstants.INTAKE_BOTTOM_ID, MotorType.kBrushless);
         
         //CLIMB
         climbClamp = new SparkMax(ArmConstants.CLIMB_ID, MotorType.kBrushless);
@@ -107,8 +98,6 @@ public class ArmSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("arm target angle", armTarget * 360);
         SmartDashboard.putNumber("arm angle", (armLeader.getAbsoluteEncoder().getPosition() * 360));
         SmartDashboard.putBoolean("follower is follower", armFollower.isFollower());
-        SmartDashboard.putNumber("Intake current", intakeTop.getOutputCurrent());
-        updateGamePieceState();
 
     }
         
@@ -116,48 +105,6 @@ public class ArmSubsystem extends SubsystemBase {
         armTarget = angle/360;
         armController.setReference(armTarget, ControlType.kPosition);
     }
-
-    public void intakeCoral() {
-        intakeTop.set(-0.5);
-        intakeBottom.set(-0.5);
-        System.out.println("Inside intakeCoral function:"+intakeTop.getOutputCurrent());
-        // updateGamePieceState();
-    }
-
-    public void outtakeCoral() {
-        intakeTop.set(0.20);
-        intakeBottom.set(0.20);
-    }
-
-    public void removeAlgaeLow() {
-        intakeTop.set(-1);
-    }
-    
-    public void removeAlgaeHigh() {
-        intakeTop.set(1);
-    }
-
-    public void stopIntakeMotors() {
-        intakeTop.set(0);
-        intakeBottom.set(0);
-    }
-
-    private void updateGamePieceState() {
-    double currentOutput = intakeTop.getOutputCurrent();
-    System.out.println("Inside update game piece");
-    System.out.println(intakeTop.getOutputCurrent());
-    if (currentOutput > 5) {
-        System.out.println("Inside if condition");
-        if (!hasCoral) {
-            hasCoral = true;
-            SmartDashboard.putBoolean("Has Coral", hasCoral);
-            stopIntakeMotors();
-            System.out.println("stopped intake motors");
-        }
-    } else {
-        
-    }
-}
 
 
 

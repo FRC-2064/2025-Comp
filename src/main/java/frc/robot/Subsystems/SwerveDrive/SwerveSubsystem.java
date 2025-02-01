@@ -1,12 +1,15 @@
 package frc.robot.Subsystems.SwerveDrive;
 
+import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.Meter;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.commands.PathfindingCommand;
@@ -30,7 +33,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Limelight1Constants;
 import frc.robot.Constants.Limelight2Constants;
-import frc.robot.LimelightHelpers;
 import frc.robot.Robot;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
@@ -39,9 +41,15 @@ import swervelib.parser.SwerveDriveConfiguration;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
+import frc.robot.LimelightHelpers;
+
+
 
 public class SwerveSubsystem extends SubsystemBase {
     private final SwerveDrive swerveDrive;
+    // private Limelight limelightFront;
+    // private Limelight limelightBack;
+    private Pigeon2 gyro;
 
     public SwerveSubsystem(File directory) {
         SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
@@ -71,6 +79,8 @@ public class SwerveSubsystem extends SubsystemBase {
             1);
         swerveDrive.stopOdometryThread();
 
+        // limelightFront = new Limelight(Limelight1Constants.LIMELIGHT_NAME);
+        // limelightBack = new Limelight(Limelight2Constants.LIMELIGHT_NAME);
 
         LimelightHelpers.setCameraPose_RobotSpace(
             Limelight1Constants.LIMELIGHT_NAME, 
@@ -92,12 +102,16 @@ public class SwerveSubsystem extends SubsystemBase {
             Limelight2Constants.YAW_OFFSET     // Yaw (degrees)
         );
 
+        gyro = new Pigeon2(60);
+
+
         setupPathPlanner();
         
     }
 
     @Override
     public void periodic() {
+        swerveDrive.updateOdometry();
         if (Robot.isReal()) {
             swerveDrive.updateOdometry();
             boolean doRejectUpdate = false;
@@ -121,6 +135,38 @@ public class SwerveSubsystem extends SubsystemBase {
                 swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(0.7,0.7,9999999));
                 swerveDrive.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
             }   
+            
+        //     limelightFront.settingsBuilder()
+        //     .withRobotOrientation(new Orientation3d(
+        //         swerveDrive.getGyroRotation3d(), new AngularVelocity3d(
+        //             // Roll = X, Pitch = Y, Yaw = Z
+        //             gyro.getAngularVelocityYDevice().getValue(),
+        //             gyro.getAngularVelocityXDevice().getValue(), 
+        //             gyro.getAngularVelocityZDevice().getValue()
+        //             )
+        //         )
+        //     );
+        
+        // limelightBack.settingsBuilder()
+        // .withRobotOrientation(new Orientation3d(
+        //     swerveDrive.getGyroRotation3d(), new AngularVelocity3d(
+        //         gyro.getAngularVelocityXDevice().getValue(),
+        //         gyro.getAngularVelocityYDevice().getValue(),
+        //         gyro.getAngularVelocityZDevice().getValue()
+        //     )
+        //     )
+        // );
+
+        // Optional<PoseEstimate> visionEstimateFront = limelightFront.getPoseEstimator(true).getPoseEstimate();
+        // Optional<PoseEstimate> visionEstimateBack = limelightBack.getPoseEstimator(true).getPoseEstimate();
+
+        // visionEstimateFront.ifPresent((PoseEstimate poseEstimate) -> {
+        //     swerveDrive.addVisionMeasurement(poseEstimate.pose.toPose2d(), poseEstimate.timestampSeconds);
+        //   });
+        //   visionEstimateBack.ifPresent((PoseEstimate poseEstimate) -> {
+        //     swerveDrive.addVisionMeasurement(poseEstimate.pose.toPose2d(), poseEstimate.timestampSeconds);
+        //   });
+
         }
     }
 
@@ -359,19 +405,22 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
 
-    public void lineUpWithTag() {
-        double ltx = LimelightHelpers.getTX(Limelight1Constants.LIMELIGHT_NAME);
-        if (Math.abs(ltx) <= 0.1) { 
-            return;
-        }
+    public Command lineUpWithTag(DoubleSupplier tx) {
+        return run(() -> {
+            double ltx = tx.getAsDouble();
+            SmartDashboard.putNumber("LTX", ltx);
 
-        SmartDashboard.putNumber("TX in Func", ltx);
-        swerveDrive.drive(
-            new Translation2d(0, -ltx),
-            0,
-            false,
-            false
-        );
+            ltx = Math.max(-30, Math.min(30, ltx));
+            double scaledLtx = ltx / 30;
+            scaledLtx = scaledLtx * swerveDrive.getMaximumChassisVelocity() * 0.8;
+
+            swerveDrive.drive(
+                new Translation2d(0, -scaledLtx),
+                0,
+                false,
+                false
+            );
+        });
     }
-}
 
+}

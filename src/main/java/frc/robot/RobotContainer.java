@@ -5,25 +5,36 @@
 package frc.robot;
 
 import java.io.File;
+import java.util.function.DoubleSupplier;
+
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.CvSink;
+import edu.wpi.first.cscore.CvSource;
+import edu.wpi.first.cscore.MjpegServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.util.PixelFormat;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.Constants.ShovelConstants;
 import frc.robot.Subsystems.ArmSubsystem;
-import frc.robot.Subsystems.ShovelSubsystem;
+import frc.robot.Subsystems.WristSubsystem;
 import frc.robot.Subsystems.SwerveDrive.SwerveSubsystem;
 import swervelib.SwerveInputStream;
 
 public class RobotContainer {
   final CommandXboxController driverXbox = new CommandXboxController(0);
-  final ShovelSubsystem shovel = new ShovelSubsystem();
   final ArmSubsystem arm = new ArmSubsystem();
+  final WristSubsystem wrist = new WristSubsystem();
   private final SwerveSubsystem drivebase = new SwerveSubsystem(
     new File(
       Filesystem.getDeployDirectory(), 
@@ -31,9 +42,11 @@ public class RobotContainer {
     )
   );
 
-  // SHOVEL COMMANDS
-  Command dump = new InstantCommand(() -> shovel.setShovelAngle(ShovelConstants.DUMP_ANGLE));
-  Command intake = new InstantCommand(() -> shovel.setShovelAngle(ShovelConstants.INTAKE_ANGLE));
+  DoubleSupplier frontTX = new DoubleSupplier() {
+    public double getAsDouble() {
+      return LimelightHelpers.getTX("limelight-one");
+    };
+  };
 
   // ARM COMMANDS
   Command homeArm = new InstantCommand(() -> arm.setTargetAngle(ArmConstants.HOME_ANGLE));
@@ -51,7 +64,7 @@ public class RobotContainer {
   Command toggleClamp = new InstantCommand(() -> arm.toggleClamp());
 
   // VISION COMMANDS
-  Command lineupWithTag = new InstantCommand(drivebase::lineUpWithTag);
+  //Command lineupWithTag = new InstantCommand(drivebase::lineUpWithTag);
 
   // DRIVE COMMANDS
   Command driveFieldOrientedDirectAngle = drivebase.driveDirectAngle(
@@ -73,32 +86,41 @@ public class RobotContainer {
 
   public RobotContainer() {
     // REGISTER AUTO COMMANDS
-    NamedCommands.registerCommand("Intake", new InstantCommand(arm::intakeCoral));
-    NamedCommands.registerCommand("stopIntake", new InstantCommand(arm::stopIntakeMotors));
-    NamedCommands.registerCommand("Outtake", new InstantCommand(arm::outtakeCoral));
+    NamedCommands.registerCommand("Intake", new InstantCommand(wrist::intakeCoral));
+    NamedCommands.registerCommand("stopIntake", new InstantCommand(wrist::stopIntakeMotors));
+    NamedCommands.registerCommand("Outtake", new InstantCommand(wrist::outtakeCoral));
     NamedCommands.registerCommand("armToFloor", homeArm);
     NamedCommands.registerCommand("armToTrough", trough);
 
+    // CAMERA
+    
+
     configureBindings();
+    
   }
 
   private void configureBindings() {
     
+
+
+    
     // DRIVE BINDINGS
     //driverXbox.back().onTrue(new InstantCommand(drivebase::zeroGyro));  
-    driverXbox.back().onTrue(new InstantCommand(drivebase::zeroGyro));
-    // driverXbox.b().onTrue(drivebase.driveToPose(new Pose2d(2,2,new Rotation2d())));
+    // driverXbox.back().onTrue(new InstantCommand(drivebase::zeroGyro));
+    driverXbox.leftBumper().whileTrue(drivebase.driveToPose(new Pose2d(11.6,4,new Rotation2d(Units.degreesToRadians(1)))));
     driverXbox.b().onTrue(trough);
     driverXbox.y().onTrue(homeArm);
     driverXbox.leftBumper().onTrue(toggleClamp);
+    // driverXbox.leftBumper().whileTrue(drivebase.lineUpWithTag(frontTX));
     driverXbox.rightBumper().onTrue(intakeFeederAngle);
     //driverXbox.start().onTrue(carryAlgae);
-    driverXbox.start().onTrue(toggleArmBrake); 
+    driverXbox.start().onTrue(toggleArmBrake);
+     
 
-    driverXbox.a().onTrue(new InstantCommand(arm::intakeCoral));
+    driverXbox.a().onTrue(new InstantCommand(wrist::intakeCoral));
     // driverXbox.a().onFalse(new InstantCommand(arm::stopIntakeMotors));
     // driverXbox.x().onTrue(new InstantCommand(arm::outtakeCoral));
-    driverXbox.x().onTrue(new InstantCommand(arm::stopIntakeMotors));
+    driverXbox.x().onTrue(new InstantCommand(wrist::stopIntakeMotors));
   
 
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
@@ -106,7 +128,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return drivebase.getAutonomousCommand("Actual Test");
+    return drivebase.getAutonomousCommand("1 Coral");
   }
   public void setDriveMode()
   {

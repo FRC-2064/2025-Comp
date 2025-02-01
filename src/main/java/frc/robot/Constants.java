@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import swervelib.math.Matter;
@@ -20,13 +22,23 @@ public class Constants {
     }
 
     public class Limelight1Constants {
-        public static final String LIMELIGHT_NAME = "limelight1";
-        public static final double FORWARD_OFFSET = 0.0;
-        public static final double SIDE_OFFSET = 0.0;
-        public static final double HEIGHT_OFFSET = 0.0;
+        public static final String LIMELIGHT_NAME = "limelight-one";
+        public static final double FORWARD_OFFSET = Units.inchesToMeters(14.5);
+        public static final double SIDE_OFFSET = Units.inchesToMeters(-9.5);
+        public static final double HEIGHT_OFFSET = Units.inchesToMeters(8.0);
         public static final double ROLL_OFFSET = 0.0;
-        public static final double PITCH_OFFSET = 0.0;
+        public static final double PITCH_OFFSET = 14.15;
         public static final double YAW_OFFSET = 0.0;
+        public static final Pose3d POSE = new Pose3d(
+            Units.inchesToMeters(FORWARD_OFFSET),
+            Units.inchesToMeters(SIDE_OFFSET),
+            Units.inchesToMeters(HEIGHT_OFFSET),
+            new Rotation3d(
+                ROLL_OFFSET,
+                PITCH_OFFSET,
+                YAW_OFFSET
+            )
+            );
     }
 
     public class Limelight2Constants {
@@ -37,13 +49,16 @@ public class Constants {
         public static final double ROLL_OFFSET = 0.0;
         public static final double PITCH_OFFSET = 0.0;
         public static final double YAW_OFFSET = 0.0;
-    }
-
-    public class ShovelConstants {
-        public static final int shovelRotatorID = 25;
-        public static final double INTAKE_ANGLE = 15;
-        public static final double DUMP_ANGLE = 45;
-        public static final double CARRY_ANGLE = 120;
+        public static final Pose3d POSE = new Pose3d(
+            Units.inchesToMeters(FORWARD_OFFSET),
+            Units.inchesToMeters(SIDE_OFFSET),
+            Units.inchesToMeters(HEIGHT_OFFSET),
+            new Rotation3d(
+                ROLL_OFFSET,
+                PITCH_OFFSET,
+                YAW_OFFSET
+            )
+            );
     }
 
     public class ArmConstants {
@@ -55,14 +70,9 @@ public class Constants {
         public static final double TROUGH_ANGLE = 44;
         public static final double FEEDER_ANGLE = 72.0; //65
         public static final double LOW_ALGAE_REMOVAL_ANGLE = 55.0;
-        public static final double CLIMB_ANGLE = 70.0;
+        public static final double CLIMB_ANGLE = 68.0;
         public static final double HIGH_ALGAE_REMOVAL_ANGLE = 124.0;
         public static final double ALGEA_CARRY_ANGLE = 32.0;
-
-        //INTAKE
-        public static final int INTAKE_TOP_ID = 28;
-        public static final int INTAKE_BOTTOM_ID = 29;
-        public static final int INTAKE_LIMIT_ID = 1;
 
         //CLIMB
         public static final int CLIMB_ID = 21;
@@ -70,4 +80,18 @@ public class Constants {
         public static final double CLIMB_CLAMP_VAL = 0.32;
         public static final double HOME_CLAMP_VAL = 0.137;
     }
+
+    public class WristConstants {
+        //WRIST
+        public static final int WRIST_ID = 47;
+        public static final double WRIST_HOME_ANGLE = 10;
+        public static final double WRIST_INTAKE_ANGLE = 90;
+
+        //INTAKE
+        public static final int INTAKE_TOP_ID = 28;
+        public static final int INTAKE_BOTTOM_ID = 29;
+        public static final int INTAKE_LIMIT_ID = 1;
+
+
+    } 
 }
