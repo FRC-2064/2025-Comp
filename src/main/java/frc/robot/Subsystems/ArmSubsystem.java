@@ -5,12 +5,12 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.MAXMotionConfig.MAXMotionPositionMode;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkFlexConfig;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -107,7 +107,8 @@ public class ArmSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("arm target angle", armTarget * 360);
         SmartDashboard.putNumber("arm angle", (armLeader.getAbsoluteEncoder().getPosition() * 360));
         SmartDashboard.putBoolean("follower is follower", armFollower.isFollower());
-
+        SmartDashboard.putNumber("Intake current", intakeTop.getOutputCurrent());
+        updateGamePieceState();
 
     }
         
@@ -119,6 +120,8 @@ public class ArmSubsystem extends SubsystemBase {
     public void intakeCoral() {
         intakeTop.set(-0.5);
         intakeBottom.set(-0.5);
+        System.out.println("Inside intakeCoral function:"+intakeTop.getOutputCurrent());
+        // updateGamePieceState();
     }
 
     public void outtakeCoral() {
@@ -138,6 +141,24 @@ public class ArmSubsystem extends SubsystemBase {
         intakeTop.set(0);
         intakeBottom.set(0);
     }
+
+    private void updateGamePieceState() {
+    double currentOutput = intakeTop.getOutputCurrent();
+    System.out.println("Inside update game piece");
+    System.out.println(intakeTop.getOutputCurrent());
+    if (currentOutput > 5) {
+        System.out.println("Inside if condition");
+        if (!hasCoral) {
+            hasCoral = true;
+            SmartDashboard.putBoolean("Has Coral", hasCoral);
+            stopIntakeMotors();
+            System.out.println("stopped intake motors");
+        }
+    } else {
+        
+    }
+}
+
 
 
     public void toggleClamp(){
