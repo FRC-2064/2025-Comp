@@ -6,6 +6,7 @@ package frc.robot;
 
 import com.pathplanner.lib.commands.PathfindingCommand;
 
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -15,9 +16,17 @@ public class Robot extends TimedRobot {
 
   private final RobotContainer m_robotContainer;
 
+  
   public Robot() {
     m_robotContainer = new RobotContainer();
     PathfindingCommand.warmupCommand().schedule();
+
+    // AddressableLED m_led = new AddressableLED(9);
+    // AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(60);
+    // m_led.setLength(m_ledBuffer.getLength());
+  
+    // m_led.setData(m_ledBuffer);
+    // m_led.start();
 
   }
 

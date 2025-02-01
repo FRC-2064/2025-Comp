@@ -8,8 +8,6 @@ import java.io.File;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -40,11 +38,17 @@ public class RobotContainer {
   // ARM COMMANDS
   Command homeArm = new InstantCommand(() -> arm.setTargetAngle(ArmConstants.HOME_ANGLE));
   Command lowAlgae = new InstantCommand(() -> arm.setTargetAngle(ArmConstants.LOW_ALGAE_REMOVAL_ANGLE));
+  Command trough = new InstantCommand(() -> arm.setTargetAngle(ArmConstants.TROUGH_ANGLE));
+  Command highAlgae = new InstantCommand(() -> arm.setTargetAngle(ArmConstants.HIGH_ALGAE_REMOVAL_ANGLE));
+  Command carryAlgae = new InstantCommand(() -> arm.setTargetAngle(ArmConstants.ALGEA_CARRY_ANGLE));
+  Command intakeFeederAngle = new InstantCommand(() -> arm.setTargetAngle(ArmConstants.FEEDER_ANGLE));
+
+
+  Command toggleArmBrake = new InstantCommand(() -> arm.armToggleCoast());
   
 
   //CLIMB CLAMP COMMANDS
-  Command hookClamp = new InstantCommand(() -> arm.setClimbClampAngle(ArmConstants.CLIMB_CLAMP_ANGLE));
-  Command unhookClamp = new InstantCommand(() -> arm.setClimbClampAngle(ArmConstants.HOME_CLAMP_ANGLE));
+  Command toggleClamp = new InstantCommand(() -> arm.toggleClamp());
 
   // VISION COMMANDS
   Command lineupWithTag = new InstantCommand(drivebase::lineUpWithTag);
@@ -69,27 +73,27 @@ public class RobotContainer {
 
   public RobotContainer() {
     // REGISTER AUTO COMMANDS
-    NamedCommands.registerCommand("Dump", dump);
-    NamedCommands.registerCommand("Intake", intake);
+    NamedCommands.registerCommand("Intake", new InstantCommand(arm::intakeCoral));
+    NamedCommands.registerCommand("stopIntake", new InstantCommand(arm::stopIntakeMotors));
+    NamedCommands.registerCommand("Outtake", new InstantCommand(arm::outtakeCoral));
+    NamedCommands.registerCommand("armToFloor", homeArm);
+    NamedCommands.registerCommand("armToTrough", trough);
+
     configureBindings();
   }
 
   private void configureBindings() {
-    // SHOVEL BINDINGS 
-    // driverXbox.a().onTrue(dump);
-    // driverXbox.x().onTrue(intake);
-
-    // VISION BINDINGS
-    // driverXbox.y().onTrue(lineupWithTag);
     
     // DRIVE BINDINGS
-    driverXbox.back().onTrue(new InstantCommand(drivebase::zeroGyro));  
-    driverXbox.start().onTrue(new InstantCommand(drivebase::setPredefinedOdom));
+    //driverXbox.back().onTrue(new InstantCommand(drivebase::zeroGyro));  
+    driverXbox.back().onTrue(new InstantCommand(drivebase::zeroGyro));
     // driverXbox.b().onTrue(drivebase.driveToPose(new Pose2d(2,2,new Rotation2d())));
-    driverXbox.b().onTrue(lowAlgae);
+    driverXbox.b().onTrue(trough);
     driverXbox.y().onTrue(homeArm);
-    driverXbox.rightTrigger().onTrue(hookClamp);
-    driverXbox.leftBumper().onTrue(unhookClamp);
+    driverXbox.leftBumper().onTrue(toggleClamp);
+    driverXbox.rightBumper().onTrue(intakeFeederAngle);
+    //driverXbox.start().onTrue(carryAlgae);
+    driverXbox.start().onTrue(toggleArmBrake); 
 
     driverXbox.a().onTrue(new InstantCommand(arm::intakeCoral));
     driverXbox.a().onFalse(new InstantCommand(arm::stopIntakeMotors));
@@ -102,7 +106,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return drivebase.getAutonomousCommand("Straight");
+    return drivebase.getAutonomousCommand("Actual Test");
   }
   public void setDriveMode()
   {

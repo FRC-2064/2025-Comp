@@ -38,6 +38,8 @@ public class ArmSubsystem extends SubsystemBase {
     private boolean newTarget = false;
     public boolean hasCoral = false;
     public boolean hasAlgae = false;
+
+    private CLAMP_STATE clampState = CLAMP_STATE.UN_CLAMPED;
     
 
     public ArmSubsystem() {
@@ -80,16 +82,17 @@ public class ArmSubsystem extends SubsystemBase {
 
         climbClampConfig = new SparkFlexConfig();
         climbClampConfig
+        .idleMode(IdleMode.kBrake)
         .smartCurrentLimit(20)
         .closedLoop
-        .pid(1, 0, 0)
+        .pid(5, 0, 0)
         // .outputRange(0, 0.21)
         .positionWrappingEnabled(true)
         .positionWrappingInputRange(0, 1)
         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
 
         //CHECK IF NEEDS TO BE INVERTED OR NOT
-        climbClampConfig.absoluteEncoder.inverted(true);
+        climbClampConfig.absoluteEncoder.inverted(false);
 
         climbClamp.configure(climbClampConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -101,8 +104,8 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("arm target angle", armTarget);
-        SmartDashboard.putNumber("arm angle", (armLeader.getAbsoluteEncoder().getPosition()));
+        SmartDashboard.putNumber("arm target angle", armTarget * 360);
+        SmartDashboard.putNumber("arm angle", (armLeader.getAbsoluteEncoder().getPosition() * 360));
         SmartDashboard.putBoolean("follower is follower", armFollower.isFollower());
 
 
@@ -119,8 +122,8 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void outtakeCoral() {
-        intakeTop.set(0.5);
-        intakeBottom.set(0.5);
+        intakeTop.set(0.20);
+        intakeBottom.set(0.20);
     }
 
     public void removeAlgaeLow() {
@@ -137,12 +140,44 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
 
-
-    public void setClimbClampAngle(double angle){
-        climbClampController.setReference(angle/360, ControlType.kPosition);
+    public void toggleClamp(){
+        switch (clampState) {
+            case CLAMPED:
+            climbClampController.setReference(ArmConstants.HOME_CLAMP_VAL, ControlType.kPosition);
+            clampState = CLAMP_STATE.UN_CLAMPED;
+                break;
+        
+            case UN_CLAMPED:
+            climbClampController.setReference(ArmConstants.CLIMB_CLAMP_VAL, ControlType.kPosition);
+            clampState = CLAMP_STATE.CLAMPED;
+                break;
+        }
     }
 
+    public void armToggleCoast(){ 
+        switch (armLeader.configAccessor.getIdleMode()) {
+            case kBrake:
+            armLeaderConfig.idleMode(IdleMode.kCoast);
+            armFollowerConfig.idleMode(IdleMode.kCoast);
+                
+            armLeader.configure(armLeaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+            armFollower.configure(armFollowerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+                break;
+            case kCoast:
+            armLeaderConfig.idleMode(IdleMode.kBrake);
+            armFollowerConfig.idleMode(IdleMode.kBrake);
 
+            armLeader.configure(armLeaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+            armFollower.configure(armFollowerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+            break;
+        }
+
+    }
+
+    private enum CLAMP_STATE {
+        CLAMPED,
+        UN_CLAMPED
+    }
 
 
 }

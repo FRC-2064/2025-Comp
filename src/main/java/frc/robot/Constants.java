@@ -52,11 +52,12 @@ public class Constants {
         public static final int ARM_FOLLOWER_ID = 27;
         
         public static final double HOME_ANGLE = 8.5;
-        public static final double TROUGH_ANGLE = 40.0;
-        public static final double FEEDER_ANGLE = 40.0;
+        public static final double TROUGH_ANGLE = 44;
+        public static final double FEEDER_ANGLE = 72.0; //65
         public static final double LOW_ALGAE_REMOVAL_ANGLE = 55.0;
-        public static final double HIGH_ALGAE_REMOVAL_ANGLE = 40.0;
-        public static final double ALGEA_CARRY_ANGLE = 40.0;
+        public static final double CLIMB_ANGLE = 70.0;
+        public static final double HIGH_ALGAE_REMOVAL_ANGLE = 124.0;
+        public static final double ALGEA_CARRY_ANGLE = 32.0;
 
         //INTAKE
         public static final int INTAKE_TOP_ID = 28;
@@ -66,7 +67,7 @@ public class Constants {
         //CLIMB
         public static final int CLIMB_ID = 21;
 
-        public static final double CLIMB_CLAMP_ANGLE = 72.0;
-        public static final double HOME_CLAMP_ANGLE = 5.0;
+        public static final double CLIMB_CLAMP_VAL = 0.32;
+        public static final double HOME_CLAMP_VAL = 0.137;
     }
 }
