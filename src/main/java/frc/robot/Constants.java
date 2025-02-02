@@ -1,7 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import swervelib.math.Matter;
@@ -14,10 +12,10 @@ public class Constants {
     public static final double MAX_SPEED = Units.feetToMeters(14.5);
 
     public class OperatorConstants {
-        public static final double DEADBAND        = 0.1;
+        public static final double DEADBAND = 0.1;
         public static final double LEFT_Y_DEADBAND = 0.1;
         public static final double RIGHT_X_DEADBAND = 0.1;
-        public static final double TURN_CONSTANT    = 6;
+        public static final double TURN_CONSTANT = 6;
         
     }
 
@@ -29,36 +27,16 @@ public class Constants {
         public static final double ROLL_OFFSET = 0.0;
         public static final double PITCH_OFFSET = 14.15;
         public static final double YAW_OFFSET = 0.0;
-        public static final Pose3d POSE = new Pose3d(
-            Units.inchesToMeters(FORWARD_OFFSET),
-            Units.inchesToMeters(SIDE_OFFSET),
-            Units.inchesToMeters(HEIGHT_OFFSET),
-            new Rotation3d(
-                ROLL_OFFSET,
-                PITCH_OFFSET,
-                YAW_OFFSET
-            )
-            );
     }
 
     public class Limelight2Constants {
-        public static final String LIMELIGHT_NAME = "limelight2";
-        public static final double FORWARD_OFFSET = 0.0;
-        public static final double SIDE_OFFSET = 0.0;
-        public static final double HEIGHT_OFFSET = 0.0;
+        public static final String LIMELIGHT_NAME = "limelight-two";
+        public static final double FORWARD_OFFSET = Units.inchesToMeters(0.0);
+        public static final double SIDE_OFFSET = Units.inchesToMeters(0.0);
+        public static final double HEIGHT_OFFSET = Units.inchesToMeters(0.0);
         public static final double ROLL_OFFSET = 0.0;
         public static final double PITCH_OFFSET = 0.0;
         public static final double YAW_OFFSET = 0.0;
-        public static final Pose3d POSE = new Pose3d(
-            Units.inchesToMeters(FORWARD_OFFSET),
-            Units.inchesToMeters(SIDE_OFFSET),
-            Units.inchesToMeters(HEIGHT_OFFSET),
-            new Rotation3d(
-                ROLL_OFFSET,
-                PITCH_OFFSET,
-                YAW_OFFSET
-            )
-            );
     }
 
     public class ArmConstants {

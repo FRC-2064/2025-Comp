@@ -34,110 +34,95 @@ public class ArmSubsystem extends SubsystemBase {
     public boolean hasAlgae = false;
 
     private CLAMP_STATE clampState = CLAMP_STATE.UN_CLAMPED;
-    
 
     public ArmSubsystem() {
-        //ARM
+        // ARM
         armLeader = new SparkFlex(ArmConstants.ARM_LEADER_ID, MotorType.kBrushless);
         armFollower = new SparkFlex(ArmConstants.ARM_FOLLOWER_ID, MotorType.kBrushless);
-        
+
         armLeaderConfig = new SparkFlexConfig();
         armFollowerConfig = new SparkFlexConfig();
-        
+
         armLeaderConfig
-        .smartCurrentLimit(40)
-        .inverted(true)
-        .idleMode(IdleMode.kBrake)
-        .closedLoop
-        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-        .pid(10, 0, 0);
-        
+                .smartCurrentLimit(40)
+                .inverted(true)
+                .idleMode(IdleMode.kBrake).closedLoop
+                .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+                .pid(10, 0, 0);
+
         armLeaderConfig
-        .idleMode(IdleMode.kBrake)
-        .closedLoop.maxMotion
-        .maxVelocity(20)
-        .maxAcceleration(20)
-        .allowedClosedLoopError(0.01)
-        .positionMode(MAXMotionPositionMode.kMAXMotionTrapezoidal);
-        
+                .idleMode(IdleMode.kBrake).closedLoop.maxMotion
+                .maxVelocity(20)
+                .maxAcceleration(20)
+                .allowedClosedLoopError(0.01)
+                .positionMode(MAXMotionPositionMode.kMAXMotionTrapezoidal);
+
         armFollowerConfig.follow(ArmConstants.ARM_LEADER_ID, true);
-        
+
         armLeader.configure(armLeaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         armFollower.configure(armFollowerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        
+
         armController = armLeader.getClosedLoopController();
-        
-        
-        //CLIMB
+
+        // CLIMB
         climbClamp = new SparkMax(ArmConstants.CLIMB_ID, MotorType.kBrushless);
 
         climbClampConfig = new SparkFlexConfig();
         climbClampConfig
-        .idleMode(IdleMode.kBrake)
-        .smartCurrentLimit(20)
-        .closedLoop
-        .pid(5, 0, 0)
-        // .outputRange(0, 0.21)
-        .positionWrappingEnabled(true)
-        .positionWrappingInputRange(0, 1)
-        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
+                .idleMode(IdleMode.kBrake)
+                .smartCurrentLimit(20).closedLoop
+                .pid(5, 0, 0)
+                .positionWrappingEnabled(true)
+                .positionWrappingInputRange(0, 1)
+                .feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
 
-        //CHECK IF NEEDS TO BE INVERTED OR NOT
         climbClampConfig.absoluteEncoder.inverted(false);
-
         climbClamp.configure(climbClampConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
         climbClampController = climbClamp.getClosedLoopController();
-
-
-
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("arm target angle", armTarget * 360);
         SmartDashboard.putNumber("arm angle", (armLeader.getAbsoluteEncoder().getPosition() * 360));
-        SmartDashboard.putBoolean("follower is follower", armFollower.isFollower());
-
     }
-        
+
     public void setTargetAngle(double angle) {
-        armTarget = angle/360;
+        armTarget = angle / 360;
         armController.setReference(armTarget, ControlType.kPosition);
     }
 
-
-
-    public void toggleClamp(){
+    public void toggleClamp() {
         switch (clampState) {
             case CLAMPED:
-            climbClampController.setReference(ArmConstants.HOME_CLAMP_VAL, ControlType.kPosition);
-            clampState = CLAMP_STATE.UN_CLAMPED;
+                climbClampController.setReference(ArmConstants.HOME_CLAMP_VAL, ControlType.kPosition);
+                clampState = CLAMP_STATE.UN_CLAMPED;
                 break;
-        
+
             case UN_CLAMPED:
-            climbClampController.setReference(ArmConstants.CLIMB_CLAMP_VAL, ControlType.kPosition);
-            clampState = CLAMP_STATE.CLAMPED;
+                climbClampController.setReference(ArmConstants.CLIMB_CLAMP_VAL, ControlType.kPosition);
+                clampState = CLAMP_STATE.CLAMPED;
                 break;
         }
     }
 
-    public void armToggleCoast(){ 
+    public void armToggleCoast() {
         switch (armLeader.configAccessor.getIdleMode()) {
             case kBrake:
-            armLeaderConfig.idleMode(IdleMode.kCoast);
-            armFollowerConfig.idleMode(IdleMode.kCoast);
-                
-            armLeader.configure(armLeaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-            armFollower.configure(armFollowerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+                armLeaderConfig.idleMode(IdleMode.kCoast);
+                armFollowerConfig.idleMode(IdleMode.kCoast);
+
+                armLeader.configure(armLeaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+                armFollower.configure(armFollowerConfig, ResetMode.kResetSafeParameters,
+                        PersistMode.kPersistParameters);
                 break;
             case kCoast:
-            armLeaderConfig.idleMode(IdleMode.kBrake);
-            armFollowerConfig.idleMode(IdleMode.kBrake);
+                armLeaderConfig.idleMode(IdleMode.kBrake);
+                armFollowerConfig.idleMode(IdleMode.kBrake);
 
-            armLeader.configure(armLeaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-            armFollower.configure(armFollowerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-            break;
+                armLeader.configure(armLeaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+                armFollower.configure(armFollowerConfig, ResetMode.kResetSafeParameters,
+                        PersistMode.kPersistParameters);
+                break;
         }
 
     }
@@ -146,6 +131,5 @@ public class ArmSubsystem extends SubsystemBase {
         CLAMPED,
         UN_CLAMPED
     }
-
 
 }

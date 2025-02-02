@@ -22,14 +22,6 @@ public class Robot extends TimedRobot {
   public Robot() {
     m_robotContainer = new RobotContainer();
     PathfindingCommand.warmupCommand().schedule();
-    // Cameraserver.startAutomaticCapture();
-
-    // AddressableLED m_led = new AddressableLED(9);
-    // AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(60);
-    // m_led.setLength(m_ledBuffer.getLength());
-  
-    // m_led.setData(m_ledBuffer);
-    // m_led.start();
     CameraServer.startAutomaticCapture();
 
   }
