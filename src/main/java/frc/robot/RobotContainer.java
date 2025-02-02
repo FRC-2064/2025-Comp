@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.WristConstants;
 import frc.robot.Subsystems.ArmSubsystem;
 import frc.robot.Subsystems.SwerveSubsystem;
 import frc.robot.Subsystems.WristSubsystem;
@@ -45,7 +46,7 @@ public class RobotContainer {
   Command toggleArmBrake = new InstantCommand(() -> arm.armToggleCoast());
 
   // CLIMB CLAMP COMMANDS
-  Command toggleClamp = new InstantCommand(() -> arm.toggleClamp());
+  //Command toggleClamp = new InstantCommand(() -> arm.toggleClamp());
 
   // VISION COMMANDS
   DoubleSupplier frontTX = new DoubleSupplier() {
@@ -55,10 +56,10 @@ public class RobotContainer {
   };
 
   // WRIST COMMANDS
-  Command intake = new StartEndCommand(
-      () -> wrist.intakeCoral(),
-      () -> wrist.stopIntakeMotors(),
-      wrist);
+  // Command intake = new StartEndCommand(
+  //     () -> wrist.intakeCoral(),
+  //     () -> wrist.stopIntakeMotors(),
+  //     wrist);
 
   // DRIVE COMMANDS
   Command driveFieldOrientedDirectAngle = drivebase.driveDirectAngle(
@@ -79,9 +80,9 @@ public class RobotContainer {
 
   public RobotContainer() {
     // REGISTER AUTO COMMANDS
-    NamedCommands.registerCommand("Intake", new InstantCommand(wrist::intakeCoral));
-    NamedCommands.registerCommand("stopIntake", new InstantCommand(wrist::stopIntakeMotors));
-    NamedCommands.registerCommand("Outtake", new InstantCommand(wrist::outtakeCoral));
+    // NamedCommands.registerCommand("Intake", new InstantCommand(wrist::intakeCoral));
+    // NamedCommands.registerCommand("stopIntake", new InstantCommand(wrist::stopIntakeMotors));
+    // NamedCommands.registerCommand("Outtake", new InstantCommand(wrist::outtakeCoral));
     NamedCommands.registerCommand("armToFloor", homeArm);
     NamedCommands.registerCommand("armToTrough", trough);
 
@@ -92,15 +93,17 @@ public class RobotContainer {
   private void configureBindings() {
 
     // ARM BINDINGS
-    driverXbox.b().onTrue(trough);
+    //driverXbox.b().onTrue(trough);
     driverXbox.y().onTrue(homeArm);
     driverXbox.rightBumper().onTrue(intakeFeederAngle);
-    driverXbox.leftBumper().onTrue(toggleClamp);
+    //driverXbox.leftBumper().onTrue(toggleClamp);
 
     driverXbox.start().onTrue(toggleArmBrake);
 
     // WRIST BINDINGS
-    driverXbox.a().whileTrue(intake);
+    //driverXbox.a().whileTrue(intake);
+    driverXbox.a().onTrue(new InstantCommand(() -> wrist.setWristAngle(WristConstants.WRIST_HOME_ANGLE)));
+    driverXbox.b().onTrue(new InstantCommand(() -> wrist.setWristAngle(220)));
 
     // DRIVE BINDINGS
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);

@@ -65,20 +65,20 @@ public class ArmSubsystem extends SubsystemBase {
         armController = armLeader.getClosedLoopController();
 
         // CLIMB
-        climbClamp = new SparkMax(ArmConstants.CLIMB_ID, MotorType.kBrushless);
+        // climbClamp = new SparkMax(ArmConstants.CLIMB_ID, MotorType.kBrushless);
 
-        climbClampConfig = new SparkFlexConfig();
-        climbClampConfig
-                .idleMode(IdleMode.kBrake)
-                .smartCurrentLimit(20).closedLoop
-                .pid(5, 0, 0)
-                .positionWrappingEnabled(true)
-                .positionWrappingInputRange(0, 1)
-                .feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
+        // climbClampConfig = new SparkFlexConfig();
+        // climbClampConfig
+        //         .idleMode(IdleMode.kBrake)
+        //         .smartCurrentLimit(20).closedLoop
+        //         .pid(5, 0, 0)
+        //         .positionWrappingEnabled(true)
+        //         .positionWrappingInputRange(0, 1)
+        //         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
 
-        climbClampConfig.absoluteEncoder.inverted(false);
-        climbClamp.configure(climbClampConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        climbClampController = climbClamp.getClosedLoopController();
+        // climbClampConfig.absoluteEncoder.inverted(false);
+        // climbClamp.configure(climbClampConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        //climbClampController = climbClamp.getClosedLoopController();
     }
 
     @Override
@@ -91,19 +91,19 @@ public class ArmSubsystem extends SubsystemBase {
         armController.setReference(armTarget, ControlType.kPosition);
     }
 
-    public void toggleClamp() {
-        switch (clampState) {
-            case CLAMPED:
-                climbClampController.setReference(ArmConstants.HOME_CLAMP_VAL, ControlType.kPosition);
-                clampState = CLAMP_STATE.UN_CLAMPED;
-                break;
+    // public void toggleClamp() {
+    //     switch (clampState) {
+    //         case CLAMPED:
+    //             climbClampController.setReference(ArmConstants.HOME_CLAMP_VAL, ControlType.kPosition);
+    //             clampState = CLAMP_STATE.UN_CLAMPED;
+    //             break;
 
-            case UN_CLAMPED:
-                climbClampController.setReference(ArmConstants.CLIMB_CLAMP_VAL, ControlType.kPosition);
-                clampState = CLAMP_STATE.CLAMPED;
-                break;
-        }
-    }
+    //         case UN_CLAMPED:
+    //             climbClampController.setReference(ArmConstants.CLIMB_CLAMP_VAL, ControlType.kPosition);
+    //             clampState = CLAMP_STATE.CLAMPED;
+    //             break;
+    //     }
+    // }
 
     public void armToggleCoast() {
         switch (armLeader.configAccessor.getIdleMode()) {

@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.WristConstants;
 
 public class WristSubsystem extends SubsystemBase {
-    // SparkMax wristMotor;
+    SparkMax wristMotor;
     SparkMax intakeTop;
     SparkMax intakeBottom;
 
@@ -23,22 +23,26 @@ public class WristSubsystem extends SubsystemBase {
     private SparkMaxConfig wristConfig;
 
     public WristSubsystem() {
-        // wristMotor = new SparkMax(WristConstants.WRIST_ID, MotorType.kBrushless);
-        intakeTop = new SparkMax(WristConstants.INTAKE_TOP_ID, MotorType.kBrushless);
-        intakeBottom = new SparkMax(WristConstants.INTAKE_BOTTOM_ID, MotorType.kBrushless);
+        wristMotor = new SparkMax(WristConstants.WRIST_ID, MotorType.kBrushless);
+        // intakeTop = new SparkMax(WristConstants.INTAKE_TOP_ID, MotorType.kBrushless);
+        // intakeBottom = new SparkMax(WristConstants.INTAKE_BOTTOM_ID, MotorType.kBrushless);
 
         wristConfig = new SparkMaxConfig();
 
         wristConfig
-                .smartCurrentLimit(20)
+                .smartCurrentLimit(40)
+                .inverted(false)
                 .idleMode(IdleMode.kBrake).closedLoop
                 .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+                .positionWrappingEnabled(false)
                 .pid(1, 0, 0);
+        wristConfig.absoluteEncoder
+        .inverted(true);
 
-        // wristMotor.configure(wristConfig, ResetMode.kResetSafeParameters,
-        // PersistMode.kPersistParameters);
+        wristMotor.configure(wristConfig, ResetMode.kResetSafeParameters,
+        PersistMode.kPersistParameters);
 
-        // wristController = wristMotor.getClosedLoopController();
+        wristController = wristMotor.getClosedLoopController();
 
     }
 
@@ -51,27 +55,27 @@ public class WristSubsystem extends SubsystemBase {
         wristController.setReference(angle / 360, ControlType.kPosition);
     }
 
-    public void intakeCoral() {
-        intakeTop.set(-0.5);
-        intakeBottom.set(-0.5);
-    }
+    // public void intakeCoral() {
+    //     intakeTop.set(-0.5);
+    //     intakeBottom.set(-0.5);
+    // }
 
-    public void outtakeCoral() {
-        intakeTop.set(0.20);
-        intakeBottom.set(0.20);
-    }
+    // public void outtakeCoral() {
+    //     intakeTop.set(0.20);
+    //     intakeBottom.set(0.20);
+    // }
 
-    public void removeAlgaeLow() {
-        intakeTop.set(-1);
-    }
+    // public void removeAlgaeLow() {
+    //     intakeTop.set(-1);
+    // }
 
-    public void removeAlgaeHigh() {
-        intakeTop.set(1);
-    }
+    // public void removeAlgaeHigh() {
+    //     intakeTop.set(1);
+    // }
 
-    public void stopIntakeMotors() {
-        intakeTop.set(0);
-        intakeBottom.set(0);
-    }
+    // public void stopIntakeMotors() {
+    //     intakeTop.set(0);
+    //     intakeBottom.set(0);
+    // }
 
 }
