@@ -46,7 +46,7 @@ public class Constants {
         
         public static final double HOME_ANGLE = 8.5;
         public static final double TROUGH_ANGLE = 44;
-        public static final double FEEDER_ANGLE = 72.0; //65
+        public static final double FEEDER_ANGLE = 49; //72
         public static final double LOW_ALGAE_REMOVAL_ANGLE = 55.0;
         public static final double CLIMB_ANGLE = 68.0;
         public static final double HIGH_ALGAE_REMOVAL_ANGLE = 124.0;
@@ -63,7 +63,8 @@ public class Constants {
         //WRIST
         public static final int WRIST_ID = 47;
         public static final double WRIST_HOME_ANGLE = 10;
-        public static final double WRIST_INTAKE_ANGLE = 90;
+        public static final double WRIST_INTAKE_ANGLE = 125;
+        public static final double WRIST_L2_ANGLE = 80;
 
         //INTAKE
         public static final int INTAKE_TOP_ID = 28;

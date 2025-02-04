@@ -42,6 +42,7 @@ public class RobotContainer {
   Command highAlgae = new InstantCommand(() -> arm.setTargetAngle(ArmConstants.HIGH_ALGAE_REMOVAL_ANGLE));
   Command carryAlgae = new InstantCommand(() -> arm.setTargetAngle(ArmConstants.ALGEA_CARRY_ANGLE));
   Command intakeFeederAngle = new InstantCommand(() -> arm.setTargetAngle(ArmConstants.FEEDER_ANGLE));
+  Command arm_trough_angle = new InstantCommand(() -> arm.setTargetAngle(ArmConstants.TROUGH_ANGLE));
 
   Command toggleArmBrake = new InstantCommand(() -> arm.armToggleCoast());
 
@@ -55,11 +56,16 @@ public class RobotContainer {
     };
   };
 
-  // WRIST COMMANDS
-  // Command intake = new StartEndCommand(
-  //     () -> wrist.intakeCoral(),
-  //     () -> wrist.stopIntakeMotors(),
-  //     wrist);
+  //WRIST COMMANDS
+  Command intake = new StartEndCommand(
+      () -> wrist.intakeCoral(),
+      () -> wrist.stopIntakeMotors(),
+      wrist);
+  Command outtake = new StartEndCommand(
+      () -> wrist.outtakeCoral(),
+      () -> wrist.stopIntakeMotors(),
+      wrist);
+    
 
   // DRIVE COMMANDS
   Command driveFieldOrientedDirectAngle = drivebase.driveDirectAngle(
@@ -95,15 +101,19 @@ public class RobotContainer {
     // ARM BINDINGS
     //driverXbox.b().onTrue(trough);
     driverXbox.y().onTrue(homeArm);
-    driverXbox.rightBumper().onTrue(intakeFeederAngle);
+    driverXbox.leftTrigger().onTrue(intakeFeederAngle);
+    driverXbox.a().onTrue(arm_trough_angle);
+
     //driverXbox.leftBumper().onTrue(toggleClamp);
 
     driverXbox.start().onTrue(toggleArmBrake);
 
     // WRIST BINDINGS
-    //driverXbox.a().whileTrue(intake);
-    driverXbox.a().onTrue(new InstantCommand(() -> wrist.setWristAngle(WristConstants.WRIST_HOME_ANGLE)));
-    driverXbox.b().onTrue(new InstantCommand(() -> wrist.setWristAngle(220)));
+    driverXbox.rightBumper().whileTrue(intake);
+    driverXbox.x().whileTrue(outtake); // Matt and Lucas coded this :)
+    // driverXbox.a().onTrue(new InstantCommand(() -> wrist.setWristAngle(WristConstants.WRIST_HOME_ANGLE)));
+    driverXbox.b().onTrue(new InstantCommand(() -> wrist.setWristAngle(WristConstants.WRIST_INTAKE_ANGLE)));
+    driverXbox.rightTrigger().onTrue(new InstantCommand(() -> wrist.setWristAngle(WristConstants.WRIST_L2_ANGLE)));
 
     // DRIVE BINDINGS
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);

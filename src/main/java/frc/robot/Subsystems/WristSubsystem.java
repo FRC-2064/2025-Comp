@@ -24,8 +24,8 @@ public class WristSubsystem extends SubsystemBase {
 
     public WristSubsystem() {
         wristMotor = new SparkMax(WristConstants.WRIST_ID, MotorType.kBrushless);
-        // intakeTop = new SparkMax(WristConstants.INTAKE_TOP_ID, MotorType.kBrushless);
-        // intakeBottom = new SparkMax(WristConstants.INTAKE_BOTTOM_ID, MotorType.kBrushless);
+        intakeTop = new SparkMax(WristConstants.INTAKE_TOP_ID, MotorType.kBrushless);
+        intakeBottom = new SparkMax(WristConstants.INTAKE_BOTTOM_ID, MotorType.kBrushless);
 
         wristConfig = new SparkMaxConfig();
 
@@ -55,27 +55,27 @@ public class WristSubsystem extends SubsystemBase {
         wristController.setReference(angle / 360, ControlType.kPosition);
     }
 
-    // public void intakeCoral() {
-    //     intakeTop.set(-0.5);
-    //     intakeBottom.set(-0.5);
-    // }
+    public void intakeCoral() {
+         intakeTop.set(-0.5);
+         intakeBottom.set(-0.5);
+    }
 
-    // public void outtakeCoral() {
-    //     intakeTop.set(0.20);
-    //     intakeBottom.set(0.20);
-    // }
+    public void outtakeCoral() {
+        intakeTop.set(0.40);
+        intakeBottom.set(0.40);
+    }
 
-    // public void removeAlgaeLow() {
-    //     intakeTop.set(-1);
-    // }
+    public void removeAlgaeLow() {
+        intakeTop.set(-1);
+    }
 
-    // public void removeAlgaeHigh() {
-    //     intakeTop.set(1);
-    // }
+    public void removeAlgaeHigh() {
+        intakeTop.set(1);
+    }
 
-    // public void stopIntakeMotors() {
-    //     intakeTop.set(0);
-    //     intakeBottom.set(0);
-    // }
+    public void stopIntakeMotors() {
+        intakeTop.set(0);
+        intakeBottom.set(0);
+    }
 
 }
