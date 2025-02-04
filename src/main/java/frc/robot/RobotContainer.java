@@ -36,15 +36,56 @@ public class RobotContainer {
           "swerve"));
 
   // ARM COMMANDS
-  Command homeArm = new InstantCommand(() -> arm.setTargetAngle(ArmConstants.HOME_ANGLE));
-  Command lowAlgae = new InstantCommand(() -> arm.setTargetAngle(ArmConstants.LOW_ALGAE_REMOVAL_ANGLE));
-  Command trough = new InstantCommand(() -> arm.setTargetAngle(ArmConstants.TROUGH_ANGLE));
-  Command highAlgae = new InstantCommand(() -> arm.setTargetAngle(ArmConstants.HIGH_ALGAE_REMOVAL_ANGLE));
-  Command carryAlgae = new InstantCommand(() -> arm.setTargetAngle(ArmConstants.ALGEA_CARRY_ANGLE));
-  Command intakeFeederAngle = new InstantCommand(() -> arm.setTargetAngle(ArmConstants.FEEDER_ANGLE));
-  Command arm_trough_angle = new InstantCommand(() -> arm.setTargetAngle(ArmConstants.TROUGH_ANGLE));
+  Command homeArm = new InstantCommand(() -> 
+  {
+    arm.setTargetAngle(ArmConstants.ARM_HOME_ANGLE);
+    wrist.setWristAngle(WristConstants.WRIST_HOME_ANGLE);
+  });
+  Command troughFront = new InstantCommand(() -> 
+  {
+    arm.setTargetAngle(ArmConstants.ARM_TROUGH_FRONT_ANGLE);
+    wrist.setWristAngle(WristConstants.WRIST_TROUGH_FRONT_ANGLE);
+  });
+  Command troughBack = new InstantCommand(() -> 
+  {
+    arm.setTargetAngle(ArmConstants.ARM_TROUGH_BACK_ANGLE);
+    wrist.setWristAngle(WristConstants.WRIST_TROUGH_BACK_ANGLE);
+  });
+  Command level2Front = new InstantCommand(() -> 
+  {
+    arm.setTargetAngle(ArmConstants.L2_FRONT_ANGLE);
+    wrist.setWristAngle(WristConstants.WRIST_L2_FRONT_ANGLE);
+  });
+  Command level2Back = new InstantCommand(() -> 
+  {
+    arm.setTargetAngle(ArmConstants.L2_BACK_ANGLE);
+    wrist.setWristAngle(WristConstants.WRIST_L2_BACK_ANGLE);
+  });
 
-  Command toggleArmBrake = new InstantCommand(() -> arm.armToggleCoast());
+  Command level3Back = new InstantCommand(() ->
+  {
+    arm.setTargetAngle(ArmConstants.L3_BACK_ANGLE);
+    wrist.setWristAngle(WristConstants.WRIST_L3_BACK_ANGLE);
+  });
+
+  Command intakeBack = new InstantCommand(() ->
+  {
+    arm.setTargetAngle(ArmConstants.ARM_BACK_INTAKE_ANGLE);
+    wrist.setWristAngle(WristConstants.WRIST_BACK_INTAKE_ANGLE);
+  });
+
+
+  Command highAlgae = new InstantCommand(() -> arm.setTargetAngle(ArmConstants.HIGH_ALGAE_REMOVAL_ANGLE));
+  Command lowAlgae = new InstantCommand(() -> arm.setTargetAngle(ArmConstants.LOW_ALGAE_REMOVAL_ANGLE));
+  
+  Command toggleArmBrake = new InstantCommand(() -> 
+  {
+  arm.armToggleCoast();
+  wrist.wristToggleCoast();
+  
+});
+
+
 
   // CLIMB CLAMP COMMANDS
   //Command toggleClamp = new InstantCommand(() -> arm.toggleClamp());
@@ -90,7 +131,6 @@ public class RobotContainer {
     // NamedCommands.registerCommand("stopIntake", new InstantCommand(wrist::stopIntakeMotors));
     // NamedCommands.registerCommand("Outtake", new InstantCommand(wrist::outtakeCoral));
     NamedCommands.registerCommand("armToFloor", homeArm);
-    NamedCommands.registerCommand("armToTrough", trough);
 
     configureBindings();
 
@@ -99,27 +139,24 @@ public class RobotContainer {
   private void configureBindings() {
 
     // ARM BINDINGS
-    //driverXbox.b().onTrue(trough);
-    driverXbox.y().onTrue(homeArm);
-    driverXbox.leftTrigger().onTrue(intakeFeederAngle);
-    driverXbox.a().onTrue(arm_trough_angle);
-
-    //driverXbox.leftBumper().onTrue(toggleClamp);
+    driverXbox.y().onTrue(level3Back);
+    driverXbox.x().onTrue(intakeBack);
+    driverXbox.leftTrigger().onTrue(troughFront);
+    driverXbox.rightTrigger().onTrue(troughBack);
+    driverXbox.leftBumper().onTrue(level2Front);
+    driverXbox.rightBumper().onTrue(level2Back);
 
     driverXbox.start().onTrue(toggleArmBrake);
 
     // WRIST BINDINGS
-    driverXbox.rightBumper().whileTrue(intake);
-    driverXbox.x().whileTrue(outtake); // Matt and Lucas coded this :)
-    // driverXbox.a().onTrue(new InstantCommand(() -> wrist.setWristAngle(WristConstants.WRIST_HOME_ANGLE)));
-    driverXbox.b().onTrue(new InstantCommand(() -> wrist.setWristAngle(WristConstants.WRIST_INTAKE_ANGLE)));
-    driverXbox.rightTrigger().onTrue(new InstantCommand(() -> wrist.setWristAngle(WristConstants.WRIST_L2_ANGLE)));
+    driverXbox.a().whileTrue(intake);
+    driverXbox.b().whileTrue(outtake);
 
     // DRIVE BINDINGS
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
     driverXbox.back().onTrue(new InstantCommand(drivebase::zeroGyro));
-    driverXbox.leftBumper()
-        .whileTrue(drivebase.driveToPose(new Pose2d(11.6, 4, new Rotation2d(Units.degreesToRadians(1)))));
+    // driverXbox.leftBumper()
+    //     .whileTrue(drivebase.driveToPose(new Pose2d(11.6, 4, new Rotation2d(Units.degreesToRadians(1)))));
     // driverXbox.leftBumper().whileTrue(drivebase.lineUpWithTag(frontTX));
 
   }

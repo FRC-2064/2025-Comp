@@ -10,6 +10,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.WristConstants;
 
@@ -35,7 +36,12 @@ public class WristSubsystem extends SubsystemBase {
                 .idleMode(IdleMode.kBrake).closedLoop
                 .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
                 .positionWrappingEnabled(false)
-                .pid(1, 0, 0);
+                .pid(4, 0, 1)
+                .maxMotion
+                .maxVelocity(5676)
+                .maxAcceleration(10000)
+                .allowedClosedLoopError(0.05);
+
         wristConfig.absoluteEncoder
         .inverted(true);
 
@@ -48,11 +54,11 @@ public class WristSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-
+        SmartDashboard.putNumber("wrist angle", (wristMotor.getAbsoluteEncoder().getPosition()*360));
     }
 
     public void setWristAngle(double angle) {
-        wristController.setReference(angle / 360, ControlType.kPosition);
+        wristController.setReference(angle / 360, ControlType.kMAXMotionPositionControl);
     }
 
     public void intakeCoral() {
@@ -76,6 +82,20 @@ public class WristSubsystem extends SubsystemBase {
     public void stopIntakeMotors() {
         intakeTop.set(0);
         intakeBottom.set(0);
+    }
+
+    public void wristToggleCoast() {
+        switch (wristMotor.configAccessor.getIdleMode()) {
+            case kBrake:
+                wristConfig.idleMode(IdleMode.kCoast);
+                wristMotor.configure(wristConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+                break;
+            case kCoast:
+                wristConfig.idleMode(IdleMode.kBrake);
+                wristMotor.configure(wristConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+                break;
+        }
+
     }
 
 }
