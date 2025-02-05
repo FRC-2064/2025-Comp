@@ -1,15 +1,12 @@
 package frc.robot.Subsystems;
 
-import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.Meter;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
-import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.commands.PathfindingCommand;
@@ -17,6 +14,8 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -33,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Limelight1Constants;
 import frc.robot.Constants.Limelight2Constants;
+import frc.robot.ControlBoard.ControlBoardUtils;
 import frc.robot.Robot;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
@@ -376,6 +376,31 @@ public class SwerveSubsystem extends SubsystemBase {
                     false,
                     false);
         });
+    }
+
+    public Command pathfindToPath(PathPlannerPath currPath) {
+        PathConstraints constraints = new PathConstraints(
+            swerveDrive.getMaximumChassisVelocity(),
+            4.0,
+            swerveDrive.getMaximumChassisAngularVelocity(),
+            Units.degreesToRadians(720));
+
+        return AutoBuilder.pathfindThenFollowPath(currPath, constraints);
+    }
+
+    public Command goToScore() {
+        PathPlannerPath currPath = ControlBoardUtils.getScorePath(swerveDrive.getOdometryHeading().getDegrees());
+        return pathfindToPath(currPath);
+    }
+
+    public Command goToCage() {
+        PathPlannerPath currPath = ControlBoardUtils.getCagePath();
+        return pathfindToPath(currPath);
+    }
+
+    public Command goToFeeder() {
+        PathPlannerPath currPath = ControlBoardUtils.getFeederPath(swerveDrive.getOdometryHeading().getDegrees());
+        return pathfindToPath(currPath);
     }
 
 }
