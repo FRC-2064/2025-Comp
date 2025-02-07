@@ -11,6 +11,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
@@ -26,8 +27,7 @@ import swervelib.SwerveInputStream;
 
 public class RobotContainer {
   final CommandXboxController driverXbox = new CommandXboxController(0);
-  final CommandXboxController operatorXbox = new CommandXboxController(1);
-  final ControlBoardHelpers cbh = new ControlBoardHelpers();
+  //final CommandXboxController operatorXbox = new CommandXboxController(1);
   final ArmSubsystem arm = new ArmSubsystem();
   final WristSubsystem wrist = new WristSubsystem();
   private final SwerveSubsystem drivebase = new SwerveSubsystem(
@@ -39,44 +39,44 @@ public class RobotContainer {
   Command homeArm = new InstantCommand(() -> 
   {
     arm.setTargetAngle(ArmConstants.ARM_HOME_ANGLE);
-    wrist.setWristAngle(WristConstants.HOME_ANGLE);
+    wrist.setWristAngle(WristConstants.WRIST_HOME_ANGLE);
   });
   Command troughFront = new InstantCommand(() -> 
   {
     arm.setTargetAngle(ArmConstants.ARM_TROUGH_FRONT_ANGLE);
-    wrist.setWristAngle(WristConstants.TROUGH_FRONT_ANGLE);
+    wrist.setWristAngle(WristConstants.WRIST_TROUGH_FRONT_ANGLE);
   });
   Command troughBack = new InstantCommand(() -> 
   {
     arm.setTargetAngle(ArmConstants.ARM_TROUGH_BACK_ANGLE);
-    wrist.setWristAngle(WristConstants.TROUGH_BACK_ANGLE);
+    wrist.setWristAngle(WristConstants.WRIST_TROUGH_BACK_ANGLE);
   });
   Command level2Front = new InstantCommand(() -> 
   {
-    arm.setTargetAngle(ArmConstants.L2_FRONT_ANGLE);
-    wrist.setWristAngle(WristConstants.L2_FRONT_ANGLE);
+    arm.setTargetAngle(ArmConstants.ARM_L2_FRONT_ANGLE);
+    wrist.setWristAngle(WristConstants.WRIST_L2_FRONT_ANGLE);
   });
   Command level2Back = new InstantCommand(() -> 
   {
-    arm.setTargetAngle(ArmConstants.L2_BACK_ANGLE);
-    wrist.setWristAngle(WristConstants.L2_BACK_ANGLE);
+    arm.setTargetAngle(ArmConstants.ARM_L2_BACK_ANGLE);
+    wrist.setWristAngle(WristConstants.WRIST_L2_BACK_ANGLE);
   });
 
   Command level3Back = new InstantCommand(() ->
   {
-    arm.setTargetAngle(ArmConstants.L3_BACK_ANGLE);
-    wrist.setWristAngle(WristConstants.L3_BACK_ANGLE);
+    arm.setTargetAngle(ArmConstants.ARM_L3_BACK_ANGLE);
+    wrist.setWristAngle(WristConstants.WRIST_L3_BACK_ANGLE);
   });
 
   Command intakeBack = new InstantCommand(() ->
   {
     arm.setTargetAngle(ArmConstants.ARM_BACK_INTAKE_ANGLE);
-    wrist.setWristAngle(WristConstants.BACK_INTAKE_ANGLE);
+    wrist.setWristAngle(WristConstants.WRIST_BACK_INTAKE_ANGLE);
   });
 
 
-  Command highAlgae = new InstantCommand(() -> arm.setTargetAngle(ArmConstants.HIGH_ALGAE_REMOVAL_ANGLE));
-  Command lowAlgae = new InstantCommand(() -> arm.setTargetAngle(ArmConstants.LOW_ALGAE_REMOVAL_ANGLE));
+  Command highAlgae = new InstantCommand(() -> arm.setTargetAngle(ArmConstants.ARM_HIGH_ALGAE_REMOVAL_ANGLE));
+  Command lowAlgae = new InstantCommand(() -> arm.setTargetAngle(ArmConstants.ARM_LOW_ALGAE_REMOVAL_ANGLE));
   
   Command toggleArmBrake = new InstantCommand(() -> 
   {

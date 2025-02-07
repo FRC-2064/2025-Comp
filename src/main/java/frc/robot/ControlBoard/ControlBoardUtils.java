@@ -10,15 +10,14 @@ import frc.robot.Constants.NamedPaths;
 public class ControlBoardUtils {
 
     public static PathPlannerPath getScorePath(double currHeading) {
-        ControlBoardHelpers controler = new ControlBoardHelpers();
-        double closestHeading;
         try {
-            if (controler.scoreLocation.get() == ControlBoardConstants.SCORE_PROCESSOR) {
+            if (ControlBoardHelpers.getScoreLocation().equals(ControlBoardConstants.SCORE_PROCESSOR)) {
+                System.out.println("Scoring Algae");
                 return PathPlannerPath.fromPathFile(NamedPaths.ALGAE_LOCATION_PROCESSOR);
             }
 
-            String reefLocation = controler.reefLocation.get();
-            int reefLevel = (int) controler.reefLevel.get();
+            String reefLocation = ControlBoardHelpers.getReefLocation();
+            int reefLevel = (int) ControlBoardHelpers.getLevel();
 
             if (reefLevel == ControlBoardConstants.REEF_LEVEL_ALGAE) {
                 String path = ReefPathLookup.algaePaths.get(reefLocation);
@@ -29,7 +28,7 @@ public class ControlBoardUtils {
                     reefLevel == ControlBoardConstants.REEF_LEVEL_2) {
                 ReefPathLookup.ReefPathPair pair = ReefPathLookup.coralPaths.get(reefLocation);
                 if (pair != null) {
-                    closestHeading = getClosestHeading(currHeading, pair.targetHeading);
+                    double closestHeading = getClosestHeading(currHeading, pair.targetHeading);
                     String pathName = (closestHeading == pair.targetHeading) ? pair.frontPath : pair.backPath;
                     return PathPlannerPath.fromPathFile(pathName);
                 }
@@ -52,9 +51,9 @@ public class ControlBoardUtils {
     }
 
     public static PathPlannerPath getFeederPath(double currHeading) {
-        ControlBoardHelpers controler = new ControlBoardHelpers();
+        String feeder = ControlBoardHelpers.getFeeder();
         try {
-            if (controler.feeder.get() == ControlBoardConstants.FEEDER_LEFT) {
+            if (feeder.equals(ControlBoardConstants.FEEDER_LEFT)) {
                 double closestHeading = getClosestHeading(currHeading, AutoHeadings.FEEDER_LEFT);
                 SmartDashboard.putString("FeederAttemptedPath", 
                 (closestHeading == AutoHeadings.FEEDER_LEFT)
@@ -65,7 +64,7 @@ public class ControlBoardUtils {
                                 ? NamedPaths.FEEDER_LOCATION_FRONT_LEFT
                                 : NamedPaths.FEEDER_LOCATION_BACK_LEFT);
 
-            } else if (controler.feeder.get() == ControlBoardConstants.FEEDER_RIGHT) {
+            } else if (feeder.equals(ControlBoardConstants.FEEDER_RIGHT)) {
                 double closestHeading = getClosestHeading(currHeading, AutoHeadings.FEEDER_RIGHT);
                 SmartDashboard.putString("FeederAttemptedPath", 
                 (closestHeading == AutoHeadings.FEEDER_RIGHT)
@@ -86,9 +85,8 @@ public class ControlBoardUtils {
     }
 
     public static PathPlannerPath getCagePath() {
-        ControlBoardHelpers controler = new ControlBoardHelpers();
         try {
-            switch (controler.bargeCage.get()) {
+            switch (ControlBoardHelpers.getCage()) {
                 case ControlBoardConstants.CAGE_LEFT:
                     return PathPlannerPath.fromPathFile(NamedPaths.CAGE_LOCATION_LEFT);
 
