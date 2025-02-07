@@ -79,6 +79,14 @@ public class WristSubsystem extends SubsystemBase {
         intakeTop.set(1);
     }
 
+    public void intakeAlgae(){
+        intakeBottom.set(0.2);
+    }
+
+    public void outtakeAlgae(){
+        intakeBottom.set(-0.2);
+    }
+
     public void stopIntakeMotors() {
         intakeTop.set(0);
         intakeBottom.set(0);

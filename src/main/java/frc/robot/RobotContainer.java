@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.ArmConstants;
@@ -74,6 +75,18 @@ public class RobotContainer {
     wrist.setWristAngle(WristConstants.WRIST_BACK_INTAKE_ANGLE);
   });
 
+  Command intakeAlgaeCommand = new InstantCommand(() ->
+  {
+    arm.setTargetAngle(ArmConstants.ARM_ALGAE_CARRY_ANGLE);
+    wrist.setWristAngle(WristConstants.WRIST_ALGAE_INTAKE_ANGLE);
+  });
+
+  Command removeAlgaeHigh = new InstantCommand(() ->
+  {
+    arm.setTargetAngle(ArmConstants.ARM_HIGH_ALGAE_REMOVAL_ANGLE);
+    wrist.setWristAngle(WristConstants.WRIST_HIGH_ALGAE_REMOVAL_ANGLE);
+  });
+
 
   Command highAlgae = new InstantCommand(() -> arm.setTargetAngle(ArmConstants.ARM_HIGH_ALGAE_REMOVAL_ANGLE));
   Command lowAlgae = new InstantCommand(() -> arm.setTargetAngle(ArmConstants.ARM_LOW_ALGAE_REMOVAL_ANGLE));
@@ -105,6 +118,16 @@ public class RobotContainer {
       () -> wrist.outtakeCoral(),
       () -> wrist.stopIntakeMotors(),
       wrist);
+
+  Command intakeAlgae = new StartEndCommand(
+    () -> wrist.intakeAlgae(),
+    () -> wrist.stopIntakeMotors(),
+    wrist);
+
+  Command outtakeAlgae = new StartEndCommand(
+  () -> wrist.outtakeAlgae(),
+  () -> wrist.stopIntakeMotors(),
+  wrist);
     
 
   // DRIVE COMMANDS
@@ -138,23 +161,29 @@ public class RobotContainer {
   private void configureBindings() {
 
     // 'GO TO' BINDINGS
-    driverXbox.a().onTrue(drivebase.goToScore());
-    driverXbox.x().onTrue(drivebase.goToCage());
-    driverXbox.b().onTrue(drivebase.goToFeeder());
+    // driverXbox.a().onTrue(drivebase.goToScore());
+    // driverXbox.x().onTrue(drivebase.goToCage());
+    // driverXbox.b().onTrue(drivebase.goToFeeder());
 
     // ARM BINDINGS
-    driverXbox.y().onTrue(level3Back);
+    // driverXbox.y().onTrue(level3Back);
     //driverXbox.x().onTrue(intakeBack);
-    driverXbox.leftTrigger().onTrue(troughFront);
+    // driverXbox.leftTrigger().onTrue(troughFront);
     driverXbox.rightTrigger().onTrue(troughBack);
-    driverXbox.leftBumper().onTrue(level2Front);
+    // driverXbox.leftBumper().onTrue(level2Front);
     driverXbox.rightBumper().onTrue(level2Back);
 
     driverXbox.start().onTrue(toggleArmBrake);
 
     // WRIST BINDINGS
-    //driverXbox.a().whileTrue(intake);
-    //driverXbox.b().whileTrue(outtake);
+    driverXbox.a().whileTrue(intake);
+    driverXbox.x().whileTrue(outtake);
+    // driverXbox.a().whileTrue(intakeAlgae);
+    // driverXbox.x().whileTrue(outtakeAlgae);
+    driverXbox.leftTrigger().whileTrue(intakeAlgae);
+    driverXbox.leftBumper().whileTrue(outtakeAlgae);
+    driverXbox.b().onTrue(intakeAlgaeCommand);
+    driverXbox.y().onTrue(removeAlgaeHigh);
 
     // DRIVE BINDINGS
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);

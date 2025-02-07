@@ -57,10 +57,11 @@ public class Constants {
 
         public static final double ARM_L3_BACK_ANGLE = 92.4;
 
-        public static final double ARM_ALGAE_CARRY_ANGLE = 32.0;
+        public static final double ARM_ALGAE_CARRY_ANGLE = 18.97;
+        // public static final double ARM_ALGAE_INTAKE_ANGLE = 0.0;
 
         public static final double ARM_LOW_ALGAE_REMOVAL_ANGLE = 55.0;
-        public static final double ARM_HIGH_ALGAE_REMOVAL_ANGLE = 124.0;
+        public static final double ARM_HIGH_ALGAE_REMOVAL_ANGLE = 106.0;
 
         public static final double ARM_CLIMB_ANGLE = 68.0;
 
@@ -88,8 +89,9 @@ public class Constants {
         public static final double WRIST_L3_BACK_ANGLE = 156.6;
                       
         public static final double WRIST_ALGAE_CARRY_ANGLE = 0.0;
+        public static final double WRIST_ALGAE_INTAKE_ANGLE = 109.22;
         
-        public static final double WRIST_HIGH_ALGAE_REMOVAL_ANGLE = 0;
+        public static final double WRIST_HIGH_ALGAE_REMOVAL_ANGLE = 95.15;
         public static final double WRIST_LOW_ALGAE_REMOVAL_ANGLE = 0;
         
         //INTAKE
