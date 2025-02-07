@@ -1,38 +1,100 @@
 package frc.robot.ControlBoard;
 
-import edu.wpi.first.networktables.BooleanEntry;
-import edu.wpi.first.networktables.IntegerEntry;
-import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StringEntry;
 
 public class ControlBoardHelpers {
-    NetworkTableInstance inst = NetworkTableInstance.getDefault();
-    NetworkTable table = inst.getTable("ControlBoard");
-    
-    public static StringEntry feeder;
-    public static StringEntry scoreLocation;
-    public static StringEntry reefLocation;
-    public static IntegerEntry reefLevel;
-    public static StringEntry bargeCage;
-    public static BooleanEntry hasScored;
-    public static StringEntry selectedAuto;
-    public static BooleanEntry hasCoral;
-    public static BooleanEntry hasAlgae;
-    public static BooleanEntry Clamped;
-    public static BooleanEntry isClimbed;
+    private static final NetworkTableInstance ntInstance = NetworkTableInstance.getDefault();
 
-    public ControlBoardHelpers() {
-        feeder = table.getStringTopic("Feeder").getEntry("LEFT");
-        scoreLocation = table.getStringTopic("ScoreLocation").getEntry("REEF");
-        reefLocation = table.getStringTopic("Reef/Location").getEntry("A");
-        reefLevel = table.getIntegerTopic("Reef/Level").getEntry(0);
-        bargeCage = table.getStringTopic("Barge/Cage").getEntry("LEFT");
-        hasScored = table.getBooleanTopic("Robot/HasScored").getEntry(false);
-        selectedAuto = table.getStringTopic("Robot/SelectedAuto").getEntry("");
-        hasCoral = table.getBooleanTopic("Robot/HasCoral").getEntry(false);
-        hasAlgae = table.getBooleanTopic("Robot/HasAlgae").getEntry(false);
-        Clamped = table.getBooleanTopic("Robot/Clamped").getEntry(false);
-        isClimbed = table.getBooleanTopic("Robot/IsClimbed").getEntry(false); 
+    private static NetworkTableEntry getEntry(String key) {
+        return ntInstance.getEntry(key);
+    }
+
+    public static int getLevel() {
+        return (int) getEntry("ControlBoard/Reef/Level").getDouble(0);
+    }
+
+    public static void setLevel(int value) {
+        getEntry("ControlBoard/Reef/Level").setDouble(value);
+    }
+
+    public static String getAuto() {
+        return getEntry("ControlBoard/Robot/SelectedAuto").getString("");
+    }
+
+    public static void setAuto(String value) {
+        getEntry("ControlBoard/Robot/SelectedAuto").setString(value);
+    }
+
+    public static String getCage() {
+        return getEntry("ControlBoard/Barge/Cage").getString("");
+    }
+
+    public static void setCage(String value) {
+        getEntry("ControlBoard/Barge/Cage").setString(value);
+    }
+
+    public static String getFeeder() {
+        return getEntry("ControlBoard/Feeder").getString("");
+    }
+
+    public static void setFeeder(String value) {
+        getEntry("ControlBoard/Feeder").setString(value);
+    }
+
+    public static String getScoreLocation() {
+        return getEntry("ControlBoard/ScoreLocation").getString("");
+    }
+
+    public static void setScoreLocation(String value) {
+        getEntry("ControlBoard/ScoreLocation").setString(value);
+    }
+
+    public static String getReefLocation() {
+        return getEntry("ControlBoard/Reef/Location").getString("");
+    }
+
+    public static void setReefLocation(String value) {
+        getEntry("ControlBoard/Reef/Location").setString(value);
+    }
+
+    public static boolean getHasScored() {
+        return getEntry("ControlBoard/Robot/HasScored").getBoolean(false);
+    }
+
+    public static void setHasScored(boolean value) {
+        getEntry("ControlBoard/Robot/HasScored").setBoolean(value);
+    }
+
+    public static boolean getHasAlgae() {
+        return getEntry("ControlBoard/Robot/HasAlgae").getBoolean(false);
+    }
+
+    public static void setHasAlgae(boolean value) {
+        getEntry("ControlBoard/Robot/HasAlgae").setBoolean(value);
+    }
+
+    public static boolean getHasCoral() {
+        return getEntry("ControlBoard/Robot/HasCoral").getBoolean(false);
+    }
+
+    public static void setHasCoral(boolean value) {
+        getEntry("ControlBoard/Robot/HasCoral").setBoolean(value);
+    }
+
+    public static boolean getClamped() {
+        return getEntry("ControlBoard/Robot/Clamped").getBoolean(false);
+    }
+
+    public static void setClamped(boolean value) {
+        getEntry("ControlBoard/Robot/Clamped").setBoolean(value);
+    }
+
+    public static boolean getClimbed() {
+        return getEntry("ControlBoard/Robot/IsClimbed").getBoolean(false);
+    }
+
+    public static void setClimbed(boolean value) {
+        getEntry("ControlBoard/Robot/IsClimbed").setBoolean(value);
     }
 }
