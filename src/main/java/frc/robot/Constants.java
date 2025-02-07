@@ -62,7 +62,7 @@ public class Constants {
         public static final double ARM_LOW_ALGAE_REMOVAL_ANGLE = 55.0;
         public static final double ARM_HIGH_ALGAE_REMOVAL_ANGLE = 124.0;
 
-        public static final double CLIMB_ANGLE = 68.0;
+        public static final double ARM_CLIMB_ANGLE = 68.0;
 
         //CLIMB
         public static final int CLIMB_ID = 21;
@@ -74,15 +74,15 @@ public class Constants {
         //WRIST
         public static final int WRIST_ID = 47;
 
-        public static final double HOME_ANGLE = 60.5;
+        public static final double WRIST_HOME_ANGLE = 60.5;
 
-        public static final double FRONT_INTAKE_ANGLE = 133.1;
-        public static final double BACK_INTAKE_ANGLE = 174.9;
+        public static final double WRIST_FRONT_INTAKE_ANGLE = 133.1;
+        public static final double WRIST_BACK_INTAKE_ANGLE = 174.9;
 
-        public static final double TROUGH_BACK_ANGLE = 227.6;
-        public static final double TROUGH_FRONT_ANGLE = 96.2;
+        public static final double WRIST_TROUGH_BACK_ANGLE = 227.6;
+        public static final double WRIST_TROUGH_FRONT_ANGLE = 96.2;
         
-        public static final double L2_FRONT_ANGLE = 81.8;
+        public static final double WRIST_L2_FRONT_ANGLE = 81.8;
         public static final double WRIST_L2_BACK_ANGLE = 226.5;
         
         public static final double WRIST_L3_BACK_ANGLE = 156.6;
