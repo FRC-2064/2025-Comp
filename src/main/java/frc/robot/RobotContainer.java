@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.WristConstants;
+import frc.robot.ControlBoard.ControlBoardHelpers;
 import frc.robot.Subsystems.ArmSubsystem;
 import frc.robot.Subsystems.SwerveSubsystem;
 import frc.robot.Subsystems.WristSubsystem;
@@ -26,6 +27,7 @@ import swervelib.SwerveInputStream;
 public class RobotContainer {
   final CommandXboxController driverXbox = new CommandXboxController(0);
   final CommandXboxController operatorXbox = new CommandXboxController(1);
+  final ControlBoardHelpers cbh = new ControlBoardHelpers();
   final ArmSubsystem arm = new ArmSubsystem();
   final WristSubsystem wrist = new WristSubsystem();
   private final SwerveSubsystem drivebase = new SwerveSubsystem(
@@ -136,13 +138,13 @@ public class RobotContainer {
   private void configureBindings() {
 
     // 'GO TO' BINDINGS
-    operatorXbox.a().onTrue(drivebase.goToScore());
-    operatorXbox.x().onTrue(drivebase.goToCage());
-    operatorXbox.b().onTrue(drivebase.goToFeeder());
+    driverXbox.a().onTrue(drivebase.goToScore());
+    driverXbox.x().onTrue(drivebase.goToCage());
+    driverXbox.b().onTrue(drivebase.goToFeeder());
 
     // ARM BINDINGS
     driverXbox.y().onTrue(level3Back);
-    driverXbox.x().onTrue(intakeBack);
+    //driverXbox.x().onTrue(intakeBack);
     driverXbox.leftTrigger().onTrue(troughFront);
     driverXbox.rightTrigger().onTrue(troughBack);
     driverXbox.leftBumper().onTrue(level2Front);
@@ -151,8 +153,8 @@ public class RobotContainer {
     driverXbox.start().onTrue(toggleArmBrake);
 
     // WRIST BINDINGS
-    driverXbox.a().whileTrue(intake);
-    driverXbox.b().whileTrue(outtake);
+    //driverXbox.a().whileTrue(intake);
+    //driverXbox.b().whileTrue(outtake);
 
     // DRIVE BINDINGS
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);

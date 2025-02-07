@@ -10,20 +10,20 @@ public class ControlBoardHelpers {
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
     NetworkTable table = inst.getTable("ControlBoard");
     
-    public static StringEntry feeder;
-    public static StringEntry scoreLocation;
-    public static StringEntry reefLocation;
-    public static IntegerEntry reefLevel;
-    public static StringEntry bargeCage;
-    public static BooleanEntry hasScored;
-    public static StringEntry selectedAuto;
-    public static BooleanEntry hasCoral;
-    public static BooleanEntry hasAlgae;
-    public static BooleanEntry Clamped;
-    public static BooleanEntry isClimbed;
+    public StringEntry feeder;
+    public StringEntry scoreLocation;
+    public StringEntry reefLocation;
+    public IntegerEntry reefLevel;
+    public StringEntry bargeCage;
+    public BooleanEntry hasScored;
+    public StringEntry selectedAuto;
+    public BooleanEntry hasCoral;
+    public BooleanEntry hasAlgae;
+    public BooleanEntry Clamped;
+    public BooleanEntry isClimbed;
 
     public ControlBoardHelpers() {
-        feeder = table.getStringTopic("Feeder").getEntry("LEFT");
+        feeder = table.getStringTopic("Feeder").getEntry("RIGHT");
         scoreLocation = table.getStringTopic("ScoreLocation").getEntry("REEF");
         reefLocation = table.getStringTopic("Reef/Location").getEntry("A");
         reefLevel = table.getIntegerTopic("Reef/Level").getEntry(0);

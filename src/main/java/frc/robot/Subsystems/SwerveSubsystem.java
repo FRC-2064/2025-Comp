@@ -186,8 +186,8 @@ public class SwerveSubsystem extends SubsystemBase {
                         }
                     },
                     new PPHolonomicDriveController(
-                            new PIDConstants(0.0, 0.0, 0.0),
-                            new PIDConstants(0.0, 0.0, 0.0)),
+                            new PIDConstants(1.0, 0.0, 0.0),
+                            new PIDConstants(1.0, 0.0, 0.0)),
                     config,
                     () -> {
                         var alliance = DriverStation.getAlliance();
@@ -390,17 +390,26 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public Command goToScore() {
         PathPlannerPath currPath = ControlBoardUtils.getScorePath(swerveDrive.getOdometryHeading().getDegrees());
-        return pathfindToPath(currPath);
+        if (currPath != null) {
+            return pathfindToPath(currPath);
+        }
+        return new Command() {};
     }
 
     public Command goToCage() {
         PathPlannerPath currPath = ControlBoardUtils.getCagePath();
-        return pathfindToPath(currPath);
+        if (currPath != null) {
+            return pathfindToPath(currPath);
+        }
+        return new Command() {};
     }
 
     public Command goToFeeder() {
         PathPlannerPath currPath = ControlBoardUtils.getFeederPath(swerveDrive.getOdometryHeading().getDegrees());
-        return pathfindToPath(currPath);
+        if (currPath != null) {
+            return pathfindToPath(currPath);
+        }
+        return new Command() {};
     }
 
 }
