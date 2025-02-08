@@ -51,11 +51,11 @@ public class ControlBoardHelpers {
     }
 
     public static String getReefLocation() {
-        return getEntry("ControlBoard/Reef/Location").getString("");
+        return getEntry("ControlBoard/ReefLocation").getString("");
     }
 
     public static void setReefLocation(String value) {
-        getEntry("ControlBoard/Reef/Location").setString(value);
+        getEntry("ControlBoard/ReefLocation").setString(value);
     }
 
     public static boolean getHasScored() {

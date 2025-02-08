@@ -21,21 +21,58 @@ public class ReefPathLookup {
             this.backPath = backPath;
         }
     }
+
+    // A IS HIGH
+    public static class AlgaePair {
+        public final String path;
+        public final AlgaeHeight algaeHeight;
+
+        public AlgaePair(String path, AlgaeHeight algaeHeight) {
+                this.path = path;
+                this.algaeHeight = algaeHeight;
+        }
+
+    }
+
     
-    public static final Map<String, String> algaePaths = new HashMap<>();
+    public static final Map<String, AlgaePair> algaePaths = new HashMap<>();
     static {
-        algaePaths.put(ControlBoardConstants.REEF_LOCATION_A, NamedPaths.ALGAE_LOCATION_AL);
-        algaePaths.put(ControlBoardConstants.REEF_LOCATION_L, NamedPaths.ALGAE_LOCATION_AL);
-        algaePaths.put(ControlBoardConstants.REEF_LOCATION_B, NamedPaths.ALGAE_LOCATION_BC);
-        algaePaths.put(ControlBoardConstants.REEF_LOCATION_C, NamedPaths.ALGAE_LOCATION_BC);
-        algaePaths.put(ControlBoardConstants.REEF_LOCATION_D, NamedPaths.ALGAE_LOCATION_DE);
-        algaePaths.put(ControlBoardConstants.REEF_LOCATION_E, NamedPaths.ALGAE_LOCATION_DE);
-        algaePaths.put(ControlBoardConstants.REEF_LOCATION_F, NamedPaths.ALGAE_LOCATION_FG);
-        algaePaths.put(ControlBoardConstants.REEF_LOCATION_G, NamedPaths.ALGAE_LOCATION_FG);
-        algaePaths.put(ControlBoardConstants.REEF_LOCATION_H, NamedPaths.ALGAE_LOCATION_HI);
-        algaePaths.put(ControlBoardConstants.REEF_LOCATION_I, NamedPaths.ALGAE_LOCATION_HI);
-        algaePaths.put(ControlBoardConstants.REEF_LOCATION_J, NamedPaths.ALGAE_LOCATION_JK);
-        algaePaths.put(ControlBoardConstants.REEF_LOCATION_K, NamedPaths.ALGAE_LOCATION_JK);
+        algaePaths.put(ControlBoardConstants.REEF_LOCATION_A, new AlgaePair(
+                NamedPaths.ALGAE_LOCATION_AL, 
+                AlgaeHeight.HIGH));
+        algaePaths.put(ControlBoardConstants.REEF_LOCATION_L, new AlgaePair(
+                NamedPaths.ALGAE_LOCATION_AL, 
+                AlgaeHeight.HIGH));
+        algaePaths.put(ControlBoardConstants.REEF_LOCATION_B, new AlgaePair(
+                NamedPaths.ALGAE_LOCATION_BC, 
+                AlgaeHeight.LOW));
+        algaePaths.put(ControlBoardConstants.REEF_LOCATION_C, new AlgaePair(
+                NamedPaths.ALGAE_LOCATION_BC, 
+                AlgaeHeight.LOW));
+        algaePaths.put(ControlBoardConstants.REEF_LOCATION_D, new AlgaePair(
+                NamedPaths.ALGAE_LOCATION_DE, 
+                AlgaeHeight.HIGH));
+        algaePaths.put(ControlBoardConstants.REEF_LOCATION_E, new AlgaePair(
+                NamedPaths.ALGAE_LOCATION_DE, 
+                AlgaeHeight.HIGH));
+        algaePaths.put(ControlBoardConstants.REEF_LOCATION_F, new AlgaePair(
+                NamedPaths.ALGAE_LOCATION_FG, 
+                AlgaeHeight.LOW));
+        algaePaths.put(ControlBoardConstants.REEF_LOCATION_G, new AlgaePair(
+                NamedPaths.ALGAE_LOCATION_FG, 
+                AlgaeHeight.LOW));
+        algaePaths.put(ControlBoardConstants.REEF_LOCATION_H, new AlgaePair(
+                NamedPaths.ALGAE_LOCATION_HI, 
+                AlgaeHeight.HIGH));
+        algaePaths.put(ControlBoardConstants.REEF_LOCATION_I, new AlgaePair(
+                NamedPaths.ALGAE_LOCATION_HI, 
+                AlgaeHeight.HIGH));
+        algaePaths.put(ControlBoardConstants.REEF_LOCATION_J, new AlgaePair(
+                NamedPaths.ALGAE_LOCATION_JK, 
+                AlgaeHeight.LOW));
+        algaePaths.put(ControlBoardConstants.REEF_LOCATION_K, new AlgaePair(
+                NamedPaths.ALGAE_LOCATION_JK, 
+                AlgaeHeight.LOW));
     }
     
 
@@ -89,5 +126,10 @@ public class ReefPathLookup {
                 AutoHeadings.REEF_HEADING_AL,
                 NamedPaths.CORAL_LOCATION_FRONT_L,
                 NamedPaths.CORAL_LOCATION_BACK_L));
+    }
+
+    public enum AlgaeHeight {
+        HIGH,
+        LOW
     }
 }

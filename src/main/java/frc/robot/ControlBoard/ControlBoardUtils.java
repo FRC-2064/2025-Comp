@@ -3,42 +3,72 @@ package frc.robot.ControlBoard;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutoHeadings;
 import frc.robot.Constants.ControlBoardConstants;
 import frc.robot.Constants.NamedPaths;
+import frc.robot.Constants.WristConstants;
+import frc.robot.ControlBoard.ReefPathLookup.AlgaeHeight;
+import frc.robot.ControlBoard.ReefPathLookup.AlgaePair;
+import frc.robot.ControlBoard.ReefPathLookup.ReefPathPair;
 
 public class ControlBoardUtils {
 
-    public static PathPlannerPath getScorePath(double currHeading) {
+    public static ScoreOutput getScorePath(double currHeading) {
         try {
             if (ControlBoardHelpers.getScoreLocation().equals(ControlBoardConstants.SCORE_PROCESSOR)) {
-                System.out.println("Scoring Algae");
-                return PathPlannerPath.fromPathFile(NamedPaths.ALGAE_LOCATION_PROCESSOR);
+                return new ScoreOutput(
+                        PathPlannerPath.fromPathFile(NamedPaths.ALGAE_LOCATION_PROCESSOR),
+                        ArmConstants.ARM_ALGAE_CARRY_ANGLE,
+                        WristConstants.WRIST_ALGAE_CARRY_ANGLE);
             }
 
             String reefLocation = ControlBoardHelpers.getReefLocation();
             int reefLevel = (int) ControlBoardHelpers.getLevel();
 
             if (reefLevel == ControlBoardConstants.REEF_LEVEL_ALGAE) {
-                String path = ReefPathLookup.algaePaths.get(reefLocation);
-                return PathPlannerPath.fromPathFile(path);
+                AlgaePair pair = ReefPathLookup.algaePaths.get(reefLocation);
+                boolean isHighAlgae = pair.algaeHeight == AlgaeHeight.HIGH;
+                return new ScoreOutput(
+                        PathPlannerPath.fromPathFile(pair.path),
+                        (isHighAlgae) ? ArmConstants.ARM_HIGH_ALGAE_REMOVAL_ANGLE
+                                : ArmConstants.ARM_LOW_ALGAE_REMOVAL_ANGLE,
+                        (isHighAlgae) ? WristConstants.WRIST_HIGH_ALGAE_REMOVAL_ANGLE
+                                : WristConstants.WRIST_LOW_ALGAE_REMOVAL_ANGLE);
             }
 
-            if (reefLevel == ControlBoardConstants.REEF_LEVEL_TROUGH ||
-                    reefLevel == ControlBoardConstants.REEF_LEVEL_2) {
-                ReefPathLookup.ReefPathPair pair = ReefPathLookup.coralPaths.get(reefLocation);
+            if (reefLevel == ControlBoardConstants.REEF_LEVEL_TROUGH) {
+                ReefPathPair pair = ReefPathLookup.coralPaths.get(reefLocation);
                 if (pair != null) {
                     double closestHeading = getClosestHeading(currHeading, pair.targetHeading);
-                    String pathName = (closestHeading == pair.targetHeading) ? pair.frontPath : pair.backPath;
-                    return PathPlannerPath.fromPathFile(pathName);
+                    boolean usingFront = closestHeading == pair.targetHeading;
+                    return new ScoreOutput(
+                            PathPlannerPath.fromPathFile((usingFront) ? pair.frontPath : pair.backPath),
+                            (usingFront) ? ArmConstants.ARM_TROUGH_FRONT_ANGLE : ArmConstants.ARM_TROUGH_BACK_ANGLE,
+                            (usingFront) ? WristConstants.WRIST_TROUGH_FRONT_ANGLE
+                                    : WristConstants.WRIST_TROUGH_BACK_ANGLE);
                 }
             }
 
-            if (reefLevel == ControlBoardConstants.REEF_LEVEL_3 ||
-                    reefLevel == ControlBoardConstants.REEF_LEVEL_4) {
+            if (reefLevel == ControlBoardConstants.REEF_LEVEL_2) {
+                ReefPathPair pair = ReefPathLookup.coralPaths.get(reefLocation);
+                if (pair != null) {
+                    double closestHeading = getClosestHeading(currHeading, pair.targetHeading);
+                    boolean usingFront = closestHeading == pair.targetHeading;
+                    return new ScoreOutput(
+                            PathPlannerPath.fromPathFile((usingFront) ? pair.frontPath : pair.backPath),
+                            (usingFront) ? ArmConstants.ARM_L2_FRONT_ANGLE : ArmConstants.ARM_L2_BACK_ANGLE,
+                            (usingFront) ? WristConstants.WRIST_L2_FRONT_ANGLE : WristConstants.WRIST_L2_BACK_ANGLE);
+                }
+            }
+
+            if (reefLevel == ControlBoardConstants.REEF_LEVEL_3) {
                 ReefPathLookup.ReefPathPair pair = ReefPathLookup.coralPaths.get(reefLocation);
                 if (pair != null) {
-                    return PathPlannerPath.fromPathFile(pair.backPath);
+                    return new ScoreOutput(
+                            PathPlannerPath.fromPathFile(pair.backPath),
+                            ArmConstants.ARM_L3_BACK_ANGLE,
+                            WristConstants.WRIST_L3_BACK_ANGLE);
                 }
             }
 
@@ -50,30 +80,38 @@ public class ControlBoardUtils {
         return null;
     }
 
-    public static PathPlannerPath getFeederPath(double currHeading) {
+    public static ScoreOutput getFeederPath(double currHeading) {
         String feeder = ControlBoardHelpers.getFeeder();
         try {
             if (feeder.equals(ControlBoardConstants.FEEDER_LEFT)) {
                 double closestHeading = getClosestHeading(currHeading, AutoHeadings.FEEDER_LEFT);
-                SmartDashboard.putString("FeederAttemptedPath", 
-                (closestHeading == AutoHeadings.FEEDER_LEFT)
-                        ? NamedPaths.FEEDER_LOCATION_FRONT_LEFT
-                        : NamedPaths.FEEDER_LOCATION_BACK_LEFT);
-                return PathPlannerPath.fromPathFile(
+                Boolean usingFront = closestHeading == AutoHeadings.FEEDER_LEFT;
+                SmartDashboard.putString("FeederAttemptedPath",
                         (closestHeading == AutoHeadings.FEEDER_LEFT)
                                 ? NamedPaths.FEEDER_LOCATION_FRONT_LEFT
                                 : NamedPaths.FEEDER_LOCATION_BACK_LEFT);
+                return new ScoreOutput(
+                        PathPlannerPath.fromPathFile((usingFront)
+                                ? NamedPaths.FEEDER_LOCATION_FRONT_LEFT
+                                : NamedPaths.FEEDER_LOCATION_BACK_LEFT),
+                        (usingFront) ? ArmConstants.ARM_FRONT_INTAKE_ANGLE : ArmConstants.ARM_BACK_INTAKE_ANGLE,
+                        (usingFront) ? WristConstants.WRIST_FRONT_INTAKE_ANGLE
+                                : WristConstants.WRIST_BACK_INTAKE_ANGLE);
 
             } else if (feeder.equals(ControlBoardConstants.FEEDER_RIGHT)) {
                 double closestHeading = getClosestHeading(currHeading, AutoHeadings.FEEDER_RIGHT);
-                SmartDashboard.putString("FeederAttemptedPath", 
-                (closestHeading == AutoHeadings.FEEDER_RIGHT)
-                        ? NamedPaths.FEEDER_LOCATION_FRONT_RIGHT
-                        : NamedPaths.FEEDER_LOCATION_BACK_RIGHT);
-                return PathPlannerPath.fromPathFile(
+                Boolean usingFront = closestHeading == AutoHeadings.FEEDER_RIGHT;
+                SmartDashboard.putString("FeederAttemptedPath",
                         (closestHeading == AutoHeadings.FEEDER_RIGHT)
                                 ? NamedPaths.FEEDER_LOCATION_FRONT_RIGHT
                                 : NamedPaths.FEEDER_LOCATION_BACK_RIGHT);
+                return new ScoreOutput(
+                        PathPlannerPath.fromPathFile((usingFront)
+                                ? NamedPaths.FEEDER_LOCATION_FRONT_RIGHT
+                                : NamedPaths.FEEDER_LOCATION_BACK_RIGHT),
+                        (usingFront) ? ArmConstants.ARM_FRONT_INTAKE_ANGLE : ArmConstants.ARM_BACK_INTAKE_ANGLE,
+                        (usingFront) ? WristConstants.WRIST_FRONT_INTAKE_ANGLE
+                                : WristConstants.WRIST_BACK_INTAKE_ANGLE);
             }
 
         } catch (Exception e) {
@@ -101,7 +139,6 @@ public class ControlBoardUtils {
             System.err.println("Error in getCagePath: " + e.getMessage());
             e.printStackTrace();
         }
-
         return null;
     }
 

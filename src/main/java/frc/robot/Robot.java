@@ -22,7 +22,7 @@ public class Robot extends TimedRobot {
   public Robot() {
     m_robotContainer = new RobotContainer();
     PathfindingCommand.warmupCommand().schedule();
-    CameraServer.startAutomaticCapture();
+    // CameraServer.startAutomaticCapture();
 
   }
 

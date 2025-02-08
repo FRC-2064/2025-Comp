@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Commands.PathFindCommand;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.WristConstants;
@@ -35,6 +36,10 @@ public class RobotContainer {
       new File(
           Filesystem.getDeployDirectory(),
           "swervewrist"));
+
+  // PathFindCommand pathFindScore = new PathFindCommand(drivebase, arm, wrist, "SCORE");
+  // PathFindCommand pathFindFeeder = new PathFindCommand(drivebase, arm, wrist, "FEEDER");
+  // PathFindCommand pathFindCage = new PathFindCommand(drivebase, arm, wrist, "CAGE");
 
   // ARM COMMANDS
   Command homeArm = new InstantCommand(() -> 
@@ -161,9 +166,9 @@ public class RobotContainer {
   private void configureBindings() {
 
     // 'GO TO' BINDINGS
-    // driverXbox.a().onTrue(drivebase.goToScore());
-    // driverXbox.x().onTrue(drivebase.goToCage());
-    // driverXbox.b().onTrue(drivebase.goToFeeder());
+    driverXbox.a().whileTrue(drivebase.goToScore());
+    driverXbox.x().whileTrue(drivebase.goToFeeder());
+    driverXbox.b().whileTrue(drivebase.goToCage());
 
     // ARM BINDINGS
     // driverXbox.y().onTrue(level3Back);
@@ -176,13 +181,13 @@ public class RobotContainer {
     driverXbox.start().onTrue(toggleArmBrake);
 
     // WRIST BINDINGS
-    driverXbox.a().whileTrue(intake);
-    driverXbox.x().whileTrue(outtake);
+    //driverXbox.a().whileTrue(intake);
+    // driverXbox.x().whileTrue(outtake);
     // driverXbox.a().whileTrue(intakeAlgae);
     // driverXbox.x().whileTrue(outtakeAlgae);
     driverXbox.leftTrigger().whileTrue(intakeAlgae);
     driverXbox.leftBumper().whileTrue(outtakeAlgae);
-    driverXbox.b().onTrue(intakeAlgaeCommand);
+    //driverXbox.b().onTrue(intakeAlgaeCommand);
     driverXbox.y().onTrue(removeAlgaeHigh);
 
     // DRIVE BINDINGS

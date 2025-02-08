@@ -31,12 +31,12 @@ public class Constants {
 
     public class Limelight2Constants {
         public static final String LIMELIGHT_NAME = "limelight-two";
-        public static final double FORWARD_OFFSET = Units.inchesToMeters(14.5);
-        public static final double SIDE_OFFSET = Units.inchesToMeters(-9.5);
+        public static final double FORWARD_OFFSET = Units.inchesToMeters(-14.5);
+        public static final double SIDE_OFFSET = Units.inchesToMeters(9.5);
         public static final double HEIGHT_OFFSET = Units.inchesToMeters(8.0);
         public static final double ROLL_OFFSET = 0.0;
         public static final double PITCH_OFFSET = 14.15;
-        public static final double YAW_OFFSET = 0.0;
+        public static final double YAW_OFFSET = 180.0;
     }
 
     public class ArmConstants {
