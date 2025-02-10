@@ -1,4 +1,4 @@
-package frc.robot.Subsystems;
+package frc.robot.Subsystems.Drive;
 
 import static edu.wpi.first.units.Units.Meter;
 
@@ -31,10 +31,11 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-import frc.robot.Constants.Limelight1Constants;
-import frc.robot.Constants.Limelight2Constants;
+import frc.robot.LimelightHelpers;
 import frc.robot.Robot;
+import frc.robot.Utils.Constants;
+import frc.robot.Utils.Constants.Limelight1Constants;
+import frc.robot.Utils.Constants.Limelight2Constants;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.math.SwerveMath;
@@ -42,7 +43,6 @@ import swervelib.parser.SwerveDriveConfiguration;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
-import frc.robot.LimelightHelpers;
 
 public class SwerveSubsystem extends SubsystemBase {
     private final SwerveDrive swerveDrive;
@@ -123,7 +123,7 @@ public class SwerveSubsystem extends SubsystemBase {
                 doRejectUpdate = true;
             }
             if (!doRejectUpdate) {
-                swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 9999999));
+                swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
                 swerveDrive.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
             }
 
@@ -143,7 +143,7 @@ public class SwerveSubsystem extends SubsystemBase {
                 doRejectUpdate = true;
             }
             if (!doRejectUpdate) {
-                swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 9999999));
+                swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
                 swerveDrive.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
             }
         }

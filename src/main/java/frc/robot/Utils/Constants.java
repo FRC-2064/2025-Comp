@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robot.Utils;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -88,6 +88,8 @@ public class Constants {
         public static final int EE_TOP_ID = 28;
         public static final int EE_BOTTOM_ID = 29;
         public static final int EE_LIMIT_ID = 1;
+        public static final double TOF_PORT = 0;
+        public static final double EE_BASE_OFFSET = 0;
     }
 
     public class WristConstants {

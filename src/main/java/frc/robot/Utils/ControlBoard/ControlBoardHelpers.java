@@ -1,4 +1,4 @@
-package frc.robot.ControlBoard;
+package frc.robot.Utils.ControlBoard;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;

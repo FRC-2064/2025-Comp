@@ -1,18 +1,18 @@
-package frc.robot.ControlBoard;
+package frc.robot.Utils.ControlBoard;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants.ControlBoardConstants;
-import frc.robot.Constants.OTFPaths;
-import frc.robot.Constants.WristConstants;
-import frc.robot.ControlBoard.ReefLookup.AlgaeHeight;
-import frc.robot.ControlBoard.ReefLookup.AlgaePair;
-import frc.robot.Subsystems.EndEffectorSubsystem.EndEffectorState;
+import frc.robot.Subsystems.Arm.EndEffectorSubsystem.EndEffectorState;
+import frc.robot.Utils.Constants.ArmConstants;
+import frc.robot.Utils.Constants.ControlBoardConstants;
+import frc.robot.Utils.Constants.OTFPaths;
+import frc.robot.Utils.Constants.WristConstants;
+import frc.robot.Utils.ControlBoard.ReefLookup.AlgaeHeight;
+import frc.robot.Utils.ControlBoard.ReefLookup.AlgaePair;
 
 public class RobotConfigProvider {
 
-    public static RobotConfiguration getGamePieceConfiguration(double currHeading) {
+    public static RobotConfiguration getGamePieceConfiguration(double currHeading, double coralOffset) {
         try {
             // SCORE ALGAE IN PROCESSOR
             if (ControlBoardHelpers.getScoreLocation().equals(ControlBoardConstants.SCORE_PROCESSOR)) {
@@ -50,15 +50,20 @@ public class RobotConfigProvider {
                     double closestHeading = getClosestHeading(currHeading,
                             endPose.getRotation().getDegrees());
                     boolean usingFront = closestHeading == endPose.getRotation().getDegrees();
+                    Pose2d adjustedPose = new Pose2d(
+                        endPose.getX(),
+                        endPose.getY(),
+                        Rotation2d.fromDegrees(closestHeading)
+                    );
                     return new RobotConfiguration(
-                            new Pose2d(endPose.getX(), endPose.getY(), Rotation2d.fromDegrees(closestHeading)),
-                            (usingFront) ? ArmConstants.ARM_TROUGH_FRONT_ANGLE
-                                    : ArmConstants.ARM_TROUGH_BACK_ANGLE,
-                            ArmConstants.ARM_HOME_ANGLE,
-                            (usingFront) ? WristConstants.WRIST_TROUGH_FRONT_ANGLE
-                                    : WristConstants.WRIST_TROUGH_BACK_ANGLE,
-                            WristConstants.WRIST_HOME_ANGLE,
-                            EndEffectorState.OUTTAKING_CORAL);
+                        adjustedPose,
+                        (usingFront) ? ArmConstants.ARM_TROUGH_FRONT_ANGLE
+                                : ArmConstants.ARM_TROUGH_BACK_ANGLE,
+                        ArmConstants.ARM_HOME_ANGLE,
+                        (usingFront) ? WristConstants.WRIST_TROUGH_FRONT_ANGLE
+                                : WristConstants.WRIST_TROUGH_BACK_ANGLE,
+                        WristConstants.WRIST_HOME_ANGLE,
+                        EndEffectorState.OUTTAKING_CORAL);
                 }
             }
 
@@ -69,15 +74,28 @@ public class RobotConfigProvider {
                     double closestHeading = getClosestHeading(currHeading,
                             endPose.getRotation().getDegrees());
                     boolean usingFront = closestHeading == endPose.getRotation().getDegrees();
+                    Pose2d basePose = new Pose2d(endPose.getTranslation(), Rotation2d.fromDegrees(closestHeading));
+                    double lateralOffset = usingFront ? coralOffset : -coralOffset;
+
+                    Rotation2d heading = basePose.getRotation();
+                    double offsetX  = -lateralOffset * heading.getSin();
+                    double offsetY = lateralOffset * heading.getCos();
+
+                    Pose2d adjustedPose = new Pose2d(
+                        basePose.getX() + offsetX,
+                        basePose.getY() + offsetY,
+                        basePose.getRotation()
+                    );
+
                     return new RobotConfiguration(
-                            new Pose2d(endPose.getX(), endPose.getY(), Rotation2d.fromDegrees(closestHeading)),
-                            (usingFront) ? ArmConstants.ARM_L2_FRONT_ANGLE
-                                    : ArmConstants.ARM_L2_BACK_ANGLE,
-                            ArmConstants.ARM_HOME_ANGLE,
-                            (usingFront) ? WristConstants.WRIST_L2_FRONT_ANGLE
-                                    : WristConstants.WRIST_L2_BACK_ANGLE,
-                            WristConstants.WRIST_HOME_ANGLE,
-                            EndEffectorState.OUTTAKING_CORAL);
+                        adjustedPose,
+                        (usingFront) ? ArmConstants.ARM_L2_FRONT_ANGLE
+                                : ArmConstants.ARM_L2_BACK_ANGLE,
+                        ArmConstants.ARM_HOME_ANGLE,
+                        (usingFront) ? WristConstants.WRIST_L2_FRONT_ANGLE
+                                : WristConstants.WRIST_L2_BACK_ANGLE,
+                        WristConstants.WRIST_HOME_ANGLE,
+                        EndEffectorState.OUTTAKING_CORAL);
                 }
             }
 
@@ -85,13 +103,26 @@ public class RobotConfigProvider {
             if (reefLevel == ControlBoardConstants.REEF_LEVEL_3) {
                 Pose2d endPose = ReefLookup.coralPoses.get(reefLocation);
                 if (endPose != null) {
+                    Pose2d basePose = endPose.rotateBy(Rotation2d.fromDegrees(180));
+                    double lateralOffset = -coralOffset;
+
+                    Rotation2d heading = basePose.getRotation();
+                    double offsetX  = -lateralOffset * heading.getSin();
+                    double offsetY = lateralOffset * heading.getCos();
+
+                    Pose2d adjustedPose = new Pose2d(
+                        basePose.getX() + offsetX,
+                        basePose.getY() + offsetY,
+                        basePose.getRotation()
+                    );
+
                     return new RobotConfiguration(
-                            endPose.rotateBy(Rotation2d.fromDegrees(180)),
-                            ArmConstants.ARM_L3_BACK_ANGLE,
-                            ArmConstants.ARM_HOME_ANGLE,
-                            WristConstants.WRIST_L3_BACK_ANGLE,
-                            WristConstants.WRIST_HOME_ANGLE,
-                            EndEffectorState.OUTTAKING_CORAL);
+                        adjustedPose,
+                        ArmConstants.ARM_L3_BACK_ANGLE,
+                        ArmConstants.ARM_HOME_ANGLE,
+                        WristConstants.WRIST_L3_BACK_ANGLE,
+                        WristConstants.WRIST_HOME_ANGLE,
+                        EndEffectorState.OUTTAKING_CORAL);
                 }
             }
 

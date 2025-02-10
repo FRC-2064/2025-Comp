@@ -13,16 +13,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.Constants.WristConstants;
-import frc.robot.Subsystems.ArmSubsystem;
-import frc.robot.Subsystems.ClampSubsystem;
-import frc.robot.Subsystems.EndEffectorSubsystem;
 import frc.robot.Subsystems.RobotSubsystem;
-import frc.robot.Subsystems.SwerveSubsystem;
-import frc.robot.Subsystems.WristSubsystem;
-import frc.robot.Subsystems.EndEffectorSubsystem.EndEffectorState;
+import frc.robot.Subsystems.Arm.ArmSubsystem;
+import frc.robot.Subsystems.Arm.ClampSubsystem;
+import frc.robot.Subsystems.Arm.EndEffectorSubsystem;
+import frc.robot.Subsystems.Arm.WristSubsystem;
+import frc.robot.Subsystems.Arm.EndEffectorSubsystem.EndEffectorState;
+import frc.robot.Subsystems.Drive.SwerveSubsystem;
+import frc.robot.Utils.Constants.ArmConstants;
+import frc.robot.Utils.Constants.OperatorConstants;
+import frc.robot.Utils.Constants.WristConstants;
 import swervelib.SwerveInputStream;
 
 public class RobotContainer {

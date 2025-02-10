@@ -1,10 +1,10 @@
-package frc.robot.ControlBoard;
+package frc.robot.Utils.ControlBoard;
 
 import java.util.Map;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import frc.robot.Constants.ControlBoardConstants;
-import frc.robot.Constants.OTFPaths;
+import frc.robot.Utils.Constants.ControlBoardConstants;
+import frc.robot.Utils.Constants.OTFPaths;
 
 import java.util.HashMap;
 

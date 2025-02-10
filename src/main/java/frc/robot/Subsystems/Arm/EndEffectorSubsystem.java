@@ -1,4 +1,4 @@
-package frc.robot.Subsystems;
+package frc.robot.Subsystems.Arm;
 
 import java.util.EnumMap;
 
@@ -6,11 +6,13 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.EndEffectorConstants;
+import frc.robot.Utils.TOF;
+import frc.robot.Utils.Constants.EndEffectorConstants;
 
 public class EndEffectorSubsystem extends SubsystemBase {
     private SparkMax top;
     private SparkMax bottom;
+    private TOF tof;
     private EndEffectorState state = EndEffectorState.STOPPED;
 
     private boolean hasCoral = false;
@@ -20,6 +22,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
     public EndEffectorSubsystem() {
         top = new SparkMax(EndEffectorConstants.EE_TOP_ID, MotorType.kBrushless);
         bottom = new SparkMax(EndEffectorConstants.EE_BOTTOM_ID, MotorType.kBrushless);
+        tof = new TOF(EndEffectorConstants.TOF_PORT);
 
         stateActions = new EnumMap<>(EndEffectorState.class);
         stateActions.put(EndEffectorState.INTAKING_CORAL, this::intakeCoral);
@@ -50,6 +53,11 @@ public class EndEffectorSubsystem extends SubsystemBase {
 
     public EndEffectorState getState() {
         return state;
+    }
+
+    public double getGamePieceOffset() {
+        double currentReading = tof.getDistance();
+        return EndEffectorConstants.EE_BASE_OFFSET - currentReading;
     }
 
     private void stopWithCoral() { 
