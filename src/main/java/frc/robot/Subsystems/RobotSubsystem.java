@@ -2,8 +2,8 @@ package frc.robot.Subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
-import frc.robot.ControlBoard.ScoreConfigProvider;
-import frc.robot.ControlBoard.ScoreConfiguration;
+import frc.robot.ControlBoard.RobotConfigProvider;
+import frc.robot.ControlBoard.RobotConfiguration;
 import frc.robot.Subsystems.ArmSubsystem.ArmState;
 import frc.robot.Subsystems.SwerveSubsystem.DriveState;
 import frc.robot.Subsystems.WristSubsystem.WristState;
@@ -17,7 +17,7 @@ public class RobotSubsystem extends SubsystemBase{
 
     private RobotState robotState = RobotState.I_IDLE;
     private RobotState endRobotState = RobotState.I_IDLE;
-    private ScoreConfiguration config;
+    private RobotConfiguration config;
 
     public RobotSubsystem(ArmSubsystem arm, ClampSubsystem clamp, SwerveSubsystem drivebase, EndEffectorSubsystem endEffector, WristSubsystem wrist) {
         this.arm = arm;
@@ -73,19 +73,19 @@ public class RobotSubsystem extends SubsystemBase{
     }
 
     public void goToFeeder() {
-        config = ScoreConfigProvider.getFeederConfiguration(drivebase.getHeading().getDegrees());
+        config = RobotConfigProvider.getFeederConfiguration(drivebase.getHeading().getDegrees());
         endRobotState = RobotState.F_FEEDER;
         robotState = RobotState.T_TRAVELING;
     }
 
     public void goToScore() {
-        config = ScoreConfigProvider.getFeederConfiguration(drivebase.getHeading().getDegrees());
+        config = RobotConfigProvider.getFeederConfiguration(drivebase.getHeading().getDegrees());
         endRobotState = RobotState.S_SCORING;
         robotState = RobotState.T_TRAVELING;
     }
 
     public void goToCage() {
-        config = ScoreConfigProvider.getCageConfiguration();
+        config = RobotConfigProvider.getCageConfiguration();
         endRobotState = RobotState.C_CLIMBING;
         robotState = RobotState.T_TRAVELING;
     }

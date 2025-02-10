@@ -10,13 +10,13 @@ import frc.robot.ControlBoard.ReefLookup.AlgaeHeight;
 import frc.robot.ControlBoard.ReefLookup.AlgaePair;
 import frc.robot.Subsystems.EndEffectorSubsystem.EndEffectorState;
 
-public class ScoreConfigProvider {
+public class RobotConfigProvider {
 
-    public static ScoreConfiguration getGamePieceConfiguration(double currHeading) {
+    public static RobotConfiguration getGamePieceConfiguration(double currHeading) {
         try {
             // SCORE ALGAE IN PROCESSOR
             if (ControlBoardHelpers.getScoreLocation().equals(ControlBoardConstants.SCORE_PROCESSOR)) {
-                return new ScoreConfiguration(
+                return new RobotConfiguration(
                         OTFPaths.PROCESSOR,
                         ArmConstants.ARM_ALGAE_CARRY_ANGLE,
                         ArmConstants.ARM_ALGAE_CARRY_ANGLE,
@@ -32,7 +32,7 @@ public class ScoreConfigProvider {
             if (reefLevel == ControlBoardConstants.REEF_LEVEL_ALGAE) {
                 AlgaePair pair = ReefLookup.algaePoses.get(reefLocation);
                 boolean isHighAlgae = pair.algaeHeight == AlgaeHeight.HIGH;
-                return new ScoreConfiguration(
+                return new RobotConfiguration(
                         pair.endPose,
                         (isHighAlgae) ? ArmConstants.ARM_HIGH_ALGAE_REMOVAL_ANGLE
                                 : ArmConstants.ARM_LOW_ALGAE_REMOVAL_ANGLE,
@@ -50,7 +50,7 @@ public class ScoreConfigProvider {
                     double closestHeading = getClosestHeading(currHeading,
                             endPose.getRotation().getDegrees());
                     boolean usingFront = closestHeading == endPose.getRotation().getDegrees();
-                    return new ScoreConfiguration(
+                    return new RobotConfiguration(
                             new Pose2d(endPose.getX(), endPose.getY(), Rotation2d.fromDegrees(closestHeading)),
                             (usingFront) ? ArmConstants.ARM_TROUGH_FRONT_ANGLE
                                     : ArmConstants.ARM_TROUGH_BACK_ANGLE,
@@ -69,7 +69,7 @@ public class ScoreConfigProvider {
                     double closestHeading = getClosestHeading(currHeading,
                             endPose.getRotation().getDegrees());
                     boolean usingFront = closestHeading == endPose.getRotation().getDegrees();
-                    return new ScoreConfiguration(
+                    return new RobotConfiguration(
                             new Pose2d(endPose.getX(), endPose.getY(), Rotation2d.fromDegrees(closestHeading)),
                             (usingFront) ? ArmConstants.ARM_L2_FRONT_ANGLE
                                     : ArmConstants.ARM_L2_BACK_ANGLE,
@@ -85,7 +85,7 @@ public class ScoreConfigProvider {
             if (reefLevel == ControlBoardConstants.REEF_LEVEL_3) {
                 Pose2d endPose = ReefLookup.coralPoses.get(reefLocation);
                 if (endPose != null) {
-                    return new ScoreConfiguration(
+                    return new RobotConfiguration(
                             endPose.rotateBy(Rotation2d.fromDegrees(180)),
                             ArmConstants.ARM_L3_BACK_ANGLE,
                             ArmConstants.ARM_HOME_ANGLE,
@@ -102,7 +102,7 @@ public class ScoreConfigProvider {
         return null;
     }
 
-    public static ScoreConfiguration getFeederConfiguration(double currHeading) {
+    public static RobotConfiguration getFeederConfiguration(double currHeading) {
         try {
             String feeder = ControlBoardHelpers.getFeeder();
 
@@ -111,7 +111,7 @@ public class ScoreConfigProvider {
                 double closestHeading = getClosestHeading(currHeading,
                         endPose.getRotation().getDegrees());
                 Boolean usingFront = closestHeading == endPose.getRotation().getDegrees();
-                return new ScoreConfiguration(
+                return new RobotConfiguration(
                         new Pose2d(endPose.getX(), endPose.getY(), Rotation2d.fromDegrees(closestHeading)),
                         (usingFront) ? ArmConstants.ARM_FRONT_INTAKE_ANGLE : ArmConstants.ARM_BACK_INTAKE_ANGLE,
                         ArmConstants.ARM_HOME_ANGLE,
@@ -124,7 +124,7 @@ public class ScoreConfigProvider {
                 double closestHeading = getClosestHeading(currHeading,
                         endPose.getRotation().getDegrees());
                 Boolean usingFront = closestHeading == endPose.getRotation().getDegrees();
-                return new ScoreConfiguration(
+                return new RobotConfiguration(
                         new Pose2d(endPose.getX(), endPose.getY(), Rotation2d.fromDegrees(closestHeading)),
                         (usingFront) ? ArmConstants.ARM_FRONT_INTAKE_ANGLE : ArmConstants.ARM_BACK_INTAKE_ANGLE,
                         ArmConstants.ARM_HOME_ANGLE,
@@ -141,11 +141,11 @@ public class ScoreConfigProvider {
         return null;
     }
 
-    public static ScoreConfiguration getCageConfiguration() {
+    public static RobotConfiguration getCageConfiguration() {
         try {
             String cage = ControlBoardHelpers.getCage();
             if (cage.equals(ControlBoardConstants.CAGE_LEFT)) {
-                return new ScoreConfiguration(
+                return new RobotConfiguration(
                         OTFPaths.CAGE_LEFT,
                         ArmConstants.ARM_CLIMB_ANGLE,
                         ArmConstants.ARM_HOME_ANGLE,
@@ -153,7 +153,7 @@ public class ScoreConfigProvider {
                         WristConstants.WRIST_HOME_ANGLE,
                         EndEffectorState.STOPPED);
             } else if (cage.equals(ControlBoardConstants.CAGE_CENTER)) {
-                return new ScoreConfiguration(
+                return new RobotConfiguration(
                         OTFPaths.CAGE_CENTER,
                         ArmConstants.ARM_CLIMB_ANGLE,
                         ArmConstants.ARM_HOME_ANGLE,
@@ -161,7 +161,7 @@ public class ScoreConfigProvider {
                         WristConstants.WRIST_HOME_ANGLE,
                         EndEffectorState.STOPPED);
             } else if (cage.equals(ControlBoardConstants.CAGE_RIGHT)) {
-                return new ScoreConfiguration(
+                return new RobotConfiguration(
                         OTFPaths.CAGE_RIGHT,
                         ArmConstants.ARM_CLIMB_ANGLE,
                         ArmConstants.ARM_HOME_ANGLE,
