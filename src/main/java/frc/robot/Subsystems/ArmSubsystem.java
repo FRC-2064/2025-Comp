@@ -29,8 +29,6 @@ public class ArmSubsystem extends SubsystemBase {
 
     private ArmState currentState = ArmState.STATIONARY;
 
-    private double armAllowedError = 0.05;
-
 
     public ArmSubsystem() {
         // ARM
@@ -52,7 +50,7 @@ public class ArmSubsystem extends SubsystemBase {
                 .idleMode(IdleMode.kBrake).closedLoop.maxMotion
                 .maxVelocity(8000)
                 .maxAcceleration(4000)
-                .allowedClosedLoopError(armAllowedError)
+                .allowedClosedLoopError(ArmConstants.ALLOWED_ERROR_DEGREES / ArmConstants.DEGREES_PER_ROTATION)
                 .positionMode(MAXMotionPositionMode.kMAXMotionTrapezoidal);
 
         armFollowerConfig.follow(ArmConstants.ARM_LEADER_ID, true);
@@ -66,10 +64,11 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        armAngle = armLeader.getAbsoluteEncoder().getPosition() * 360;
-        double diff = armTarget - armAngle;
-        if (Math.abs(diff) < armAllowedError) {
+        armAngle = armLeader.getAbsoluteEncoder().getPosition() * ArmConstants.DEGREES_PER_ROTATION;
+        if (Math.abs(armAngle - armTarget) < ArmConstants.ALLOWED_ERROR_DEGREES) {
             currentState = ArmState.STATIONARY;
+        } else {
+            currentState = ArmState.MOVING;
         }
         SmartDashboard.putString("Logging/Arm/State", currentState.toString());
         SmartDashboard.putNumber("Logging/Arm/Angle", armAngle);
@@ -84,9 +83,12 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void setTargetAngle(double angle) {
-        armTarget = angle / 360;
-        armController.setReference(armTarget, ControlType.kPosition);
-        currentState = ArmState.MOVING;
+        if (armTarget == angle) {
+            return;
+        }
+        armTarget = angle;
+        double normalizedTarget = angle / ArmConstants.DEGREES_PER_ROTATION;
+        armController.setReference(normalizedTarget, ControlType.kPosition);
     }
 
     public void armToggleCoast() {

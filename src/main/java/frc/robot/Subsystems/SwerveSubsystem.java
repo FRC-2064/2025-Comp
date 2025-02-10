@@ -34,7 +34,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Limelight1Constants;
 import frc.robot.Constants.Limelight2Constants;
-import frc.robot.Constants.OTFPaths;
 import frc.robot.Robot;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
@@ -48,6 +47,8 @@ import frc.robot.LimelightHelpers;
 public class SwerveSubsystem extends SubsystemBase {
     private final SwerveDrive swerveDrive;
     private DriveState driveState = DriveState.USER_CONTROLLED;
+    private Pose2d otfStartPose;
+    private Pose2d otfEndPose;
 
     public SwerveSubsystem(File directory) {
         SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
@@ -100,6 +101,9 @@ public class SwerveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+
+        manageDriveState();
+
         swerveDrive.updateOdometry();
         if (Robot.isReal()) {
             // LIMELIGHT 1 : FONT
@@ -393,9 +397,17 @@ public class SwerveSubsystem extends SubsystemBase {
         if (endPose == null) {
             return new Command() {};
         }
-        // draw line to end pose and pick a point along it
+        driveState = DriveState.PATHFINDING;
+        // figure out how to get a good point to start at
+        Pose2d gennedStartPose = new Pose2d(endPose.getX(), endPose.getY(), Rotation2d.fromDegrees(0));
+
+        otfEndPose = endPose;
+        otfStartPose = gennedStartPose;
+
+
+        // need to find out what angles these should be at, its direction its driving in, not orientation
         List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
-                new Pose2d(endPose.getX() + 0.5, endPose.getY(), Rotation2d.fromDegrees(0)),
+                new Pose2d(gennedStartPose.getX(), gennedStartPose.getY(), Rotation2d.fromDegrees(0)),
                 new Pose2d(endPose.getX(), endPose.getY(), Rotation2d.fromDegrees(0)));
 
         PathConstraints constraints = new PathConstraints(
@@ -411,6 +423,46 @@ public class SwerveSubsystem extends SubsystemBase {
                 new GoalEndState(0.0, endPose.getRotation()));
 
         return pathfindToPath(generatedPath);
+    }
+
+    private void manageDriveState() {
+        switch (driveState) {
+            case PATHFINDING:
+                pathfinding();
+                break;
+
+            case FOLLOWING_PATH:
+                followingPath();
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    private void pathfinding() {
+        if (otfStartPose == null) {
+            return;
+        }
+
+        Pose2d currentPose = getPose();
+        Translation2d diffTranslation = currentPose.getTranslation().minus(otfStartPose.getTranslation());
+        double positionError = diffTranslation.getNorm();
+
+        if (positionError < Constants.DRIVESTATE_ALLOWED_ERROR) { 
+            driveState = DriveState.FOLLOWING_PATH;
+        }
+
+    }
+
+    private void followingPath() {
+        Pose2d currentPose = getPose();
+        Translation2d diffTranslation = currentPose.getTranslation().minus(otfEndPose.getTranslation());
+        double positionError = diffTranslation.getNorm();
+
+        if (positionError < Constants.DRIVESTATE_ALLOWED_ERROR) { 
+            driveState = DriveState.USER_CONTROLLED;
+        }
     }
 
     public DriveState getDriveState() {

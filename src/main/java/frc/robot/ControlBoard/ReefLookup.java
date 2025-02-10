@@ -3,15 +3,12 @@ package frc.robot.ControlBoard;
 import java.util.Map;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.Constants.AutoHeadings;
 import frc.robot.Constants.ControlBoardConstants;
-import frc.robot.Constants.NamedPaths;
 import frc.robot.Constants.OTFPaths;
 
 import java.util.HashMap;
 
-public class ReefPathLookup {
+public class ReefLookup {
 
         // A IS HIGH
         public static class AlgaePair {

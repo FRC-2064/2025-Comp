@@ -8,6 +8,8 @@ import swervelib.math.Matter;
 
 public class Constants {
 
+    public static final double DRIVESTATE_ALLOWED_ERROR = 0.1;
+
     public static final double ROBOT_MASS = 100;
     public static final Matter CHASSIS = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
     public static final double LOOP_TIME = 0.13;
@@ -68,12 +70,17 @@ public class Constants {
         public static final double ARM_L3_BACK_ANGLE = 92.4;
 
         public static final double ARM_ALGAE_CARRY_ANGLE = 18.97;
-        // public static final double ARM_ALGAE_INTAKE_ANGLE = 0.0;
 
         public static final double ARM_LOW_ALGAE_REMOVAL_ANGLE = 55.0;
         public static final double ARM_HIGH_ALGAE_REMOVAL_ANGLE = 106.0;
 
         public static final double ARM_CLIMB_ANGLE = 68.0;
+
+        public static final double DEGREES_PER_ROTATION = 360.0;
+        public static final double ALLOWED_ERROR_DEGREES = 1.0;
+
+        public static final double ARM_SAFE_MIN_ANGLE = 10;
+        public static final double ARM_SAFE_MAX_ANGLE = 90;
     }
 
     public class EndEffectorConstants {
@@ -108,71 +115,12 @@ public class Constants {
 
         public static final double WRIST_CLIMB_ANGLE = 0;
 
+        public static final double DEGREES_PER_ROTATION = 360.0;
+        public static final double ALLOWED_ERROR_DEGREES = 1.0;
 
-
-    }
-
-    public class NamedPaths {
-        // CORAL PATHS
-        public static final String CORAL_LOCATION_FRONT_A = "CORAL_LOCATION_FRONT_A";
-        public static final String CORAL_LOCATION_FRONT_B = "CORAL_LOCATION_FRONT_B";
-        public static final String CORAL_LOCATION_FRONT_C = "CORAL_LOCATION_FRONT_C";
-        public static final String CORAL_LOCATION_FRONT_D = "CORAL_LOCATION_FRONT_D";
-        public static final String CORAL_LOCATION_FRONT_E = "CORAL_LOCATION_FRONT_E";
-        public static final String CORAL_LOCATION_FRONT_F = "CORAL_LOCATION_FRONT_F";
-        public static final String CORAL_LOCATION_FRONT_G = "CORAL_LOCATION_FRONT_G";
-        public static final String CORAL_LOCATION_FRONT_H = "CORAL_LOCATION_FRONT_H";
-        public static final String CORAL_LOCATION_FRONT_I = "CORAL_LOCATION_FRONT_I";
-        public static final String CORAL_LOCATION_FRONT_J = "CORAL_LOCATION_FRONT_J";
-        public static final String CORAL_LOCATION_FRONT_K = "CORAL_LOCATION_FRONT_K";
-        public static final String CORAL_LOCATION_FRONT_L = "CORAL_LOCATION_FRONT_L";
-
-        public static final String CORAL_LOCATION_BACK_A = "CORAL_LOCATION_BACK_A";
-        public static final String CORAL_LOCATION_BACK_B = "CORAL_LOCATION_BACK_B";
-        public static final String CORAL_LOCATION_BACK_C = "CORAL_LOCATION_BACK_C";
-        public static final String CORAL_LOCATION_BACK_D = "CORAL_LOCATION_BACK_D";
-        public static final String CORAL_LOCATION_BACK_E = "CORAL_LOCATION_BACK_E";
-        public static final String CORAL_LOCATION_BACK_F = "CORAL_LOCATION_BACK_F";
-        public static final String CORAL_LOCATION_BACK_G = "CORAL_LOCATION_BACK_G";
-        public static final String CORAL_LOCATION_BACK_H = "CORAL_LOCATION_BACK_H";
-        public static final String CORAL_LOCATION_BACK_I = "CORAL_LOCATION_BACK_I";
-        public static final String CORAL_LOCATION_BACK_J = "CORAL_LOCATION_BACK_J";
-        public static final String CORAL_LOCATION_BACK_K = "CORAL_LOCATION_BACK_K";
-        public static final String CORAL_LOCATION_BACK_L = "CORAL_LOCATION_BACK_L";
-
-        // ALGAE PATHS
-        public static final String ALGAE_LOCATION_AL = "ALGAE_LOCATION_AL";
-        public static final String ALGAE_LOCATION_BC = "ALGAE_LOCATION_BC";
-        public static final String ALGAE_LOCATION_DE = "ALGAE_LOCATION_DE";
-        public static final String ALGAE_LOCATION_FG = "ALGAE_LOCATION_FG";
-        public static final String ALGAE_LOCATION_HI = "ALGAE_LOCATION_HI";
-        public static final String ALGAE_LOCATION_JK = "ALGAE_LOCATION_JK";
-        public static final String ALGAE_LOCATION_PROCESSOR = "ALGAE_LOCATION_PROCESSOR"; // DONE
-
-        // FEEDER PATHS
-        public static final String FEEDER_LOCATION_FRONT_LEFT = "FEEDER_LOCATION_FRONT_LEFT"; // DONE
-        public static final String FEEDER_LOCATION_FRONT_RIGHT = "FEEDER_LOCATION_FRONT_RIGHT"; // DONE
-        public static final String FEEDER_LOCATION_BACK_LEFT = "FEEDER_LOCATION_BACK_LEFT"; // DONE
-        public static final String FEEDER_LOCATION_BACK_RIGHT = "FEEDER_LOCATION_BACK_RIGHT"; // DONE
-
-        // CAGE PATHS
-        public static final String CAGE_LOCATION_LEFT = "CAGE_LOCATION_LEFT"; // DONE
-        public static final String CAGE_LOCATION_CENTER = "CAGE_LOCATION_CENTER"; // DONE
-        public static final String CAGE_LOCATION_RIGHT = "CAGE_LOCATION_RIGHT"; // DONE
-    }
-
-    public class AutoHeadings {
-        // REEF
-        public static final double REEF_HEADING_AL = 0.0;
-        public static final double REEF_HEADING_FG = 180.0;
-        public static final double REEF_HEADING_BC = -60.0;
-        public static final double REEF_HEADING_HI = 120.0;
-        public static final double REEF_HEADING_DE = -120.0;
-        public static final double REEF_HEADING_JK = 60.0;
-
-        // FEEDER
-        public static final double FEEDER_LEFT = 126.0;
-        public static final double FEEDER_RIGHT = -126.0;
+        public static final double WRIST_SAFE_MIN_ANGLE = 10;
+        public static final double WRIST_SAFE_MAX_ANGLE = 200;
+        
     }
 
     public class ControlBoardConstants {

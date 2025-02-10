@@ -26,8 +26,6 @@ public class WristSubsystem extends SubsystemBase {
 
     private WristState currentState = WristState.STATIONARY;
 
-    private double wristAllowedError = 0.05;
-
     public WristSubsystem() {
         wristMotor = new SparkMax(WristConstants.WRIST_ID, MotorType.kBrushless);
         wristConfig = new SparkMaxConfig();
@@ -42,10 +40,9 @@ public class WristSubsystem extends SubsystemBase {
                 .maxMotion
                 .maxVelocity(5676)
                 .maxAcceleration(10000)
-                .allowedClosedLoopError(wristAllowedError);
+                .allowedClosedLoopError(WristConstants.ALLOWED_ERROR_DEGREES / WristConstants.DEGREES_PER_ROTATION);
 
-        wristConfig.absoluteEncoder
-        .inverted(true);
+        wristConfig.absoluteEncoder.inverted(true);
 
         wristMotor.configure(wristConfig, ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
@@ -56,12 +53,13 @@ public class WristSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        wristAngle = wristMotor.getAbsoluteEncoder().getPosition() * 360;
-        if (Math.abs(wristAngle - wristTarget) < wristAllowedError) {
+        wristAngle = wristMotor.getAbsoluteEncoder().getPosition() * WristConstants.DEGREES_PER_ROTATION;
+        if (Math.abs(wristAngle - wristTarget) < WristConstants.ALLOWED_ERROR_DEGREES) {
             currentState = WristState.STATIONARY;
         } else {
             currentState = WristState.MOVING;
         }
+
         SmartDashboard.putString("Logging/Wrist/State", currentState.toString());
         SmartDashboard.putNumber("Logging/Wrist/Angle", wristAngle);
     }
@@ -75,22 +73,25 @@ public class WristSubsystem extends SubsystemBase {
     }
 
     public void setTargetAngle(double angle) {
+        if (wristTarget == angle) {
+            return;
+        }
         wristTarget = angle;
-        wristController.setReference(angle / 360, ControlType.kMAXMotionPositionControl);
+        double normalizedTarget = angle / WristConstants.DEGREES_PER_ROTATION;
+        wristController.setReference(normalizedTarget, ControlType.kMAXMotionPositionControl);
     }
 
     public void wristToggleCoast() {
         switch (wristMotor.configAccessor.getIdleMode()) {
             case kBrake:
                 wristConfig.idleMode(IdleMode.kCoast);
-                wristMotor.configure(wristConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
                 break;
             case kCoast:
                 wristConfig.idleMode(IdleMode.kBrake);
-                wristMotor.configure(wristConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
                 break;
-        }
-
+            }
+            
+            wristMotor.configure(wristConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     public enum WristState {

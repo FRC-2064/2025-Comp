@@ -5,25 +5,24 @@
 package frc.robot;
 
 import java.io.File;
-import java.util.function.DoubleSupplier;
-
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.WristConstants;
-import frc.robot.ControlBoard.ScoreConfigProvider;
 import frc.robot.Subsystems.ArmSubsystem;
 import frc.robot.Subsystems.ClampSubsystem;
 import frc.robot.Subsystems.EndEffectorSubsystem;
 import frc.robot.Subsystems.RobotSubsystem;
 import frc.robot.Subsystems.SwerveSubsystem;
 import frc.robot.Subsystems.WristSubsystem;
+import frc.robot.Subsystems.EndEffectorSubsystem.EndEffectorState;
 import swervelib.SwerveInputStream;
 
 public class RobotContainer {
@@ -102,38 +101,36 @@ public class RobotContainer {
     wrist.wristToggleCoast();
   });
 
+  // EE COMMANDS
+  Command intakeCoral = new StartEndCommand(
+    () -> endEffector.setState(EndEffectorState.INTAKING_CORAL),
+    () -> endEffector.setState(EndEffectorState.STOPPED),
+    endEffector);
 
+  Command outtakeCoral = new StartEndCommand(
+    () -> endEffector.setState(EndEffectorState.OUTTAKING_CORAL),
+    () -> endEffector.setState(EndEffectorState.STOPPED),
+    endEffector);
 
-  // CLIMB CLAMP COMMANDS
-  //Command toggleClamp = new InstantCommand(() -> arm.toggleClamp());
+  Command intakeAlgae = new StartEndCommand(
+    () -> endEffector.setState(EndEffectorState.INTAKING_ALGAE),
+    () -> endEffector.setState(EndEffectorState.STOPPED),
+    endEffector);
 
-  // VISION COMMANDS
-  DoubleSupplier frontTX = new DoubleSupplier() {
-    public double getAsDouble() {
-      return LimelightHelpers.getTX("limelight-one");
-    };
-  };
+  Command outtakeAlgae = new StartEndCommand(
+    () -> endEffector.setState(EndEffectorState.OUTTAKING_ALGAE),
+    () -> endEffector.setState(EndEffectorState.STOPPED),
+    endEffector);
 
-  //WRIST COMMANDS
-  // Command intake = new StartEndCommand(
-  //     () -> wrist.intakeCoral(),
-  //     () -> wrist.stopIntakeMotors(),
-  //     wrist);
-  // Command outtake = new StartEndCommand(
-  //     () -> wrist.outtakeCoral(),
-  //     () -> wrist.stopIntakeMotors(),
-  //     wrist);
+  Command removeHigh = new StartEndCommand(
+      () -> endEffector.setState(EndEffectorState.REMOVING_HIGH_ALGAE),
+      () -> endEffector.setState(EndEffectorState.STOPPED),
+      endEffector);
 
-  // Command intakeAlgae = new StartEndCommand(
-  //   () -> wrist.intakeAlgae(),
-  //   () -> wrist.stopIntakeMotors(),
-  //   wrist);
-
-  // Command outtakeAlgae = new StartEndCommand(
-  // () -> wrist.outtakeAlgae(),
-  // () -> wrist.stopIntakeMotors(),
-  // wrist);
-    
+  Command removeLow = new StartEndCommand(
+      () -> endEffector.setState(EndEffectorState.REMOVING_LOW_ALGAE),
+      () -> endEffector.setState(EndEffectorState.STOPPED),
+      endEffector);
 
   // DRIVE COMMANDS
   Command driveFieldOrientedDirectAngle = drivebase.driveDirectAngle(
@@ -166,9 +163,10 @@ public class RobotContainer {
   private void configureBindings() {
 
     // 'GO TO' BINDINGS
-    driverXbox.a().onTrue(new InstantCommand(robot::goToFeeder));
-    driverXbox.b().onTrue(new InstantCommand(robot::goToCage));
-    driverXbox.x().onTrue(new InstantCommand(robot::goToScore));
+    // UNTESTED DO NOT USE
+    // driverXbox.a().onTrue(new InstantCommand(robot::goToFeeder));
+    // driverXbox.b().onTrue(new InstantCommand(robot::goToCage));
+    // driverXbox.x().onTrue(new InstantCommand(robot::goToScore));
 
 
     // ARM BINDINGS

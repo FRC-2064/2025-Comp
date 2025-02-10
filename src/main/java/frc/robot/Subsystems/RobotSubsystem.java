@@ -1,9 +1,12 @@
 package frc.robot.Subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.ControlBoard.ScoreConfiguration;
-import frc.robot.Subsystems.EndEffectorSubsystem.EndEffectorState;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.ControlBoard.ScoreConfigProvider;
+import frc.robot.ControlBoard.ScoreConfiguration;
+import frc.robot.Subsystems.ArmSubsystem.ArmState;
+import frc.robot.Subsystems.SwerveSubsystem.DriveState;
+import frc.robot.Subsystems.WristSubsystem.WristState;
 
 public class RobotSubsystem extends SubsystemBase{
     ArmSubsystem arm;
@@ -12,11 +15,9 @@ public class RobotSubsystem extends SubsystemBase{
     EndEffectorSubsystem endEffector;
     WristSubsystem wrist;
 
-    private RobotState currentState = RobotState.IDLE;
-    private RobotState desiredState = RobotState.IDLE;
-
+    private RobotState robotState = RobotState.I_IDLE;
+    private RobotState endRobotState = RobotState.I_IDLE;
     private ScoreConfiguration config;
-
 
     public RobotSubsystem(ArmSubsystem arm, ClampSubsystem clamp, SwerveSubsystem drivebase, EndEffectorSubsystem endEffector, WristSubsystem wrist) {
         this.arm = arm;
@@ -24,108 +25,84 @@ public class RobotSubsystem extends SubsystemBase{
         this.drivebase = drivebase;
         this.endEffector = endEffector;
         this.wrist = wrist;
+
     }
 
     @Override
     public void periodic() {
-        if (currentState != desiredState && config != null) {
-            manageState();
-        }
-    }
-
-    private void manageState() {
-        switch (desiredState) {
-            case IDLE:
-                break;
+        switch (robotState) {
             case T_TRAVELING:
-                t();
+                arm.setTargetAngle(config.travelArmAngle);
+                wrist.setTargetAngle(config.travelWristAngle);
+
+                double armAngle = arm.getArmAngle();
+                if (armAngle >= ArmConstants.ARM_SAFE_MIN_ANGLE && armAngle <= ArmConstants.ARM_SAFE_MAX_ANGLE) {
+                    drivebase.pathfindToOTFPath(config.desiredEndPose).schedule();
+                    robotState = RobotState.P_PATHING;
+                }
                 break;
-            case S_STARTEDPATH:
-                s();
+        
+            case P_PATHING:
+                if (drivebase.getDriveState() == DriveState.FOLLOWING_PATH) {
+                    arm.setTargetAngle(config.finalArmAngle);
+                    wrist.setTargetAngle(config.finalWristAngle);
+                    robotState = endRobotState;
+                }
                 break;
+
             case F_FEEDER:
-                f();
-                break;
-            case R1_REEFLEVEL1, R2_REEFLEVEL2, R3_REEFLEVEL3: 
-                r();
-                break;
-            case A1_LOWALGAE:
-                a1();
-                break;
-            case A2_HIGHALGAE:
-                a2();
-                break;
+            case S_SCORING:
+                if (drivebase.getDriveState() == DriveState.USER_CONTROLLED &&
+                    arm.getState() == ArmState.STATIONARY &&
+                    wrist.getWristState() == WristState.STATIONARY) {
+                        endEffector.setState(config.endEffectorState);
+                        robotState = RobotState.I_IDLE;
+                    }
+            case C_CLIMBING:
+                    // do climb stuff {}
+                    // if robot has climbed then brake climb
+                    robotState = RobotState.B_BRAKINGCLIMB;
+            case B_BRAKINGCLIMB:
+                    // if braking is complete
+                    robotState = RobotState.I_IDLE;
+            case I_IDLE:
             default:
                 break;
         }
-        currentState = desiredState;
+
     }
 
-    private void t() {
-        drivebase.pathfindToOTFPath(config.desiredEndPose).schedule();
-        arm.setTargetAngle(config.travelArmAngle);
-        wrist.setTargetAngle(config.travelWristAngle);
+    public void goToFeeder() {
+        config = ScoreConfigProvider.getFeederConfiguration(drivebase.getHeading().getDegrees());
+        endRobotState = RobotState.F_FEEDER;
+        robotState = RobotState.T_TRAVELING;
     }
 
-    private void s() {
-        arm.setTargetAngle(config.finalArmAngle);
-        wrist.setTargetAngle(config.finalWristAngle);
+    public void goToScore() {
+        config = ScoreConfigProvider.getFeederConfiguration(drivebase.getHeading().getDegrees());
+        endRobotState = RobotState.S_SCORING;
+        robotState = RobotState.T_TRAVELING;
     }
 
-    private void f() {
-        endEffector.setState(EndEffectorState.INTAKING_CORAL);
+    public void goToCage() {
+        config = ScoreConfigProvider.getCageConfiguration();
+        endRobotState = RobotState.C_CLIMBING;
+        robotState = RobotState.T_TRAVELING;
     }
 
-    private void r() {
-        endEffector.setState(EndEffectorState.OUTTAKING_CORAL);
-    }
-
-    private void a1() {
-        endEffector.setState(EndEffectorState.REMOVING_LOW_ALGAE);
-    }
-
-    private void a2() {
-        endEffector.setState(EndEffectorState.REMOVING_HIGH_ALGAE);
-    }
 
     public RobotState getState() {
-        return currentState;
-    }
-
-    public void setState(RobotState state) {
-        desiredState = state;
-    }
-
-    public void goToFeeder() { 
-        config = ScoreConfigProvider.getFeederConfiguration(drivebase.getHeading().getDegrees());
-        currentState = RobotState.IDLE;
-        desiredState = RobotState.T_TRAVELING;
-    }
-
-    public void goToScore() { 
-        config = ScoreConfigProvider.getGamePieceConfiguration(drivebase.getHeading().getDegrees());
-        currentState = RobotState.IDLE;
-        desiredState = RobotState.T_TRAVELING;
-    }
-
-    public void goToCage() { 
-        config = ScoreConfigProvider.getCageConfiguration();
-        currentState = RobotState.IDLE;
-        desiredState = RobotState.T_TRAVELING;
+        return robotState;
     }
 
     public enum RobotState {
-        IDLE,
+        I_IDLE,
         C_CLIMBING,
-        B_BRAKEDCLIMB,
-        P_PROCESSOR,
+        B_BRAKINGCLIMB,
         T_TRAVELING,
-        S_STARTEDPATH,
+        P_PATHING,
         F_FEEDER,
-        R1_REEFLEVEL1,
-        R2_REEFLEVEL2,
-        R3_REEFLEVEL3,
-        A1_LOWALGAE,
-        A2_HIGHALGAE
+        S_SCORING,
+        M_MANUAL
     }
 }
