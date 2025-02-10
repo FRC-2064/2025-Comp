@@ -16,18 +16,20 @@ import frc.robot.Constants.WristConstants;
 
 public class WristSubsystem extends SubsystemBase {
     SparkMax wristMotor;
-    SparkMax intakeTop;
-    SparkMax intakeBottom;
 
     private SparkClosedLoopController wristController;
 
     private SparkMaxConfig wristConfig;
 
+    private double wristAngle;
+    private double wristTarget;
+
+    private WristState currentState = WristState.STATIONARY;
+
+    private double wristAllowedError = 0.05;
+
     public WristSubsystem() {
         wristMotor = new SparkMax(WristConstants.WRIST_ID, MotorType.kBrushless);
-        intakeTop = new SparkMax(WristConstants.INTAKE_TOP_ID, MotorType.kBrushless);
-        intakeBottom = new SparkMax(WristConstants.INTAKE_BOTTOM_ID, MotorType.kBrushless);
-
         wristConfig = new SparkMaxConfig();
 
         wristConfig
@@ -40,7 +42,7 @@ public class WristSubsystem extends SubsystemBase {
                 .maxMotion
                 .maxVelocity(5676)
                 .maxAcceleration(10000)
-                .allowedClosedLoopError(0.05);
+                .allowedClosedLoopError(wristAllowedError);
 
         wristConfig.absoluteEncoder
         .inverted(true);
@@ -54,42 +56,27 @@ public class WristSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("wrist angle", (wristMotor.getAbsoluteEncoder().getPosition()*360));
+        wristAngle = wristMotor.getAbsoluteEncoder().getPosition() * 360;
+        if (Math.abs(wristAngle - wristTarget) < wristAllowedError) {
+            currentState = WristState.STATIONARY;
+        } else {
+            currentState = WristState.MOVING;
+        }
+        SmartDashboard.putString("Logging/Wrist/State", currentState.toString());
+        SmartDashboard.putNumber("Logging/Wrist/Angle", wristAngle);
     }
 
-    public void setWristAngle(double angle) {
+    public double getWristAngle() {
+        return wristAngle;
+    }
+
+    public WristState getWristState() {
+        return currentState;
+    }
+
+    public void setTargetAngle(double angle) {
+        wristTarget = angle;
         wristController.setReference(angle / 360, ControlType.kMAXMotionPositionControl);
-    }
-
-    public void intakeCoral() {
-         intakeTop.set(-0.5);
-         intakeBottom.set(-0.5);
-    }
-
-    public void outtakeCoral() {
-        intakeTop.set(0.40);
-        intakeBottom.set(0.40);
-    }
-
-    public void removeAlgaeLow() {
-        intakeTop.set(-1);
-    }
-
-    public void removeAlgaeHigh() {
-        intakeTop.set(1);
-    }
-
-    public void intakeAlgae(){
-        intakeBottom.set(0.2);
-    }
-
-    public void outtakeAlgae(){
-        intakeBottom.set(-0.2);
-    }
-
-    public void stopIntakeMotors() {
-        intakeTop.set(0);
-        intakeBottom.set(0);
     }
 
     public void wristToggleCoast() {
@@ -106,4 +93,8 @@ public class WristSubsystem extends SubsystemBase {
 
     }
 
+    public enum WristState {
+        MOVING,
+        STATIONARY
+    }
 }

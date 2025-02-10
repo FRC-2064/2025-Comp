@@ -11,18 +11,17 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Commands.PathFindCommand;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.WristConstants;
-import frc.robot.ControlBoard.ControlBoardHelpers;
+import frc.robot.ControlBoard.ScoreConfigProvider;
 import frc.robot.Subsystems.ArmSubsystem;
+import frc.robot.Subsystems.ClampSubsystem;
+import frc.robot.Subsystems.EndEffectorSubsystem;
+import frc.robot.Subsystems.RobotSubsystem;
 import frc.robot.Subsystems.SwerveSubsystem;
 import frc.robot.Subsystems.WristSubsystem;
 import swervelib.SwerveInputStream;
@@ -32,64 +31,65 @@ public class RobotContainer {
   //final CommandXboxController operatorXbox = new CommandXboxController(1);
   final ArmSubsystem arm = new ArmSubsystem();
   final WristSubsystem wrist = new WristSubsystem();
-  private final SwerveSubsystem drivebase = new SwerveSubsystem(
+  final EndEffectorSubsystem endEffector = new EndEffectorSubsystem();
+  final ClampSubsystem clamp = new ClampSubsystem();
+  final SwerveSubsystem drivebase = new SwerveSubsystem(
       new File(
           Filesystem.getDeployDirectory(),
           "swervewrist"));
 
-  // PathFindCommand pathFindScore = new PathFindCommand(drivebase, arm, wrist, "SCORE");
-  // PathFindCommand pathFindFeeder = new PathFindCommand(drivebase, arm, wrist, "FEEDER");
-  // PathFindCommand pathFindCage = new PathFindCommand(drivebase, arm, wrist, "CAGE");
+
+  final RobotSubsystem robot = new RobotSubsystem(arm, clamp, drivebase, endEffector, wrist);
 
   // ARM COMMANDS
   Command homeArm = new InstantCommand(() -> 
   {
     arm.setTargetAngle(ArmConstants.ARM_HOME_ANGLE);
-    wrist.setWristAngle(WristConstants.WRIST_HOME_ANGLE);
+    wrist.setTargetAngle(WristConstants.WRIST_HOME_ANGLE);
   });
   Command troughFront = new InstantCommand(() -> 
   {
     arm.setTargetAngle(ArmConstants.ARM_TROUGH_FRONT_ANGLE);
-    wrist.setWristAngle(WristConstants.WRIST_TROUGH_FRONT_ANGLE);
+    wrist.setTargetAngle(WristConstants.WRIST_TROUGH_FRONT_ANGLE);
   });
   Command troughBack = new InstantCommand(() -> 
   {
     arm.setTargetAngle(ArmConstants.ARM_TROUGH_BACK_ANGLE);
-    wrist.setWristAngle(WristConstants.WRIST_TROUGH_BACK_ANGLE);
+    wrist.setTargetAngle(WristConstants.WRIST_TROUGH_BACK_ANGLE);
   });
   Command level2Front = new InstantCommand(() -> 
   {
     arm.setTargetAngle(ArmConstants.ARM_L2_FRONT_ANGLE);
-    wrist.setWristAngle(WristConstants.WRIST_L2_FRONT_ANGLE);
+    wrist.setTargetAngle(WristConstants.WRIST_L2_FRONT_ANGLE);
   });
   Command level2Back = new InstantCommand(() -> 
   {
     arm.setTargetAngle(ArmConstants.ARM_L2_BACK_ANGLE);
-    wrist.setWristAngle(WristConstants.WRIST_L2_BACK_ANGLE);
+    wrist.setTargetAngle(WristConstants.WRIST_L2_BACK_ANGLE);
   });
 
   Command level3Back = new InstantCommand(() ->
   {
     arm.setTargetAngle(ArmConstants.ARM_L3_BACK_ANGLE);
-    wrist.setWristAngle(WristConstants.WRIST_L3_BACK_ANGLE);
+    wrist.setTargetAngle(WristConstants.WRIST_L3_BACK_ANGLE);
   });
 
   Command intakeBack = new InstantCommand(() ->
   {
     arm.setTargetAngle(ArmConstants.ARM_BACK_INTAKE_ANGLE);
-    wrist.setWristAngle(WristConstants.WRIST_BACK_INTAKE_ANGLE);
+    wrist.setTargetAngle(WristConstants.WRIST_BACK_INTAKE_ANGLE);
   });
 
   Command intakeAlgaeCommand = new InstantCommand(() ->
   {
     arm.setTargetAngle(ArmConstants.ARM_ALGAE_CARRY_ANGLE);
-    wrist.setWristAngle(WristConstants.WRIST_ALGAE_INTAKE_ANGLE);
+    wrist.setTargetAngle(WristConstants.WRIST_ALGAE_INTAKE_ANGLE);
   });
 
   Command removeAlgaeHigh = new InstantCommand(() ->
   {
     arm.setTargetAngle(ArmConstants.ARM_HIGH_ALGAE_REMOVAL_ANGLE);
-    wrist.setWristAngle(WristConstants.WRIST_HIGH_ALGAE_REMOVAL_ANGLE);
+    wrist.setTargetAngle(WristConstants.WRIST_HIGH_ALGAE_REMOVAL_ANGLE);
   });
 
 
@@ -115,24 +115,24 @@ public class RobotContainer {
   };
 
   //WRIST COMMANDS
-  Command intake = new StartEndCommand(
-      () -> wrist.intakeCoral(),
-      () -> wrist.stopIntakeMotors(),
-      wrist);
-  Command outtake = new StartEndCommand(
-      () -> wrist.outtakeCoral(),
-      () -> wrist.stopIntakeMotors(),
-      wrist);
+  // Command intake = new StartEndCommand(
+  //     () -> wrist.intakeCoral(),
+  //     () -> wrist.stopIntakeMotors(),
+  //     wrist);
+  // Command outtake = new StartEndCommand(
+  //     () -> wrist.outtakeCoral(),
+  //     () -> wrist.stopIntakeMotors(),
+  //     wrist);
 
-  Command intakeAlgae = new StartEndCommand(
-    () -> wrist.intakeAlgae(),
-    () -> wrist.stopIntakeMotors(),
-    wrist);
+  // Command intakeAlgae = new StartEndCommand(
+  //   () -> wrist.intakeAlgae(),
+  //   () -> wrist.stopIntakeMotors(),
+  //   wrist);
 
-  Command outtakeAlgae = new StartEndCommand(
-  () -> wrist.outtakeAlgae(),
-  () -> wrist.stopIntakeMotors(),
-  wrist);
+  // Command outtakeAlgae = new StartEndCommand(
+  // () -> wrist.outtakeAlgae(),
+  // () -> wrist.stopIntakeMotors(),
+  // wrist);
     
 
   // DRIVE COMMANDS
@@ -166,9 +166,10 @@ public class RobotContainer {
   private void configureBindings() {
 
     // 'GO TO' BINDINGS
-    driverXbox.a().whileTrue(drivebase.goToScore());
-    driverXbox.x().whileTrue(drivebase.goToFeeder());
-    driverXbox.b().whileTrue(drivebase.goToCage());
+    driverXbox.a().onTrue(new InstantCommand(robot::goToFeeder));
+    driverXbox.b().onTrue(new InstantCommand(robot::goToCage));
+    driverXbox.x().onTrue(new InstantCommand(robot::goToScore));
+
 
     // ARM BINDINGS
     // driverXbox.y().onTrue(level3Back);
@@ -185,10 +186,10 @@ public class RobotContainer {
     // driverXbox.x().whileTrue(outtake);
     // driverXbox.a().whileTrue(intakeAlgae);
     // driverXbox.x().whileTrue(outtakeAlgae);
-    driverXbox.leftTrigger().whileTrue(intakeAlgae);
-    driverXbox.leftBumper().whileTrue(outtakeAlgae);
+    // driverXbox.leftTrigger().whileTrue(intakeAlgae);
+    // driverXbox.leftBumper().whileTrue(outtakeAlgae);
     //driverXbox.b().onTrue(intakeAlgaeCommand);
-    driverXbox.y().onTrue(removeAlgaeHigh);
+    // driverXbox.y().onTrue(removeAlgaeHigh);
 
     // DRIVE BINDINGS
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);

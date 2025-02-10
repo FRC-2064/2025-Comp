@@ -6,7 +6,6 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.MAXMotionConfig.MAXMotionPositionMode;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -19,21 +18,19 @@ import frc.robot.Constants.ArmConstants;
 public class ArmSubsystem extends SubsystemBase {
     private SparkFlex armLeader;
     private SparkFlex armFollower;
-    private SparkMax climbClamp;
 
     private SparkClosedLoopController armController;
-    private SparkClosedLoopController climbClampController;
 
     private SparkFlexConfig armLeaderConfig;
     private SparkFlexConfig armFollowerConfig;
-    private SparkFlexConfig climbClampConfig;
 
     private double armTarget;
+    private double armAngle;
 
-    public boolean hasCoral = false;
-    public boolean hasAlgae = false;
+    private ArmState currentState = ArmState.STATIONARY;
 
-    private CLAMP_STATE clampState = CLAMP_STATE.UN_CLAMPED;
+    private double armAllowedError = 0.05;
+
 
     public ArmSubsystem() {
         // ARM
@@ -55,7 +52,7 @@ public class ArmSubsystem extends SubsystemBase {
                 .idleMode(IdleMode.kBrake).closedLoop.maxMotion
                 .maxVelocity(8000)
                 .maxAcceleration(4000)
-                .allowedClosedLoopError(0.05)
+                .allowedClosedLoopError(armAllowedError)
                 .positionMode(MAXMotionPositionMode.kMAXMotionTrapezoidal);
 
         armFollowerConfig.follow(ArmConstants.ARM_LEADER_ID, true);
@@ -65,46 +62,32 @@ public class ArmSubsystem extends SubsystemBase {
 
         armController = armLeader.getClosedLoopController();
 
-        // CLIMB
-        // climbClamp = new SparkMax(ArmConstants.CLIMB_ID, MotorType.kBrushless);
-
-        // climbClampConfig = new SparkFlexConfig();
-        // climbClampConfig
-        //         .idleMode(IdleMode.kBrake)
-        //         .smartCurrentLimit(20).closedLoop
-        //         .pid(5, 0, 0)
-        //         .positionWrappingEnabled(true)
-        //         .positionWrappingInputRange(0, 1)
-        //         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
-
-        // climbClampConfig.absoluteEncoder.inverted(false);
-        // climbClamp.configure(climbClampConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        //climbClampController = climbClamp.getClosedLoopController();
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("arm angle", (armLeader.getAbsoluteEncoder().getPosition() * 360));
+        armAngle = armLeader.getAbsoluteEncoder().getPosition() * 360;
+        double diff = armTarget - armAngle;
+        if (Math.abs(diff) < armAllowedError) {
+            currentState = ArmState.STATIONARY;
+        }
+        SmartDashboard.putString("Logging/Arm/State", currentState.toString());
+        SmartDashboard.putNumber("Logging/Arm/Angle", armAngle);
+    }
+
+    public double getArmAngle() {
+        return armAngle;
+    }
+
+    public ArmState getState() {
+        return currentState;
     }
 
     public void setTargetAngle(double angle) {
         armTarget = angle / 360;
         armController.setReference(armTarget, ControlType.kPosition);
+        currentState = ArmState.MOVING;
     }
-
-    // public void toggleClamp() {
-    //     switch (clampState) {
-    //         case CLAMPED:
-    //             climbClampController.setReference(ArmConstants.HOME_CLAMP_VAL, ControlType.kPosition);
-    //             clampState = CLAMP_STATE.UN_CLAMPED;
-    //             break;
-
-    //         case UN_CLAMPED:
-    //             climbClampController.setReference(ArmConstants.CLIMB_CLAMP_VAL, ControlType.kPosition);
-    //             clampState = CLAMP_STATE.CLAMPED;
-    //             break;
-    //     }
-    // }
 
     public void armToggleCoast() {
         switch (armLeader.configAccessor.getIdleMode()) {
@@ -125,12 +108,11 @@ public class ArmSubsystem extends SubsystemBase {
                         PersistMode.kPersistParameters);
                 break;
         }
-
     }
 
-    private enum CLAMP_STATE {
-        CLAMPED,
-        UN_CLAMPED
+    public enum ArmState {
+        MOVING,
+        STATIONARY
     }
 
 }

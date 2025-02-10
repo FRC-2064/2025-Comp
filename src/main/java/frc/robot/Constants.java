@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import swervelib.math.Matter;
@@ -39,6 +41,14 @@ public class Constants {
         public static final double YAW_OFFSET = 180.0;
     }
 
+    public class ClampConstants {
+        //CLIMB
+        public static final int CLAMP_ID = 21;
+        public static final double CLAMP_CLOSED_VAL = 0.32;
+        public static final double CLAMP_OPEN_VAL = 0.137;
+        
+    }
+
     public class ArmConstants {
         //ARM
         public static final int ARM_LEADER_ID = 26;
@@ -64,11 +74,13 @@ public class Constants {
         public static final double ARM_HIGH_ALGAE_REMOVAL_ANGLE = 106.0;
 
         public static final double ARM_CLIMB_ANGLE = 68.0;
+    }
 
-        //CLIMB
-        public static final int CLIMB_ID = 21;
-        public static final double CLIMB_CLAMP_VAL = 0.32;
-        public static final double HOME_CLAMP_VAL = 0.137;
+    public class EndEffectorConstants {
+        //INTAKE
+        public static final int EE_TOP_ID = 28;
+        public static final int EE_BOTTOM_ID = 29;
+        public static final int EE_LIMIT_ID = 1;
     }
 
     public class WristConstants {
@@ -93,11 +105,8 @@ public class Constants {
         
         public static final double WRIST_HIGH_ALGAE_REMOVAL_ANGLE = 95.15;
         public static final double WRIST_LOW_ALGAE_REMOVAL_ANGLE = 0;
-        
-        //INTAKE
-        public static final int INTAKE_TOP_ID = 28;
-        public static final int INTAKE_BOTTOM_ID = 29;
-        public static final int INTAKE_LIMIT_ID = 1;
+
+        public static final double WRIST_CLIMB_ANGLE = 0;
 
 
 
@@ -201,5 +210,41 @@ public class Constants {
         public static final String FEEDER_LEFT = "LEFT";
         public static final String FEEDER_RIGHT = "RIGHT";
 
+    }
+
+    public class OTFPaths {
+        // CAGE
+        public static final Pose2d CAGE_LEFT = new Pose2d(8.715, 7.25, Rotation2d.fromDegrees(180.0)); // Done
+        public static final Pose2d CAGE_CENTER = new Pose2d(8.715, 6.15, Rotation2d.fromDegrees(180.0)); // Done
+        public static final Pose2d CAGE_RIGHT = new Pose2d(8.715, 5.1, Rotation2d.fromDegrees(180.0)); // Done
+
+        // ALGAE REMOVAL
+        public static final Pose2d ALGAE_LOCATION_AB = new Pose2d(3.19405, 4.0259, Rotation2d.fromDegrees(0.0)); // tag 18
+        public static final Pose2d ALGAE_LOCATION_CD = new Pose2d(3.842131, 2.904871924, Rotation2d.fromDegrees(60.0)); // tag 17
+        public static final Pose2d ALGAE_LOCATION_EF = new Pose2d(5.136515, 2.904871924, Rotation2d.fromDegrees(120.0)); // tag 22
+        public static final Pose2d ALGAE_LOCATION_GH = new Pose2d(5.784596, 4.0259, Rotation2d.fromDegrees(180.0)); // tag 21
+        public static final Pose2d ALGAE_LOCATION_IJ = new Pose2d(5.136515, 5.146928076, Rotation2d.fromDegrees(240.0)); // tag 20
+        public static final Pose2d ALGAE_LOCATION_KL = new Pose2d(3.842131, 5.146928076, Rotation2d.fromDegrees(300.0)); // tag 19
+        
+        // SCORE
+        public static final Pose2d PROCESSOR = new Pose2d(5.987542, 0.45974, Rotation2d.fromDegrees(270)); // tag 16
+        public static final Pose2d CORAL_LOCATION_A = new Pose2d(0,0, Rotation2d.fromDegrees(0.0)); // tag 18
+        public static final Pose2d CORAL_LOCATION_B = new Pose2d(0,0, Rotation2d.fromDegrees(0.0)); // tag 18
+        public static final Pose2d CORAL_LOCATION_C = new Pose2d(0,0, Rotation2d.fromDegrees(60.0)); // tag 17
+        public static final Pose2d CORAL_LOCATION_D = new Pose2d(0,0, Rotation2d.fromDegrees(60.0)); // tag 17
+        public static final Pose2d CORAL_LOCATION_E = new Pose2d(0,0, Rotation2d.fromDegrees(120.0)); // tag 22
+        public static final Pose2d CORAL_LOCATION_F = new Pose2d(0,0, Rotation2d.fromDegrees(120.0)); // tag 22
+        public static final Pose2d CORAL_LOCATION_G = new Pose2d(0,0, Rotation2d.fromDegrees(180.0)); // tag 21
+        public static final Pose2d CORAL_LOCATION_H = new Pose2d(0,0, Rotation2d.fromDegrees(180.0)); // tag 21
+        public static final Pose2d CORAL_LOCATION_I = new Pose2d(0,0, Rotation2d.fromDegrees(240.0)); // tag 20
+        public static final Pose2d CORAL_LOCATION_J = new Pose2d(0,0, Rotation2d.fromDegrees(240.0)); // tag 20
+        public static final Pose2d CORAL_LOCATION_K = new Pose2d(0,0, Rotation2d.fromDegrees(300.0)); // tag 19
+        public static final Pose2d CORAL_LOCATION_L = new Pose2d(0,0, Rotation2d.fromDegrees(300.0)); // tag 19
+
+        // FEEDER
+        public static final Pose2d FEEDER_LOCATION_LEFT = new Pose2d(1.123621854, 7.021460172, Rotation2d.fromDegrees(126.0)); // tag 13
+        public static final Pose2d FEEDER_LOCATION_RIGHT = new Pose2d(1.123621854, 1.030339828, Rotation2d.fromDegrees(234.0)); // tag 12
+
+        
     }
 }
