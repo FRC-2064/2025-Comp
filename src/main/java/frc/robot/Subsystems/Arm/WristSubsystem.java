@@ -1,4 +1,4 @@
-package frc.robot.Subsystems;
+package frc.robot.Subsystems.Arm;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -12,22 +12,22 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.WristConstants;
+import frc.robot.Utils.Constants.WristConstants;
 
 public class WristSubsystem extends SubsystemBase {
     SparkMax wristMotor;
-    SparkMax intakeTop;
-    SparkMax intakeBottom;
 
     private SparkClosedLoopController wristController;
 
     private SparkMaxConfig wristConfig;
 
+    private double wristAngle;
+    private double wristTarget;
+
+    private WristState currentState = WristState.STATIONARY;
+
     public WristSubsystem() {
         wristMotor = new SparkMax(WristConstants.WRIST_ID, MotorType.kBrushless);
-        intakeTop = new SparkMax(WristConstants.INTAKE_TOP_ID, MotorType.kBrushless);
-        intakeBottom = new SparkMax(WristConstants.INTAKE_BOTTOM_ID, MotorType.kBrushless);
-
         wristConfig = new SparkMaxConfig();
 
         wristConfig
@@ -40,10 +40,9 @@ public class WristSubsystem extends SubsystemBase {
                 .maxMotion
                 .maxVelocity(5676)
                 .maxAcceleration(10000)
-                .allowedClosedLoopError(0.05);
+                .allowedClosedLoopError(WristConstants.ALLOWED_ERROR_DEGREES / WristConstants.DEGREES_PER_ROTATION);
 
-        wristConfig.absoluteEncoder
-        .inverted(true);
+        wristConfig.absoluteEncoder.inverted(true);
 
         wristMotor.configure(wristConfig, ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
@@ -54,56 +53,49 @@ public class WristSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("wrist angle", (wristMotor.getAbsoluteEncoder().getPosition()*360));
+        wristAngle = wristMotor.getAbsoluteEncoder().getPosition() * WristConstants.DEGREES_PER_ROTATION;
+        if (Math.abs(wristAngle - wristTarget) < WristConstants.ALLOWED_ERROR_DEGREES) {
+            currentState = WristState.STATIONARY;
+        } else {
+            currentState = WristState.MOVING;
+        }
+
+        SmartDashboard.putString("Logging/Wrist/State", currentState.toString());
+        SmartDashboard.putNumber("Logging/Wrist/Angle", wristAngle);
     }
 
-    public void setWristAngle(double angle) {
-        wristController.setReference(angle / 360, ControlType.kMAXMotionPositionControl);
+    public double getWristAngle() {
+        return wristAngle;
     }
 
-    public void intakeCoral() {
-         intakeTop.set(-0.5);
-         intakeBottom.set(-0.5);
+    public WristState getWristState() {
+        return currentState;
     }
 
-    public void outtakeCoral() {
-        intakeTop.set(0.40);
-        intakeBottom.set(0.40);
-    }
-
-    public void removeAlgaeLow() {
-        intakeTop.set(-1);
-    }
-
-    public void removeAlgaeHigh() {
-        intakeTop.set(1);
-    }
-
-    public void intakeAlgae(){
-        intakeBottom.set(0.2);
-    }
-
-    public void outtakeAlgae(){
-        intakeBottom.set(-0.2);
-    }
-
-    public void stopIntakeMotors() {
-        intakeTop.set(0);
-        intakeBottom.set(0);
+    public void setTargetAngle(double angle) {
+        if (wristTarget == angle) {
+            return;
+        }
+        wristTarget = angle;
+        double normalizedTarget = angle / WristConstants.DEGREES_PER_ROTATION;
+        wristController.setReference(normalizedTarget, ControlType.kMAXMotionPositionControl);
     }
 
     public void wristToggleCoast() {
         switch (wristMotor.configAccessor.getIdleMode()) {
             case kBrake:
                 wristConfig.idleMode(IdleMode.kCoast);
-                wristMotor.configure(wristConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
                 break;
             case kCoast:
                 wristConfig.idleMode(IdleMode.kBrake);
-                wristMotor.configure(wristConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
                 break;
-        }
-
+            }
+            
+            wristMotor.configure(wristConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
+    public enum WristState {
+        MOVING,
+        STATIONARY
+    }
 }

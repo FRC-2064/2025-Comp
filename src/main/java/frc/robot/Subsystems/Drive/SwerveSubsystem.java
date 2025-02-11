@@ -1,20 +1,22 @@
-package frc.robot.Subsystems;
+package frc.robot.Subsystems.Drive;
 
 import static edu.wpi.first.units.Units.Meter;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.Waypoint;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -28,14 +30,12 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-import frc.robot.Constants.Limelight1Constants;
-import frc.robot.Constants.Limelight2Constants;
-import frc.robot.ControlBoard.ControlBoardUtils;
-import frc.robot.ControlBoard.ScoreOutput;
+import frc.robot.LimelightHelpers;
 import frc.robot.Robot;
+import frc.robot.Utils.Constants;
+import frc.robot.Utils.Constants.Limelight1Constants;
+import frc.robot.Utils.Constants.Limelight2Constants;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.math.SwerveMath;
@@ -43,10 +43,12 @@ import swervelib.parser.SwerveDriveConfiguration;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
-import frc.robot.LimelightHelpers;
 
 public class SwerveSubsystem extends SubsystemBase {
     private final SwerveDrive swerveDrive;
+    private DriveState driveState = DriveState.USER_CONTROLLED;
+    private Pose2d otfStartPose;
+    private Pose2d otfEndPose;
 
     public SwerveSubsystem(File directory) {
         SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
@@ -99,6 +101,9 @@ public class SwerveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+
+        manageDriveState();
+
         swerveDrive.updateOdometry();
         if (Robot.isReal()) {
             // LIMELIGHT 1 : FONT
@@ -118,7 +123,7 @@ public class SwerveSubsystem extends SubsystemBase {
                 doRejectUpdate = true;
             }
             if (!doRejectUpdate) {
-                swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 9999999));
+                swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
                 swerveDrive.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
             }
 
@@ -138,7 +143,7 @@ public class SwerveSubsystem extends SubsystemBase {
                 doRejectUpdate = true;
             }
             if (!doRejectUpdate) {
-                swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 9999999));
+                swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
                 swerveDrive.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
             }
         }
@@ -188,8 +193,8 @@ public class SwerveSubsystem extends SubsystemBase {
                         }
                     },
                     new PPHolonomicDriveController(
-                            new PIDConstants(8.0, 0.0, 0.0),
-                            new PIDConstants(1.0, 0.0, 0.0)),
+                            new PIDConstants(10.0, 0.0, 0.0),
+                            new PIDConstants(8.0, 0.0, 0.0)),
                     config,
                     () -> {
                         var alliance = DriverStation.getAlliance();
@@ -203,8 +208,6 @@ public class SwerveSubsystem extends SubsystemBase {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        PathfindingCommand.warmupCommand().schedule();
     }
 
     public Command getAutonomousCommand(String pathName) {
@@ -382,42 +385,97 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public Command pathfindToPath(PathPlannerPath currPath) {
         PathConstraints constraints = new PathConstraints(
-            swerveDrive.getMaximumChassisVelocity(),
-            4.0,
-            swerveDrive.getMaximumChassisAngularVelocity(),
-            Units.degreesToRadians(720));
+                swerveDrive.getMaximumChassisVelocity(),
+                4.0,
+                swerveDrive.getMaximumChassisAngularVelocity(),
+                Units.degreesToRadians(720));
 
         return AutoBuilder.pathfindThenFollowPath(currPath, constraints);
     }
 
-    public Command goToScore() {
-        return new InstantCommand(() -> {
-            ScoreOutput output = ControlBoardUtils.getScorePath(swerveDrive.getOdometryHeading().getDegrees());
-            if (output != null) {
-                Command pathCommand = pathfindToPath(output.path);
-                pathCommand.schedule();
-            }
-        });
+    public Command pathfindToOTFPath(Pose2d startPose, Pose2d endPose) {
+        if (endPose == null) {
+            return new Command() {};
+        }
+        driveState = DriveState.PATHFINDING;
+
+        otfStartPose = startPose;
+        otfEndPose = endPose;
+
+        double dx = endPose.getX() - startPose.getX();
+        double dy = endPose.getY() - startPose.getY();
+        double angleRadians = Math.atan2(dy, dx);
+        Rotation2d startRotation = new Rotation2d(angleRadians);
+
+
+        // need to find out what angles these should be at, its direction its driving in, not orientation
+        List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
+                new Pose2d(startPose.getX(), startPose.getY(), startRotation),
+                new Pose2d(endPose.getX(), endPose.getY(), new Rotation2d()));
+
+        PathConstraints constraints = new PathConstraints(
+                swerveDrive.getMaximumChassisVelocity(),
+                4.0,
+                swerveDrive.getMaximumChassisAngularVelocity(),
+                Units.degreesToRadians(720));
+
+        PathPlannerPath generatedPath = new PathPlannerPath(
+                waypoints,
+                constraints,
+                null,
+                new GoalEndState(0.0, endPose.getRotation()));
+
+        return pathfindToPath(generatedPath);
     }
 
-    public Command goToCage() {
-        return new InstantCommand(() -> {
-            PathPlannerPath currPath = ControlBoardUtils.getCagePath();
-            if (currPath != null) {
-                Command pathCommand = pathfindToPath(currPath);
-                pathCommand.schedule();
-            }
-        });
+    private void manageDriveState() {
+        switch (driveState) {
+            case PATHFINDING:
+                pathfinding();
+                break;
+
+            case FOLLOWING_PATH:
+                followingPath();
+                break;
+
+            default:
+                break;
+        }
     }
 
-    public Command goToFeeder() {
-        return new InstantCommand(() -> {
-            ScoreOutput output = ControlBoardUtils.getFeederPath(swerveDrive.getOdometryHeading().getDegrees());
-            if (output != null) {
-                Command pathCommand = pathfindToPath(output.path);
-                pathCommand.schedule();
-            }
-        });
+    private void pathfinding() {
+        if (otfStartPose == null) {
+            return;
+        }
+
+        Pose2d currentPose = getPose();
+        Translation2d diffTranslation = currentPose.getTranslation().minus(otfStartPose.getTranslation());
+        double positionError = diffTranslation.getNorm();
+
+        if (positionError < Constants.DRIVESTATE_ALLOWED_ERROR) { 
+            driveState = DriveState.FOLLOWING_PATH;
+        }
+
+    }
+
+    private void followingPath() {
+        Pose2d currentPose = getPose();
+        Translation2d diffTranslation = currentPose.getTranslation().minus(otfEndPose.getTranslation());
+        double positionError = diffTranslation.getNorm();
+
+        if (positionError < Constants.DRIVESTATE_ALLOWED_ERROR) { 
+            driveState = DriveState.USER_CONTROLLED;
+        }
+    }
+
+    public DriveState getDriveState() {
+        return driveState;
+    }
+
+    public enum DriveState {
+        PATHFINDING,
+        FOLLOWING_PATH,
+        USER_CONTROLLED
     }
 
 }

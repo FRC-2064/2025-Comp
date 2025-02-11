@@ -1,4 +1,4 @@
-package frc.robot.ControlBoard;
+package frc.robot.Utils.ControlBoard;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -51,11 +51,11 @@ public class ControlBoardHelpers {
     }
 
     public static String getReefLocation() {
-        return getEntry("ControlBoard/ReefLocation").getString("");
+        return getEntry("ControlBoard/Reef/Location").getString("");
     }
 
     public static void setReefLocation(String value) {
-        getEntry("ControlBoard/ReefLocation").setString(value);
+        getEntry("ControlBoard/Reef/Location").setString(value);
     }
 
     public static boolean getHasScored() {
