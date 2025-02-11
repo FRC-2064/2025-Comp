@@ -18,6 +18,7 @@ public class RobotConfigProvider {
             if (ControlBoardHelpers.getScoreLocation().equals(ControlBoardConstants.SCORE_PROCESSOR)) {
                 return new RobotConfiguration(
                         OTFPaths.PROCESSOR,
+                        computeStartPose(OTFPaths.PROCESSOR),
                         ArmConstants.ARM_ALGAE_CARRY_ANGLE,
                         ArmConstants.ARM_ALGAE_CARRY_ANGLE,
                         WristConstants.WRIST_ALGAE_CARRY_ANGLE,
@@ -34,6 +35,7 @@ public class RobotConfigProvider {
                 boolean isHighAlgae = pair.algaeHeight == AlgaeHeight.HIGH;
                 return new RobotConfiguration(
                         pair.endPose,
+                        computeStartPose(pair.endPose),
                         (isHighAlgae) ? ArmConstants.ARM_HIGH_ALGAE_REMOVAL_ANGLE
                                 : ArmConstants.ARM_LOW_ALGAE_REMOVAL_ANGLE,
                         ArmConstants.ARM_HOME_ANGLE,
@@ -57,6 +59,7 @@ public class RobotConfigProvider {
                     );
                     return new RobotConfiguration(
                         adjustedPose,
+                        computeStartPose(adjustedPose),
                         (usingFront) ? ArmConstants.ARM_TROUGH_FRONT_ANGLE
                                 : ArmConstants.ARM_TROUGH_BACK_ANGLE,
                         ArmConstants.ARM_HOME_ANGLE,
@@ -89,6 +92,7 @@ public class RobotConfigProvider {
 
                     return new RobotConfiguration(
                         adjustedPose,
+                        computeStartPose(adjustedPose),
                         (usingFront) ? ArmConstants.ARM_L2_FRONT_ANGLE
                                 : ArmConstants.ARM_L2_BACK_ANGLE,
                         ArmConstants.ARM_HOME_ANGLE,
@@ -118,6 +122,7 @@ public class RobotConfigProvider {
 
                     return new RobotConfiguration(
                         adjustedPose,
+                        computeStartPose(adjustedPose),
                         ArmConstants.ARM_L3_BACK_ANGLE,
                         ArmConstants.ARM_HOME_ANGLE,
                         WristConstants.WRIST_L3_BACK_ANGLE,
@@ -142,8 +147,10 @@ public class RobotConfigProvider {
                 double closestHeading = getClosestHeading(currHeading,
                         endPose.getRotation().getDegrees());
                 Boolean usingFront = closestHeading == endPose.getRotation().getDegrees();
+                Pose2d adjustedPose = new Pose2d(endPose.getX(), endPose.getY(), Rotation2d.fromDegrees(closestHeading));
                 return new RobotConfiguration(
-                        new Pose2d(endPose.getX(), endPose.getY(), Rotation2d.fromDegrees(closestHeading)),
+                        adjustedPose,
+                        computeStartPose(adjustedPose),
                         (usingFront) ? ArmConstants.ARM_FRONT_INTAKE_ANGLE : ArmConstants.ARM_BACK_INTAKE_ANGLE,
                         ArmConstants.ARM_HOME_ANGLE,
                         (usingFront) ? WristConstants.WRIST_FRONT_INTAKE_ANGLE
@@ -155,14 +162,16 @@ public class RobotConfigProvider {
                 double closestHeading = getClosestHeading(currHeading,
                         endPose.getRotation().getDegrees());
                 Boolean usingFront = closestHeading == endPose.getRotation().getDegrees();
+                Pose2d adjustedPose = new Pose2d(endPose.getX(), endPose.getY(), Rotation2d.fromDegrees(closestHeading));
                 return new RobotConfiguration(
-                        new Pose2d(endPose.getX(), endPose.getY(), Rotation2d.fromDegrees(closestHeading)),
-                        (usingFront) ? ArmConstants.ARM_FRONT_INTAKE_ANGLE : ArmConstants.ARM_BACK_INTAKE_ANGLE,
-                        ArmConstants.ARM_HOME_ANGLE,
-                        (usingFront) ? WristConstants.WRIST_FRONT_INTAKE_ANGLE
-                                : WristConstants.WRIST_BACK_INTAKE_ANGLE,
-                        WristConstants.WRIST_HOME_ANGLE,
-                        EndEffectorState.INTAKING_CORAL);
+                    adjustedPose,
+                    computeStartPose(adjustedPose),
+                    (usingFront) ? ArmConstants.ARM_FRONT_INTAKE_ANGLE : ArmConstants.ARM_BACK_INTAKE_ANGLE,
+                    ArmConstants.ARM_HOME_ANGLE,
+                    (usingFront) ? WristConstants.WRIST_FRONT_INTAKE_ANGLE
+                            : WristConstants.WRIST_BACK_INTAKE_ANGLE,
+                    WristConstants.WRIST_HOME_ANGLE,
+                    EndEffectorState.INTAKING_CORAL);
             }
 
         } catch (Exception e) {
@@ -178,6 +187,7 @@ public class RobotConfigProvider {
             if (cage.equals(ControlBoardConstants.CAGE_LEFT)) {
                 return new RobotConfiguration(
                         OTFPaths.CAGE_LEFT,
+                        computeStartPose(OTFPaths.CAGE_LEFT),
                         ArmConstants.ARM_CLIMB_ANGLE,
                         ArmConstants.ARM_HOME_ANGLE,
                         WristConstants.WRIST_CLIMB_ANGLE,
@@ -186,6 +196,7 @@ public class RobotConfigProvider {
             } else if (cage.equals(ControlBoardConstants.CAGE_CENTER)) {
                 return new RobotConfiguration(
                         OTFPaths.CAGE_CENTER,
+                        computeStartPose(OTFPaths.CAGE_CENTER),
                         ArmConstants.ARM_CLIMB_ANGLE,
                         ArmConstants.ARM_HOME_ANGLE,
                         WristConstants.WRIST_CLIMB_ANGLE,
@@ -194,6 +205,7 @@ public class RobotConfigProvider {
             } else if (cage.equals(ControlBoardConstants.CAGE_RIGHT)) {
                 return new RobotConfiguration(
                         OTFPaths.CAGE_RIGHT,
+                        computeStartPose(OTFPaths.CAGE_RIGHT),
                         ArmConstants.ARM_CLIMB_ANGLE,
                         ArmConstants.ARM_HOME_ANGLE,
                         WristConstants.WRIST_CLIMB_ANGLE,
@@ -205,6 +217,13 @@ public class RobotConfigProvider {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private static Pose2d computeStartPose(Pose2d endPose) {
+        double theta = endPose.getRotation().getRadians();
+        double dx = 0.5 * Math.cos(theta);
+        double dy = 0.5 * Math.sin(theta);
+        return new Pose2d(endPose.getX() - dx, endPose.getY() - dy, Rotation2d.fromDegrees(0.0));
     }
 
     private static double getClosestHeading(double currHeading, double targetHeading) {

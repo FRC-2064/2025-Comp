@@ -44,10 +44,10 @@ public class RobotSubsystem extends SubsystemBase{
                 wrist.setTargetAngle(config.travelWristAngle);
 
                 double armAngle = arm.getArmAngle();
-                if (armAngle >= ArmConstants.ARM_SAFE_MIN_ANGLE && armAngle <= ArmConstants.ARM_SAFE_MAX_ANGLE) {
-                    drivebase.pathfindToOTFPath(config.desiredEndPose).schedule();
+                //if (armAngle >= ArmConstants.ARM_SAFE_MIN_ANGLE && armAngle <= ArmConstants.ARM_SAFE_MAX_ANGLE) {
+                    drivebase.pathfindToOTFPath(config.desiredStartPose, config.desiredEndPose).schedule();
                     robotState = RobotState.P_PATHING;
-                }
+                //}
                 break;
         
             case P_PATHING:

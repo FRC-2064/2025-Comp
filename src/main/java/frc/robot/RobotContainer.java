@@ -20,6 +20,7 @@ import frc.robot.Subsystems.Arm.EndEffectorSubsystem;
 import frc.robot.Subsystems.Arm.WristSubsystem;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem.EndEffectorState;
 import frc.robot.Subsystems.Drive.SwerveSubsystem;
+import frc.robot.Subsystems.LEDs.LEDSubsystem;
 import frc.robot.Utils.Constants.ArmConstants;
 import frc.robot.Utils.Constants.OperatorConstants;
 import frc.robot.Utils.Constants.WristConstants;
@@ -32,13 +33,14 @@ public class RobotContainer {
   final WristSubsystem wrist = new WristSubsystem();
   final EndEffectorSubsystem endEffector = new EndEffectorSubsystem();
   final ClampSubsystem clamp = new ClampSubsystem();
+  final LEDSubsystem leds = new LEDSubsystem();
   final SwerveSubsystem drivebase = new SwerveSubsystem(
       new File(
           Filesystem.getDeployDirectory(),
           "swervewrist"));
 
 
-  final RobotSubsystem robot = new RobotSubsystem(arm, clamp, drivebase, endEffector, wrist);
+  final RobotSubsystem robot = new RobotSubsystem(arm, clamp, drivebase, endEffector, wrist, leds);
 
   // ARM COMMANDS
   Command homeArm = new InstantCommand(() -> 
@@ -164,9 +166,9 @@ public class RobotContainer {
 
     // 'GO TO' BINDINGS
     // UNTESTED DO NOT USE
-    // driverXbox.a().onTrue(new InstantCommand(robot::goToFeeder));
-    // driverXbox.b().onTrue(new InstantCommand(robot::goToCage));
-    // driverXbox.x().onTrue(new InstantCommand(robot::goToScore));
+    driverXbox.a().onTrue(new InstantCommand(robot::goToFeeder));
+    driverXbox.b().onTrue(new InstantCommand(robot::goToCage));
+    driverXbox.x().onTrue(new InstantCommand(robot::goToScore));
 
 
     // ARM BINDINGS

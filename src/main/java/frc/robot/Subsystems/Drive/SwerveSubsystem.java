@@ -393,22 +393,25 @@ public class SwerveSubsystem extends SubsystemBase {
         return AutoBuilder.pathfindThenFollowPath(currPath, constraints);
     }
 
-    public Command pathfindToOTFPath(Pose2d endPose) {
+    public Command pathfindToOTFPath(Pose2d startPose, Pose2d endPose) {
         if (endPose == null) {
             return new Command() {};
         }
         driveState = DriveState.PATHFINDING;
-        // figure out how to get a good point to start at
-        Pose2d gennedStartPose = new Pose2d(endPose.getX(), endPose.getY(), Rotation2d.fromDegrees(0));
 
+        otfStartPose = startPose;
         otfEndPose = endPose;
-        otfStartPose = gennedStartPose;
+
+        double dx = endPose.getX() - startPose.getX();
+        double dy = endPose.getY() - startPose.getY();
+        double angleRadians = Math.atan2(dy, dx);
+        Rotation2d startRotation = new Rotation2d(angleRadians);
 
 
         // need to find out what angles these should be at, its direction its driving in, not orientation
         List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
-                new Pose2d(gennedStartPose.getX(), gennedStartPose.getY(), Rotation2d.fromDegrees(0)),
-                new Pose2d(endPose.getX(), endPose.getY(), Rotation2d.fromDegrees(0)));
+                new Pose2d(startPose.getX(), startPose.getY(), startRotation),
+                new Pose2d(endPose.getX(), endPose.getY(), new Rotation2d()));
 
         PathConstraints constraints = new PathConstraints(
                 swerveDrive.getMaximumChassisVelocity(),
