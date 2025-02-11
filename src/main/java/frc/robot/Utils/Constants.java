@@ -56,7 +56,7 @@ public class Constants {
         public static final int ARM_LEADER_ID = 26;
         public static final int ARM_FOLLOWER_ID = 27;
         
-        public static final double ARM_HOME_ANGLE = 8.5;
+        public static final double ARM_HOME_ANGLE = 45;
 
         public static final double ARM_FRONT_INTAKE_ANGLE = 40.7; //72
         public static final double ARM_BACK_INTAKE_ANGLE = 102.2;

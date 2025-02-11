@@ -53,6 +53,7 @@ public class ArmSubsystem extends SubsystemBase {
                 .allowedClosedLoopError(ArmConstants.ALLOWED_ERROR_DEGREES / ArmConstants.DEGREES_PER_ROTATION)
                 .positionMode(MAXMotionPositionMode.kMAXMotionTrapezoidal);
 
+        armFollowerConfig.idleMode(IdleMode.kBrake);
         armFollowerConfig.follow(ArmConstants.ARM_LEADER_ID, true);
 
         armLeader.configure(armLeaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);

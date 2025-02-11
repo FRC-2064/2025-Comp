@@ -31,7 +31,7 @@ public class WristSubsystem extends SubsystemBase {
         wristConfig = new SparkMaxConfig();
 
         wristConfig
-                .smartCurrentLimit(40)
+                .smartCurrentLimit(10)
                 .inverted(false)
                 .idleMode(IdleMode.kBrake).closedLoop
                 .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
@@ -62,6 +62,7 @@ public class WristSubsystem extends SubsystemBase {
 
         SmartDashboard.putString("Logging/Wrist/State", currentState.toString());
         SmartDashboard.putNumber("Logging/Wrist/Angle", wristAngle);
+        SmartDashboard.putNumber("Logging/Wrist/DesiredAngle", wristTarget);
     }
 
     public double getWristAngle() {
@@ -78,7 +79,7 @@ public class WristSubsystem extends SubsystemBase {
         }
         wristTarget = angle;
         double normalizedTarget = angle / WristConstants.DEGREES_PER_ROTATION;
-        wristController.setReference(normalizedTarget, ControlType.kMAXMotionPositionControl);
+        wristController.setReference(normalizedTarget, ControlType.kPosition);
     }
 
     public void wristToggleCoast() {

@@ -26,7 +26,7 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     PathfindingCommand.warmupCommand().schedule();
     // CameraServer.startAutomaticCapture();
-    sensor = new VL53L0X();
+    //sensor = new VL53L0X();
   }
 
   @Override

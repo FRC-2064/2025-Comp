@@ -20,7 +20,9 @@ import frc.robot.Subsystems.Arm.EndEffectorSubsystem;
 import frc.robot.Subsystems.Arm.WristSubsystem;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem.EndEffectorState;
 import frc.robot.Subsystems.Drive.SwerveSubsystem;
+import frc.robot.Subsystems.Drive.SwerveSubsystem.DriveState;
 import frc.robot.Subsystems.LEDs.LEDSubsystem;
+import frc.robot.Subsystems.RobotSubsystem.RobotState;
 import frc.robot.Utils.Constants.ArmConstants;
 import frc.robot.Utils.Constants.OperatorConstants;
 import frc.robot.Utils.Constants.WristConstants;
@@ -166,18 +168,20 @@ public class RobotContainer {
 
     // 'GO TO' BINDINGS
     // UNTESTED DO NOT USE
-    driverXbox.a().onTrue(new InstantCommand(robot::goToFeeder));
-    driverXbox.b().onTrue(new InstantCommand(robot::goToCage));
+    // driverXbox.a().onTrue(new InstantCommand(robot::goToFeeder));
+    // driverXbox.b().onTrue(new InstantCommand(robot::goToCage));
     driverXbox.x().onTrue(new InstantCommand(robot::goToScore));
+    driverXbox.a().onTrue(new InstantCommand(() -> robot.setState(RobotState.P_PATHING)));
+    driverXbox.b().onTrue(new InstantCommand(() -> robot.setState(RobotState.S_SCORING)));
 
 
     // ARM BINDINGS
     // driverXbox.y().onTrue(level3Back);
     //driverXbox.x().onTrue(intakeBack);
     // driverXbox.leftTrigger().onTrue(troughFront);
-    driverXbox.rightTrigger().onTrue(troughBack);
+    driverXbox.rightTrigger().whileTrue(outtakeCoral);
     // driverXbox.leftBumper().onTrue(level2Front);
-    driverXbox.rightBumper().onTrue(level2Back);
+    driverXbox.rightBumper().whileTrue(intakeCoral);
 
     driverXbox.start().onTrue(toggleArmBrake);
 

@@ -45,27 +45,28 @@ public class RobotSubsystem extends SubsystemBase{
 
                 double armAngle = arm.getArmAngle();
                 //if (armAngle >= ArmConstants.ARM_SAFE_MIN_ANGLE && armAngle <= ArmConstants.ARM_SAFE_MAX_ANGLE) {
-                    drivebase.pathfindToOTFPath(config.desiredStartPose, config.desiredEndPose).schedule();
-                    robotState = RobotState.P_PATHING;
+                    //drivebase.pathfindToOTFPath(config.desiredStartPose, config.desiredEndPose).schedule();
+                    //robotState = RobotState.P_PATHING;
                 //}
                 break;
         
             case P_PATHING:
-                if (drivebase.getDriveState() == DriveState.FOLLOWING_PATH) {
-                    arm.setTargetAngle(config.finalArmAngle);
+                //if (drivebase.getDriveState() == DriveState.FOLLOWING_PATH) {
+
+                arm.setTargetAngle(config.finalArmAngle);
                     wrist.setTargetAngle(config.finalWristAngle);
-                    robotState = endRobotState;
-                }
+                    //robotState = endRobotState;
+                //}
                 break;
 
             case F_FEEDER:
             case S_SCORING:
-                if (drivebase.getDriveState() == DriveState.USER_CONTROLLED &&
-                    arm.getState() == ArmState.STATIONARY &&
-                    wrist.getWristState() == WristState.STATIONARY) {
+                //if (drivebase.getDriveState() == DriveState.USER_CONTROLLED &&
+                  //  arm.getState() == ArmState.STATIONARY &&
+                    //wrist.getWristState() == WristState.STATIONARY) {
                         endEffector.setState(config.endEffectorState);
                         robotState = RobotState.I_IDLE;
-                    }
+                   // }
             case C_CLIMBING:
                     // do climb stuff {}
                     // if robot has climbed then brake climb
@@ -85,18 +86,28 @@ public class RobotSubsystem extends SubsystemBase{
 
     public void goToFeeder() {
         config = RobotConfigProvider.getFeederConfiguration(drivebase.getHeading().getDegrees());
+        if (config == null) {
+            return;
+        }
         endRobotState = RobotState.F_FEEDER;
         robotState = RobotState.T_TRAVELING;
     }
 
     public void goToScore() {
         config = RobotConfigProvider.getGamePieceConfiguration(drivebase.getHeading().getDegrees(), endEffector.getGamePieceOffset());
+        if (config == null) {
+            return;
+        }
         endRobotState = RobotState.S_SCORING;
         robotState = RobotState.T_TRAVELING;
+
     }
 
     public void goToCage() {
         config = RobotConfigProvider.getCageConfiguration();
+        if (config == null) {
+            return;
+        }
         endRobotState = RobotState.C_CLIMBING;
         robotState = RobotState.T_TRAVELING;
     }
@@ -104,6 +115,10 @@ public class RobotSubsystem extends SubsystemBase{
 
     public RobotState getState() {
         return robotState;
+    }
+
+    public void setState(RobotState state) {
+        robotState = state;
     }
 
     public enum RobotState {

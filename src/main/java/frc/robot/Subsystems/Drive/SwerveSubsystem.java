@@ -468,6 +468,10 @@ public class SwerveSubsystem extends SubsystemBase {
         }
     }
 
+    public void setState(DriveState state) {
+        driveState = state;
+    }
+
     public DriveState getDriveState() {
         return driveState;
     }
