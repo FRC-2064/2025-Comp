@@ -24,8 +24,10 @@ import frc.robot.Subsystems.Drive.SwerveSubsystem.DriveState;
 import frc.robot.Subsystems.LEDs.LEDSubsystem;
 import frc.robot.Subsystems.RobotSubsystem.RobotState;
 import frc.robot.Utils.Constants.ArmConstants;
+import frc.robot.Utils.Constants.ControlBoardConstants;
 import frc.robot.Utils.Constants.OperatorConstants;
 import frc.robot.Utils.Constants.WristConstants;
+import frc.robot.Utils.ControlBoard.ControlBoardHelpers;
 import swervelib.SwerveInputStream;
 
 public class RobotContainer {
@@ -43,6 +45,13 @@ public class RobotContainer {
 
 
   final RobotSubsystem robot = new RobotSubsystem(arm, clamp, drivebase, endEffector, wrist, leds);
+
+  // set controlboard
+
+  Command cb_set = new InstantCommand(() -> {
+    ControlBoardHelpers.setLevel(1);
+    ControlBoardHelpers.setReefLocation(ControlBoardConstants.REEF_LOCATION_L);
+  });
 
   // ARM COMMANDS
   Command homeArm = new InstantCommand(() -> 
@@ -174,6 +183,8 @@ public class RobotContainer {
     driverXbox.a().onTrue(new InstantCommand(() -> robot.setState(RobotState.P_PATHING)));
     driverXbox.b().onTrue(new InstantCommand(() -> robot.setState(RobotState.S_SCORING)));
 
+    driverXbox.y().onTrue(cb_set);
+
 
     // ARM BINDINGS
     // driverXbox.y().onTrue(level3Back);
@@ -181,7 +192,7 @@ public class RobotContainer {
     // driverXbox.leftTrigger().onTrue(troughFront);
     driverXbox.rightTrigger().whileTrue(outtakeCoral);
     // driverXbox.leftBumper().onTrue(level2Front);
-    driverXbox.rightBumper().whileTrue(intakeCoral);
+    driverXbox.leftTrigger().whileTrue(intakeCoral);
 
     driverXbox.start().onTrue(toggleArmBrake);
 

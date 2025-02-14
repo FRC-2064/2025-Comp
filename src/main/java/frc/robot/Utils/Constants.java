@@ -7,13 +7,12 @@ import edu.wpi.first.math.util.Units;
 import swervelib.math.Matter;
 
 public class Constants {
-
-    public static final double DRIVESTATE_ALLOWED_ERROR = 0.1;
+    public static final double DRIVESTATE_ALLOWED_ERROR = 1.0;
 
     public static final double ROBOT_MASS = 100;
     public static final Matter CHASSIS = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
     public static final double LOOP_TIME = 0.13;
-    public static final double MAX_SPEED = Units.feetToMeters(14.5);
+    public static final double MAX_SPEED = Units.feetToMeters(4);
 
     public class OperatorConstants {
         public static final double DEADBAND = 0.1;
@@ -113,16 +112,15 @@ public class Constants {
         public static final double WRIST_ALGAE_INTAKE_ANGLE = 109.22;
         
         public static final double WRIST_HIGH_ALGAE_REMOVAL_ANGLE = 95.15;
-        public static final double WRIST_LOW_ALGAE_REMOVAL_ANGLE = 0;
+        public static final double WRIST_LOW_ALGAE_REMOVAL_ANGLE = 60;
 
-        public static final double WRIST_CLIMB_ANGLE = 0;
+        public static final double WRIST_CLIMB_ANGLE = 60;
 
         public static final double DEGREES_PER_ROTATION = 360.0;
         public static final double ALLOWED_ERROR_DEGREES = 1.0;
 
         public static final double WRIST_SAFE_MIN_ANGLE = 10;
         public static final double WRIST_SAFE_MAX_ANGLE = 200;
-        
     }
 
     public class ControlBoardConstants {
@@ -188,8 +186,8 @@ public class Constants {
         public static final Pose2d CORAL_LOCATION_H = new Pose2d(0,0, Rotation2d.fromDegrees(180.0)); // tag 21
         public static final Pose2d CORAL_LOCATION_I = new Pose2d(0,0, Rotation2d.fromDegrees(240.0)); // tag 20
         public static final Pose2d CORAL_LOCATION_J = new Pose2d(0,0, Rotation2d.fromDegrees(240.0)); // tag 20
-        public static final Pose2d CORAL_LOCATION_K = new Pose2d(0,0, Rotation2d.fromDegrees(300.0)); // tag 19
-        public static final Pose2d CORAL_LOCATION_L = new Pose2d(0,0, Rotation2d.fromDegrees(300.0)); // tag 19
+        public static final Pose2d CORAL_LOCATION_K = new Pose2d(3.842131, 5.146928076, Rotation2d.fromDegrees(300.0)); // tag 19
+        public static final Pose2d CORAL_LOCATION_L = new Pose2d(3.842131,5.146928076, Rotation2d.fromDegrees(300.0)); // tag 19
 
         // FEEDER
         public static final Pose2d FEEDER_LOCATION_LEFT = new Pose2d(1.123621854, 7.021460172, Rotation2d.fromDegrees(126.0)); // tag 13

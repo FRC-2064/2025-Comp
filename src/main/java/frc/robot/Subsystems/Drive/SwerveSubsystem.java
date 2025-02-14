@@ -101,7 +101,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-
+        SmartDashboard.putString("Logging/Drive/State", getDriveState().toString());
         manageDriveState();
 
         swerveDrive.updateOdometry();
@@ -193,8 +193,8 @@ public class SwerveSubsystem extends SubsystemBase {
                         }
                     },
                     new PPHolonomicDriveController(
-                            new PIDConstants(10.0, 0.0, 0.0),
-                            new PIDConstants(8.0, 0.0, 0.0)),
+                            new PIDConstants(2.0, 0.0, 1.0),
+                            new PIDConstants(4.0, 0.0, 1.0)),
                     config,
                     () -> {
                         var alliance = DriverStation.getAlliance();
@@ -415,7 +415,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
         PathConstraints constraints = new PathConstraints(
                 swerveDrive.getMaximumChassisVelocity(),
-                4.0,
+                0.5,
                 swerveDrive.getMaximumChassisAngularVelocity(),
                 Units.degreesToRadians(720));
 
@@ -443,14 +443,54 @@ public class SwerveSubsystem extends SubsystemBase {
         }
     }
 
+    private Pose2d getRelativePose() {
+        Pose2d absPos = getPose();
+        double absX = absPos.getX();
+        double absY = absPos.getY();
+
+        double field_length = Units.inchesToMeters(649);
+        double field_width = Units.inchesToMeters(319);
+
+
+
+        double center_x = field_length / 2;
+        double center_y = field_width / 2;
+        
+        double x_centered = absX - center_x;
+        double y_centered = absY - center_y;
+        
+        double x_rotated = -x_centered;
+        double y_rotated = -y_centered;
+        
+        double x_final = x_rotated + center_x;
+        double y_final = y_rotated + center_y;
+
+
+        return new Pose2d(x_final, y_final, new Rotation2d());
+        
+
+    }
+
     private void pathfinding() {
         if (otfStartPose == null) {
             return;
         }
 
-        Pose2d currentPose = getPose();
+        Pose2d currentPose = getRelativePose();
+        SmartDashboard.putNumber("Logging/Drive/absX", getPose().getX());
+        SmartDashboard.putNumber("Logging/Drive/absY", getPose().getY());
+        SmartDashboard.putNumber("Logging/Drive/PositionX", currentPose.getX());
+        SmartDashboard.putNumber("Logging/Drive/PositionY", currentPose.getY());
+        SmartDashboard.putNumber("Logging/Drive/otfX", otfStartPose.getX());
+        SmartDashboard.putNumber("Logging/Drive/otfY", otfStartPose.getY());
+        SmartDashboard.putNumber("Logging/Drive/otfEndX", otfEndPose.getX());
+        SmartDashboard.putNumber("Logging/Drive/otfEndY", otfEndPose.getY());
+        
+
         Translation2d diffTranslation = currentPose.getTranslation().minus(otfStartPose.getTranslation());
         double positionError = diffTranslation.getNorm();
+
+        SmartDashboard.putNumber("Logging/Drive/PositionError", positionError);
 
         if (positionError < Constants.DRIVESTATE_ALLOWED_ERROR) { 
             driveState = DriveState.FOLLOWING_PATH;
@@ -459,7 +499,13 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     private void followingPath() {
-        Pose2d currentPose = getPose();
+        Pose2d currentPose = getRelativePose();
+        SmartDashboard.putNumber("Logging/Drive/absX", getPose().getX());
+        SmartDashboard.putNumber("Logging/Drive/absY", getPose().getY());
+        SmartDashboard.putNumber("Logging/Drive/PositionX", currentPose.getX());
+        SmartDashboard.putNumber("Logging/Drive/PositionY", currentPose.getY());
+        SmartDashboard.putNumber("Logging/Drive/otfEndX", otfEndPose.getX());
+        SmartDashboard.putNumber("Logging/Drive/otfEndY", otfEndPose.getY());
         Translation2d diffTranslation = currentPose.getTranslation().minus(otfEndPose.getTranslation());
         double positionError = diffTranslation.getNorm();
 

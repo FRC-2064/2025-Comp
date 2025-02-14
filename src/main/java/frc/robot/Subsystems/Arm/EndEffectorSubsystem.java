@@ -5,6 +5,7 @@ import java.util.EnumMap;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Utils.TOF;
 import frc.robot.Utils.Constants.EndEffectorConstants;
@@ -37,6 +38,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         stopWithCoral();
+        SmartDashboard.putString("Logging/EE/State", getState().toString());
     }
 
     public void setState(EndEffectorState newState) {
