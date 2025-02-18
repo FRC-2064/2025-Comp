@@ -11,90 +11,90 @@ public class ControlBoardHelpers {
     }
 
     public static int getLevel() {
-        return (int) getEntry("ControlBoard/Reef/Level").getDouble(0);
+        return (int) getEntry("/ControlBoard/Reef/Level").getDouble(0);
     }
 
     public static void setLevel(int value) {
-        getEntry("ControlBoard/Reef/Level").setDouble(value);
+        getEntry("/ControlBoard/Reef/Level").setDouble(value);
     }
 
     public static String getAuto() {
-        return getEntry("ControlBoard/Robot/SelectedAuto").getString("");
+        return getEntry("/ControlBoard/Robot/SelectedAuto").getString("");
     }
 
     public static void setAuto(String value) {
-        getEntry("ControlBoard/Robot/SelectedAuto").setString(value);
+        getEntry("/ControlBoard/Robot/SelectedAuto").setString(value);
     }
 
     public static String getCage() {
-        return getEntry("ControlBoard/Barge/Cage").getString("");
+        return getEntry("/ControlBoard/Barge/Cage").getString("");
     }
 
     public static void setCage(String value) {
-        getEntry("ControlBoard/Barge/Cage").setString(value);
+        getEntry("/ControlBoard/Barge/Cage").setString(value);
     }
 
     public static String getFeeder() {
-        return getEntry("ControlBoard/Feeder").getString("");
+        return getEntry("/ControlBoard/Feeder").getString("");
     }
 
     public static void setFeeder(String value) {
-        getEntry("ControlBoard/Feeder").setString(value);
+        getEntry("/ControlBoard/Feeder").setString(value);
     }
 
     public static String getScoreLocation() {
-        return getEntry("ControlBoard/ScoreLocation").getString("");
+        return getEntry("/ControlBoard/ScoreLocation").getString("");
     }
 
     public static void setScoreLocation(String value) {
-        getEntry("ControlBoard/ScoreLocation").setString(value);
+        getEntry("/ControlBoard/ScoreLocation").setString(value);
     }
 
     public static String getReefLocation() {
-        return getEntry("ControlBoard/ReefLocation").getString("");
+        return getEntry("/ControlBoard/Reef/Location").getString("");
     }
 
     public static void setReefLocation(String value) {
-        getEntry("ControlBoard/ReefLocation").setString(value);
+        getEntry("/ControlBoard/Reef/Location").setString(value);
     }
 
     public static boolean getHasScored() {
-        return getEntry("ControlBoard/Robot/HasScored").getBoolean(false);
+        return getEntry("/ControlBoard/Robot/HasScored").getBoolean(false);
     }
 
     public static void setHasScored(boolean value) {
-        getEntry("ControlBoard/Robot/HasScored").setBoolean(value);
+        getEntry("/ControlBoard/Robot/HasScored").setBoolean(value);
     }
 
     public static boolean getHasAlgae() {
-        return getEntry("ControlBoard/Robot/HasAlgae").getBoolean(false);
+        return getEntry("/ControlBoard/Robot/HasAlgae").getBoolean(false);
     }
 
     public static void setHasAlgae(boolean value) {
-        getEntry("ControlBoard/Robot/HasAlgae").setBoolean(value);
+        getEntry("/ControlBoard/Robot/HasAlgae").setBoolean(value);
     }
 
     public static boolean getHasCoral() {
-        return getEntry("ControlBoard/Robot/HasCoral").getBoolean(false);
+        return getEntry("/ControlBoard/Robot/HasCoral").getBoolean(false);
     }
 
     public static void setHasCoral(boolean value) {
-        getEntry("ControlBoard/Robot/HasCoral").setBoolean(value);
+        getEntry("/ControlBoard/Robot/HasCoral").setBoolean(value);
     }
 
     public static boolean getClamped() {
-        return getEntry("ControlBoard/Robot/Clamped").getBoolean(false);
+        return getEntry("/ControlBoard/Robot/Clamped").getBoolean(false);
     }
 
     public static void setClamped(boolean value) {
-        getEntry("ControlBoard/Robot/Clamped").setBoolean(value);
+        getEntry("/ControlBoard/Robot/Clamped").setBoolean(value);
     }
 
     public static boolean getClimbed() {
-        return getEntry("ControlBoard/Robot/IsClimbed").getBoolean(false);
+        return getEntry("/ControlBoard/Robot/IsClimbed").getBoolean(false);
     }
 
     public static void setClimbed(boolean value) {
-        getEntry("ControlBoard/Robot/IsClimbed").setBoolean(value);
+        getEntry("/ControlBoard/Robot/IsClimbed").setBoolean(value);
     }
 }

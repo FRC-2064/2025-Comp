@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Utils.TOF;
 import frc.robot.Utils.Constants.EndEffectorConstants;
+import frc.robot.Utils.ControlBoard.ControlBoardHelpers;
 
 public class EndEffectorSubsystem extends SubsystemBase {
     private SparkMax top;
@@ -17,6 +18,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
     private EndEffectorState state = EndEffectorState.STOPPED;
 
     private boolean hasCoral = false;
+    private boolean HasAlgae = false;
 
     private final EnumMap<EndEffectorState, Runnable> stateActions;
 
@@ -38,6 +40,8 @@ public class EndEffectorSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         stopWithCoral();
+        ControlBoardHelpers.setHasAlgae(HasAlgae);
+        ControlBoardHelpers.setHasCoral(hasCoral);
         SmartDashboard.putString("Logging/EE/State", getState().toString());
     }
 

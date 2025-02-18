@@ -13,6 +13,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Utils.Constants.ClampConstants;
+import frc.robot.Utils.ControlBoard.ControlBoardHelpers;
 
 public class ClampSubsystem extends SubsystemBase {
     private SparkMax clamp;
@@ -53,6 +54,7 @@ public class ClampSubsystem extends SubsystemBase {
             manageState();
         }
         SmartDashboard.putString("Logging/Clamp/State", currentState.toString());
+
     }
 
     private void manageState() {
@@ -71,11 +73,13 @@ public class ClampSubsystem extends SubsystemBase {
     private void open() {
         clampController.setReference(ClampConstants.CLAMP_OPEN_VAL, ControlType.kPosition);
         currentState = ClampState.OPEN;
+        ControlBoardHelpers.setClamped(false);
     }
 
     private void close() {
         clampController.setReference(ClampConstants.CLAMP_CLOSED_VAL, ControlType.kPosition);
         currentState = ClampState.CLOSED;
+        ControlBoardHelpers.setClamped(true);
     }
 
 
