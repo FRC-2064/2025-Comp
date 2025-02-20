@@ -9,10 +9,12 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Subsystems.RobotSubsystem;
 import frc.robot.Subsystems.Arm.ArmSubsystem;
 import frc.robot.Subsystems.Arm.ClampSubsystem;
@@ -33,6 +35,7 @@ import swervelib.SwerveInputStream;
 public class RobotContainer {
   final CommandXboxController driverXbox = new CommandXboxController(0);
   //final CommandXboxController operatorXbox = new CommandXboxController(1);
+  final Joystick joystick = new Joystick(1);
   final ArmSubsystem arm = new ArmSubsystem();
   final WristSubsystem wrist = new WristSubsystem();
   final EndEffectorSubsystem endEffector = new EndEffectorSubsystem();
@@ -145,6 +148,65 @@ public class RobotContainer {
       () -> endEffector.setState(EndEffectorState.STOPPED),
       endEffector);
 
+  /// Joystick Commands for manual practice
+  Command frontTroughReef = new InstantCommand(
+    () -> {
+      arm.setTargetAngle(ArmConstants.ARM_TROUGH_FRONT_ANGLE);
+    wrist.setTargetAngle(WristConstants.WRIST_TROUGH_FRONT_ANGLE);
+    });
+
+    Command frontL2Reef = new InstantCommand(
+    () -> {
+      arm.setTargetAngle(ArmConstants.ARM_L2_FRONT_ANGLE);
+    wrist.setTargetAngle(WristConstants.WRIST_L2_FRONT_ANGLE);
+    });
+
+    Command frontFeeder = new InstantCommand(
+    () -> {
+      arm.setTargetAngle(ArmConstants.ARM_FRONT_INTAKE_ANGLE);
+    wrist.setTargetAngle(WristConstants.WRIST_FRONT_INTAKE_ANGLE);
+    });
+
+    
+
+    Command backTroughReef = new InstantCommand(
+    () -> {
+      arm.setTargetAngle(ArmConstants.ARM_TROUGH_BACK_ANGLE);
+    wrist.setTargetAngle(WristConstants.WRIST_TROUGH_BACK_ANGLE);
+    });
+
+    Command backL2Reef = new InstantCommand(
+    () -> {
+      arm.setTargetAngle(ArmConstants.ARM_L2_BACK_ANGLE);
+    wrist.setTargetAngle(WristConstants.WRIST_L2_BACK_ANGLE);
+    });
+
+    Command backL3Reef = new InstantCommand(
+    () -> {
+      arm.setTargetAngle(ArmConstants.ARM_L3_BACK_ANGLE);
+    wrist.setTargetAngle(WristConstants.WRIST_L3_BACK_ANGLE);
+    });
+
+    Command frontLowAlgaeRemoval = new InstantCommand(
+    () -> {
+      arm.setTargetAngle(ArmConstants.ARM_LOW_ALGAE_REMOVAL_ANGLE);
+    wrist.setTargetAngle(WristConstants.WRIST_LOW_ALGAE_REMOVAL_ANGLE);
+    });
+
+    Command backHighAlgaeRemoval = new InstantCommand(
+    () -> {
+      arm.setTargetAngle(ArmConstants.ARM_HIGH_ALGAE_REMOVAL_ANGLE);
+    wrist.setTargetAngle(WristConstants.WRIST_HIGH_ALGAE_REMOVAL_ANGLE);
+    });
+
+    
+    Command backFeeder = new InstantCommand(
+    () -> {
+      arm.setTargetAngle(ArmConstants.ARM_BACK_INTAKE_ANGLE);
+    wrist.setTargetAngle(WristConstants.WRIST_BACK_INTAKE_ANGLE);
+    });
+  
+
   // DRIVE COMMANDS
   Command driveFieldOrientedDirectAngle = drivebase.driveDirectAngle(
       () -> MathUtil.applyDeadband(-driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
@@ -190,9 +252,9 @@ public class RobotContainer {
     // driverXbox.y().onTrue(level3Back);
     //driverXbox.x().onTrue(intakeBack);
     // driverXbox.leftTrigger().onTrue(troughFront);
-    driverXbox.rightTrigger().whileTrue(outtakeCoral);
+    driverXbox.leftTrigger().whileTrue(outtakeCoral);
     // driverXbox.leftBumper().onTrue(level2Front);
-    driverXbox.leftTrigger().whileTrue(intakeCoral);
+    driverXbox.rightTrigger().whileTrue(intakeCoral);
 
     driverXbox.start().onTrue(toggleArmBrake);
 
@@ -212,6 +274,22 @@ public class RobotContainer {
     // driverXbox.leftBumper()
     //     .whileTrue(drivebase.driveToPose(new Pose2d(11.6, 4, new Rotation2d(Units.degreesToRadians(1)))));
     // driverXbox.leftBumper().whileTrue(drivebase.lineUpWithTag(frontTX));
+
+    
+  new JoystickButton(joystick, 14).onTrue(frontTroughReef);
+  new JoystickButton(joystick, 15).onTrue(frontL2Reef);
+  new JoystickButton(joystick, 13).onTrue(frontLowAlgaeRemoval);
+
+  new JoystickButton(joystick, 8).onTrue(backTroughReef);
+  new JoystickButton(joystick, 9).onTrue(backL2Reef);
+  new JoystickButton(joystick, 10).onTrue(backL3Reef);
+  new JoystickButton(joystick, 7).onTrue(backHighAlgaeRemoval);
+
+  new JoystickButton(joystick, 12).onTrue(frontFeeder);
+  new JoystickButton(joystick, 6).onTrue(backFeeder);
+  
+
+
 
   }
 
