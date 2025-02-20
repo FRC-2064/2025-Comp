@@ -33,9 +33,10 @@ import frc.robot.Utils.ControlBoard.ControlBoardHelpers;
 import swervelib.SwerveInputStream;
 
 public class RobotContainer {
-  final CommandXboxController driverXbox = new CommandXboxController(0);
+  final CommandXboxController driverXbox = new CommandXboxController(3);
   //final CommandXboxController operatorXbox = new CommandXboxController(1);
-  final Joystick joystick = new Joystick(1);
+  final Joystick driverJoystick = new Joystick(0);
+  final Joystick driverTurnJoystick = new Joystick(1);
   final ArmSubsystem arm = new ArmSubsystem();
   final WristSubsystem wrist = new WristSubsystem();
   final EndEffectorSubsystem endEffector = new EndEffectorSubsystem();
@@ -222,8 +223,18 @@ public class RobotContainer {
       .scaleTranslation(0.8)
       .allianceRelativeControl(true);
 
-  Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
 
+  SwerveInputStream driveAngularVelocityJoystick = SwerveInputStream.of(
+      drivebase.getSwerveDrive(),
+      () -> driverJoystick.getY() * -1,
+      () -> driverJoystick.getX() * -1).withControllerRotationAxis(driverTurnJoystick::getX)
+      .deadband(OperatorConstants.DEADBAND)
+      .scaleTranslation(0.8)
+      .allianceRelativeControl(true);
+
+      Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
+      Command driveFieldOrientedAnglularVelocityJoystick = drivebase.driveFieldOriented(driveAngularVelocityJoystick);
+      
   public RobotContainer() {
     // REGISTER AUTO COMMANDS
     // NamedCommands.registerCommand("Intake", new InstantCommand(wrist::intakeCoral));
@@ -252,9 +263,9 @@ public class RobotContainer {
     // driverXbox.y().onTrue(level3Back);
     //driverXbox.x().onTrue(intakeBack);
     // driverXbox.leftTrigger().onTrue(troughFront);
-    driverXbox.leftTrigger().whileTrue(outtakeCoral);
+    // driverXbox.leftTrigger().whileTrue(outtakeCoral);
     // driverXbox.leftBumper().onTrue(level2Front);
-    driverXbox.rightTrigger().whileTrue(intakeCoral);
+    // driverXbox.rightTrigger().whileTrue(intakeCoral);
 
     driverXbox.start().onTrue(toggleArmBrake);
 
@@ -269,24 +280,29 @@ public class RobotContainer {
     // driverXbox.y().onTrue(removeAlgaeHigh);
 
     // DRIVE BINDINGS
-    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+    // drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocityJoystick);
     driverXbox.back().onTrue(new InstantCommand(drivebase::zeroGyro));
     // driverXbox.leftBumper()
     //     .whileTrue(drivebase.driveToPose(new Pose2d(11.6, 4, new Rotation2d(Units.degreesToRadians(1)))));
     // driverXbox.leftBumper().whileTrue(drivebase.lineUpWithTag(frontTX));
 
-    
-  new JoystickButton(joystick, 14).onTrue(frontTroughReef);
-  new JoystickButton(joystick, 15).onTrue(frontL2Reef);
-  new JoystickButton(joystick, 13).onTrue(frontLowAlgaeRemoval);
 
-  new JoystickButton(joystick, 8).onTrue(backTroughReef);
-  new JoystickButton(joystick, 9).onTrue(backL2Reef);
-  new JoystickButton(joystick, 10).onTrue(backL3Reef);
-  new JoystickButton(joystick, 7).onTrue(backHighAlgaeRemoval);
 
-  new JoystickButton(joystick, 12).onTrue(frontFeeder);
-  new JoystickButton(joystick, 6).onTrue(backFeeder);
+  new JoystickButton(driverJoystick, 1).whileTrue(outtakeCoral);
+  new JoystickButton(driverTurnJoystick, 1).whileTrue(intakeCoral);
+  
+  new JoystickButton(driverJoystick, 14).onTrue(frontTroughReef);
+  new JoystickButton(driverJoystick, 15).onTrue(frontL2Reef);
+  new JoystickButton(driverJoystick, 13).onTrue(frontLowAlgaeRemoval);
+
+  new JoystickButton(driverJoystick, 8).onTrue(backTroughReef);
+  new JoystickButton(driverJoystick, 9).onTrue(backL2Reef);
+  new JoystickButton(driverJoystick, 10).onTrue(backL3Reef);
+  new JoystickButton(driverJoystick, 7).onTrue(backHighAlgaeRemoval);
+
+  new JoystickButton(driverJoystick, 12).onTrue(frontFeeder);
+  new JoystickButton(driverJoystick, 6).onTrue(backFeeder);
   
 
 
