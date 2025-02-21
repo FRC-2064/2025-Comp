@@ -215,6 +215,12 @@ public class RobotContainer {
       () -> -driverXbox.getRightX(),
       () -> -driverXbox.getRightY());
 
+  Command driveFieldOrientedDirectAngleJoystick = drivebase.driveDirectAngle(
+      () -> MathUtil.applyDeadband(-driverJoystick.getY(), OperatorConstants.LEFT_Y_DEADBAND),
+      () -> MathUtil.applyDeadband(-driverJoystick.getX(), OperatorConstants.DEADBAND),
+      () -> -driverTurnJoystick.getX(),
+      () -> -driverTurnJoystick.getY());
+
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(
       drivebase.getSwerveDrive(),
       () -> driverXbox.getLeftY() * -1,
@@ -282,6 +288,7 @@ public class RobotContainer {
     // DRIVE BINDINGS
     // drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocityJoystick);
+    // drivebase.setDefaultCommand(driveFieldOrientedDirectAngleJoystick);
     driverXbox.back().onTrue(new InstantCommand(drivebase::zeroGyro));
     // driverXbox.leftBumper()
     //     .whileTrue(drivebase.driveToPose(new Pose2d(11.6, 4, new Rotation2d(Units.degreesToRadians(1)))));
@@ -289,9 +296,16 @@ public class RobotContainer {
 
 
 
+  // Intake outake
   new JoystickButton(driverJoystick, 1).whileTrue(outtakeCoral);
   new JoystickButton(driverTurnJoystick, 1).whileTrue(intakeCoral);
+
+  // Algage
+  new JoystickButton(driverTurnJoystick, 14).onTrue(intakeAlgaeCommand);
+  // new JoystickButton(driverTurnJoystick, 15).onTrue(outtakeAlgaeCommand);
   
+  
+
   new JoystickButton(driverJoystick, 14).onTrue(frontTroughReef);
   new JoystickButton(driverJoystick, 15).onTrue(frontL2Reef);
   new JoystickButton(driverJoystick, 13).onTrue(frontLowAlgaeRemoval);
