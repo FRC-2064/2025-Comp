@@ -52,28 +52,51 @@ public class Constants {
 
     public class ArmConstants {
         //ARM
-        public static final int ARM_LEADER_ID = 26;
-        public static final int ARM_FOLLOWER_ID = 27;
+        // this is for PHASE 4 BOT, PHASE 3 bot is flipped
+        public static final int ARM_LEADER_ID = 27;
+        public static final int ARM_FOLLOWER_ID = 26;
         
         public static final double ARM_HOME_ANGLE = 45;
 
-        public static final double ARM_FRONT_INTAKE_ANGLE = 45.7; //72
-        public static final double ARM_BACK_INTAKE_ANGLE = 102.2;
+        // FOR PHASE 4
+        public static final double ARM_FRONT_INTAKE_ANGLE = 56.9; //72
+        public static final double ARM_BACK_INTAKE_ANGLE = 123.05;
         
-        public static final double ARM_TROUGH_FRONT_ANGLE = 32.6;
+        public static final double ARM_TROUGH_FRONT_ANGLE = 43.2;
         public static final double ARM_TROUGH_BACK_ANGLE = 120.3;
 
-        public static final double ARM_L2_FRONT_ANGLE = 47.4;
-        public static final double ARM_L2_BACK_ANGLE = 95.2;
+        public static final double ARM_L2_FRONT_ANGLE = 62.5;
+        public static final double ARM_L2_BACK_ANGLE = 83.25;
 
-        public static final double ARM_L3_BACK_ANGLE = 92.4;
+        public static final double ARM_L3_BACK_ANGLE = 83.5;
 
-        public static final double ARM_ALGAE_CARRY_ANGLE = 18.97;
+        public static final double ARM_ALGAE_CARRY_ANGLE = 22.5;
 
-        public static final double ARM_LOW_ALGAE_REMOVAL_ANGLE = 55.0;
-        public static final double ARM_HIGH_ALGAE_REMOVAL_ANGLE = 106.0;
+        public static final double ARM_LOW_ALGAE_REMOVAL_ANGLE = 52.7;
+        public static final double ARM_HIGH_ALGAE_REMOVAL_ANGLE = 95.8;
 
         public static final double ARM_CLIMB_ANGLE = 68.0;
+        
+        public static final double ARM_GROUND_INTAKE = 3.88;
+
+        // FOR PHASE 3
+        // public static final double ARM_FRONT_INTAKE_ANGLE = 45.7; //72
+        // public static final double ARM_BACK_INTAKE_ANGLE = 102.2;
+        
+        // public static final double ARM_TROUGH_FRONT_ANGLE = 32.6;
+        // public static final double ARM_TROUGH_BACK_ANGLE = 120.3;
+
+        // public static final double ARM_L2_FRONT_ANGLE = 47.4;
+        // public static final double ARM_L2_BACK_ANGLE = 95.2;
+
+        // public static final double ARM_L3_BACK_ANGLE = 92.4;
+
+        // public static final double ARM_ALGAE_CARRY_ANGLE = 18.97;
+
+        // public static final double ARM_LOW_ALGAE_REMOVAL_ANGLE = 55.0;
+        // public static final double ARM_HIGH_ALGAE_REMOVAL_ANGLE = 106.0;
+
+        // public static final double ARM_CLIMB_ANGLE = 68.0;
 
         public static final double DEGREES_PER_ROTATION = 360.0;
         public static final double ALLOWED_ERROR_DEGREES = 1.0;
@@ -97,22 +120,43 @@ public class Constants {
 
         public static final double WRIST_HOME_ANGLE = 60.5;
 
-        public static final double WRIST_FRONT_INTAKE_ANGLE = 133.1;
-        public static final double WRIST_BACK_INTAKE_ANGLE = 174.9;
+        // FOR PHASE 4
+        public static final double WRIST_FRONT_INTAKE_ANGLE = 102.2;
+        public static final double WRIST_BACK_INTAKE_ANGLE = 219.85;
 
+        public static final double WRIST_TROUGH_FRONT_ANGLE = 43.2;
         public static final double WRIST_TROUGH_BACK_ANGLE = 227.6;
-        public static final double WRIST_TROUGH_FRONT_ANGLE = 96.2;
         
-        public static final double WRIST_L2_FRONT_ANGLE = 81.8;
-        public static final double WRIST_L2_BACK_ANGLE = 226.5;
+        public static final double WRIST_L2_FRONT_ANGLE = 48.5;
+        public static final double WRIST_L2_BACK_ANGLE = 257.2;
         
-        public static final double WRIST_L3_BACK_ANGLE = 156.6;
+        public static final double WRIST_L3_BACK_ANGLE = 220.18;
                       
-        public static final double WRIST_ALGAE_CARRY_ANGLE = 0.0;
-        public static final double WRIST_ALGAE_INTAKE_ANGLE = 109.22;
+        public static final double WRIST_ALGAE_CARRY_ANGLE = 88.8;
+        public static final double WRIST_ALGAE_INTAKE_ANGLE = 88.8;
         
-        public static final double WRIST_HIGH_ALGAE_REMOVAL_ANGLE = 95.15;
-        public static final double WRIST_LOW_ALGAE_REMOVAL_ANGLE = 60;
+        public static final double WRIST_LOW_ALGAE_REMOVAL_ANGLE = 50.98;
+        public static final double WRIST_HIGH_ALGAE_REMOVAL_ANGLE = 205.78;
+
+        public static final double WRIST_GROUND_INTAKE = 67.3;
+
+        // FOR PHASE 3
+        // public static final double WRIST_FRONT_INTAKE_ANGLE = 133.1;
+        // public static final double WRIST_BACK_INTAKE_ANGLE = 174.9;
+
+        // public static final double WRIST_TROUGH_BACK_ANGLE = 227.6;
+        // public static final double WRIST_TROUGH_FRONT_ANGLE = 96.2;
+        
+        // public static final double WRIST_L2_FRONT_ANGLE = 81.8;
+        // public static final double WRIST_L2_BACK_ANGLE = 226.5;
+        
+        // public static final double WRIST_L3_BACK_ANGLE = 156.6;
+                      
+        // public static final double WRIST_ALGAE_CARRY_ANGLE = 0.0;
+        // public static final double WRIST_ALGAE_INTAKE_ANGLE = 109.22;
+        
+        // public static final double WRIST_HIGH_ALGAE_REMOVAL_ANGLE = 95.15;
+        // public static final double WRIST_LOW_ALGAE_REMOVAL_ANGLE = 60;
 
         public static final double WRIST_CLIMB_ANGLE = 60;
 
@@ -192,6 +236,9 @@ public class Constants {
         // FEEDER
         public static final Pose2d FEEDER_LOCATION_LEFT = new Pose2d(1.123621854, 7.021460172, Rotation2d.fromDegrees(126.0)); // tag 13
         public static final Pose2d FEEDER_LOCATION_RIGHT = new Pose2d(1.123621854, 1.030339828, Rotation2d.fromDegrees(234.0)); // tag 12
+
+        // TEST POSE
+        public static final Pose2d TEST_LOCATION = new Pose2d(12.57, 1.75, Rotation2d.fromDegrees(180));
 
         
     }

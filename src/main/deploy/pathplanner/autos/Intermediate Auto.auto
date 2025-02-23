@@ -1,0 +1,49 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeEE"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "BackL3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "intermediate"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "OuttakeEE"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopEE"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

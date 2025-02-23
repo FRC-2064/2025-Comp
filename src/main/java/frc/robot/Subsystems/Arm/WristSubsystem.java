@@ -31,12 +31,12 @@ public class WristSubsystem extends SubsystemBase {
         wristConfig = new SparkMaxConfig();
 
         wristConfig
-                .smartCurrentLimit(10)
-                .inverted(false)
+                .smartCurrentLimit(20)
+                .inverted(true)
                 .idleMode(IdleMode.kBrake).closedLoop
                 .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
                 .positionWrappingEnabled(false)
-                .pid(4, 0, 1)
+                .pid(5, 0, 1)
                 .maxMotion
                 .maxVelocity(5676)
                 .maxAcceleration(10000)

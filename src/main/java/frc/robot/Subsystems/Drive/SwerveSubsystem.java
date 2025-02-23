@@ -102,6 +102,9 @@ public class SwerveSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putString("Logging/Drive/State", getDriveState().toString());
+        SmartDashboard.putNumber("Logging/Drive/Heading",getHeading().getDegrees());
+
+        
         manageDriveState();
 
         swerveDrive.updateOdometry();
@@ -193,8 +196,8 @@ public class SwerveSubsystem extends SubsystemBase {
                         }
                     },
                     new PPHolonomicDriveController(
-                            new PIDConstants(2.0, 0.0, 1.0),
-                            new PIDConstants(4.0, 0.0, 1.0)),
+                            new PIDConstants(4.0, 0.0, 0.0),
+                            new PIDConstants(2.0, 0.0, 0.0)),
                     config,
                     () -> {
                         var alliance = DriverStation.getAlliance();
@@ -425,6 +428,13 @@ public class SwerveSubsystem extends SubsystemBase {
                 null,
                 new GoalEndState(0.0, endPose.getRotation()));
 
+        var alliance = DriverStation.getAlliance();
+        
+        if (alliance.isPresent()) {
+            if (alliance.get() == DriverStation.Alliance.Red) {
+                generatedPath.flipPath();
+            }
+        }
         return pathfindToPath(generatedPath);
     }
 
@@ -476,15 +486,13 @@ public class SwerveSubsystem extends SubsystemBase {
             return;
         }
 
-        Pose2d currentPose = getRelativePose();
-        SmartDashboard.putNumber("Logging/Drive/absX", getPose().getX());
-        SmartDashboard.putNumber("Logging/Drive/absY", getPose().getY());
-        SmartDashboard.putNumber("Logging/Drive/PositionX", currentPose.getX());
-        SmartDashboard.putNumber("Logging/Drive/PositionY", currentPose.getY());
-        SmartDashboard.putNumber("Logging/Drive/otfX", otfStartPose.getX());
-        SmartDashboard.putNumber("Logging/Drive/otfY", otfStartPose.getY());
-        SmartDashboard.putNumber("Logging/Drive/otfEndX", otfEndPose.getX());
-        SmartDashboard.putNumber("Logging/Drive/otfEndY", otfEndPose.getY());
+        var alliance = DriverStation.getAlliance();
+        Pose2d currentPose = getPose();
+        if (alliance.isPresent()) {
+            if (alliance.get() == DriverStation.Alliance.Red) {
+                currentPose = getRelativePose();
+            }
+        }
         
 
         Translation2d diffTranslation = currentPose.getTranslation().minus(otfStartPose.getTranslation());

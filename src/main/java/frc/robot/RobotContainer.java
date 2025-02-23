@@ -5,6 +5,8 @@
 package frc.robot;
 
 import java.io.File;
+
+import com.fasterxml.jackson.databind.util.Named;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
@@ -14,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Subsystems.RobotSubsystem;
 import frc.robot.Subsystems.Arm.ArmSubsystem;
 import frc.robot.Subsystems.Arm.ClampSubsystem;
@@ -22,9 +23,7 @@ import frc.robot.Subsystems.Arm.EndEffectorSubsystem;
 import frc.robot.Subsystems.Arm.WristSubsystem;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem.EndEffectorState;
 import frc.robot.Subsystems.Drive.SwerveSubsystem;
-import frc.robot.Subsystems.Drive.SwerveSubsystem.DriveState;
 import frc.robot.Subsystems.LEDs.LEDSubsystem;
-import frc.robot.Subsystems.RobotSubsystem.RobotState;
 import frc.robot.Utils.Constants.ArmConstants;
 import frc.robot.Utils.Constants.ControlBoardConstants;
 import frc.robot.Utils.Constants.OperatorConstants;
@@ -33,7 +32,8 @@ import frc.robot.Utils.ControlBoard.ControlBoardHelpers;
 import swervelib.SwerveInputStream;
 
 public class RobotContainer {
-  final CommandXboxController driverXbox = new CommandXboxController(3);
+  final CommandXboxController driverXbox = new CommandXboxController(0);
+  final CommandXboxController operatorXbox = new CommandXboxController(1);
   //final CommandXboxController operatorXbox = new CommandXboxController(1);
   final Joystick driverJoystick = new Joystick(0);
   final Joystick driverTurnJoystick = new Joystick(1);
@@ -45,7 +45,7 @@ public class RobotContainer {
   final SwerveSubsystem drivebase = new SwerveSubsystem(
       new File(
           Filesystem.getDeployDirectory(),
-          "swervewrist"));
+          "swerve"));
 
 
   final RobotSubsystem robot = new RobotSubsystem(arm, clamp, drivebase, endEffector, wrist, leds);
@@ -206,6 +206,13 @@ public class RobotContainer {
       arm.setTargetAngle(ArmConstants.ARM_BACK_INTAKE_ANGLE);
     wrist.setTargetAngle(WristConstants.WRIST_BACK_INTAKE_ANGLE);
     });
+
+    Command groundIntake = new InstantCommand(
+      () -> {
+        arm.setTargetAngle(ArmConstants.ARM_GROUND_INTAKE);
+        wrist.setTargetAngle(WristConstants.WRIST_GROUND_INTAKE);
+      }
+    );
   
 
   // DRIVE COMMANDS
@@ -224,7 +231,7 @@ public class RobotContainer {
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(
       drivebase.getSwerveDrive(),
       () -> driverXbox.getLeftY() * -1,
-      () -> driverXbox.getLeftX() * -1).withControllerRotationAxis(driverXbox::getRightX)
+      () -> driverXbox.getLeftX() * -1).withControllerRotationAxis(() -> -driverXbox.getRightX())
       .deadband(OperatorConstants.DEADBAND)
       .scaleTranslation(0.8)
       .allianceRelativeControl(true);
@@ -233,7 +240,7 @@ public class RobotContainer {
   SwerveInputStream driveAngularVelocityJoystick = SwerveInputStream.of(
       drivebase.getSwerveDrive(),
       () -> driverJoystick.getY() * -1,
-      () -> driverJoystick.getX() * -1).withControllerRotationAxis(driverTurnJoystick::getX)
+      () -> driverJoystick.getX() * -1).withControllerRotationAxis(() -> -driverTurnJoystick.getX())
       .deadband(OperatorConstants.DEADBAND)
       .scaleTranslation(0.8)
       .allianceRelativeControl(true);
@@ -246,23 +253,33 @@ public class RobotContainer {
     // NamedCommands.registerCommand("Intake", new InstantCommand(wrist::intakeCoral));
     // NamedCommands.registerCommand("stopIntake", new InstantCommand(wrist::stopIntakeMotors));
     // NamedCommands.registerCommand("Outtake", new InstantCommand(wrist::outtakeCoral));
-    NamedCommands.registerCommand("armToFloor", homeArm);
+    // NamedCommands.registerCommand("armToFloor", homeArm);
 
+    NamedCommands.registerCommand("ArmToTrough", troughFront);
+    NamedCommands.registerCommand("FrontL2", frontL2Reef);
+    NamedCommands.registerCommand("BackL3", backL3Reef);
+    NamedCommands.registerCommand("OuttakeEE", new InstantCommand(() -> endEffector.setState(EndEffectorState.OUTTAKING_CORAL)));
+    NamedCommands.registerCommand("StopEE", new InstantCommand(() -> endEffector.setState(EndEffectorState.STOPPED)));
+    NamedCommands.registerCommand("IntakeEE", new InstantCommand(() -> endEffector.setState(EndEffectorState.INTAKING_CORAL)));
+    NamedCommands.registerCommand("FeederFront", frontFeeder);
     configureBindings();
 
   }
 
   private void configureBindings() {
 
+    ControlBoardHelpers.setScoreLocation("TEST");
+
     // 'GO TO' BINDINGS
     // UNTESTED DO NOT USE
     // driverXbox.a().onTrue(new InstantCommand(robot::goToFeeder));
     // driverXbox.b().onTrue(new InstantCommand(robot::goToCage));
-    driverXbox.x().onTrue(new InstantCommand(robot::goToScore));
-    driverXbox.a().onTrue(new InstantCommand(() -> robot.setState(RobotState.P_PATHING)));
-    driverXbox.b().onTrue(new InstantCommand(() -> robot.setState(RobotState.S_SCORING)));
+    // driverXbox.x().onTrue(new InstantCommand(robot::goToScore));
+    // driverXbox.a().onTrue(new InstantCommand(() -> robot.setState(RobotState.P_PATHING)));
+    // driverXbox.b().onTrue(new InstantCommand(() -> robot.setState(RobotState.S_SCORING)));
 
     driverXbox.y().onTrue(cb_set);
+    //driverXbox.x().onTrue(new InstantCommand(robot::goToScore));
 
 
     // ARM BINDINGS
@@ -286,8 +303,8 @@ public class RobotContainer {
     // driverXbox.y().onTrue(removeAlgaeHigh);
 
     // DRIVE BINDINGS
-    // drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
-    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocityJoystick);
+    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+    // drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocityJoystick);
     // drivebase.setDefaultCommand(driveFieldOrientedDirectAngleJoystick);
     driverXbox.back().onTrue(new InstantCommand(drivebase::zeroGyro));
     // driverXbox.leftBumper()
@@ -297,26 +314,47 @@ public class RobotContainer {
 
 
   // Intake outake
-  new JoystickButton(driverJoystick, 1).whileTrue(outtakeCoral);
-  new JoystickButton(driverTurnJoystick, 1).whileTrue(intakeCoral);
+  // new JoystickButton(driverJoystick, 1).whileTrue(outtakeCoral);
+  // new JoystickButton(driverTurnJoystick, 1).whileTrue(intakeCoral);
+
+  driverXbox.rightTrigger().whileTrue(intakeCoral);
+  driverXbox.leftTrigger().whileTrue(outtakeCoral);
 
   // Algage
-  new JoystickButton(driverTurnJoystick, 14).onTrue(intakeAlgaeCommand);
+  // new JoystickButton(driverTurnJoystick, 14).onTrue(intakeAlgaeCommand);
   // new JoystickButton(driverTurnJoystick, 15).onTrue(outtakeAlgaeCommand);
   
   
 
-  new JoystickButton(driverJoystick, 14).onTrue(frontTroughReef);
-  new JoystickButton(driverJoystick, 15).onTrue(frontL2Reef);
-  new JoystickButton(driverJoystick, 13).onTrue(frontLowAlgaeRemoval);
+  // new JoystickButton(driverJoystick, 14).onTrue(frontTroughReef);
+  // new JoystickButton(driverJoystick, 15).onTrue(frontL2Reef);
+  // new JoystickButton(driverJoystick, 13).onTrue(frontLowAlgaeRemoval);
 
-  new JoystickButton(driverJoystick, 8).onTrue(backTroughReef);
-  new JoystickButton(driverJoystick, 9).onTrue(backL2Reef);
-  new JoystickButton(driverJoystick, 10).onTrue(backL3Reef);
-  new JoystickButton(driverJoystick, 7).onTrue(backHighAlgaeRemoval);
+  operatorXbox.rightBumper().onTrue(frontL2Reef);
+  operatorXbox.a().onTrue(frontTroughReef);
+  operatorXbox.povRight().onTrue(frontLowAlgaeRemoval);
+  operatorXbox.povLeft().onTrue(groundIntake);
 
-  new JoystickButton(driverJoystick, 12).onTrue(frontFeeder);
-  new JoystickButton(driverJoystick, 6).onTrue(backFeeder);
+  operatorXbox.povUp().onTrue(intakeAlgaeCommand);
+
+
+
+  // new JoystickButton(driverJoystick, 8).onTrue(backTroughReef);
+  // new JoystickButton(driverJoystick, 9).onTrue(backL2Reef);
+  // new JoystickButton(driverJoystick, 10).onTrue(backL3Reef);
+  // new JoystickButton(driverJoystick, 7).onTrue(backHighAlgaeRemoval);
+
+  operatorXbox.x().onTrue(backTroughReef);
+  operatorXbox.leftBumper().onTrue(backL2Reef);
+  operatorXbox.y().onTrue(backL3Reef);
+  driverXbox.b().onTrue(backHighAlgaeRemoval);
+
+  // new JoystickButton(driverJoystick, 12).onTrue(frontFeeder);
+  // new JoystickButton(driverJoystick, 6).onTrue(backFeeder);
+
+  operatorXbox.rightTrigger().onTrue(frontFeeder);
+  operatorXbox.leftTrigger().onTrue(backFeeder);
+
   
 
 
@@ -324,7 +362,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return drivebase.getAutonomousCommand("1 Coral");
+    return drivebase.getAutonomousCommand("Big Brain 3");
   }
 
   public void setDriveMode() {

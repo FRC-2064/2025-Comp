@@ -82,13 +82,13 @@ public class EndEffectorSubsystem extends SubsystemBase {
     }
 
     private void intakeCoral(){
-        top.set(-0.5);
-        bottom.set(-0.5);
+        top.set(0.5);
+        bottom.set(0.5);
     }
 
     private void outtakeCoral(){
-        top.set(0.3);
-        bottom.set(0.3);
+        top.set(-0.3);
+        bottom.set(-0.3);
     }
 
     private void intakeAlgae(){

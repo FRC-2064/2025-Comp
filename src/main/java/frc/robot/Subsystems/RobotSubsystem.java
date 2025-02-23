@@ -64,7 +64,7 @@ public class RobotSubsystem extends SubsystemBase{
 
             case F_FEEDER:
             case S_SCORING:
-            endEffector.setState(config.endEffectorState);
+            //endEffector.setState(config.endEffectorState);
                 if (drivebase.getDriveState() == DriveState.USER_CONTROLLED &&
                     arm.getState() == ArmState.STATIONARY &&
                     wrist.getWristState() == WristState.STATIONARY) {

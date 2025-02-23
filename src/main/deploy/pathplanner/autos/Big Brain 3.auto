@@ -1,0 +1,133 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeEE"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ArmToTrough"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Basic"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "OuttakeEE"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopEE"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ReefToFeeder"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeEE"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "FeederToReef"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "OuttakeEE"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopEE"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ReefToFeeder2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeEE"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "FeederToReef"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "OuttakeEE"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopEE"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
