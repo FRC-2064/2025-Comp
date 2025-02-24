@@ -6,27 +6,19 @@ package frc.robot;
 
 import com.pathplanner.lib.commands.PathfindingCommand;
 
-import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.cameraserver.CameraServer;
-import frc.robot.sensors.VL53L0X;
 
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
-  private VL53L0X sensor;
-
-  
   public Robot() {
     m_robotContainer = new RobotContainer();
     PathfindingCommand.warmupCommand().schedule();
     // CameraServer.startAutomaticCapture();
-    //sensor = new VL53L0X();
   }
 
   @Override
