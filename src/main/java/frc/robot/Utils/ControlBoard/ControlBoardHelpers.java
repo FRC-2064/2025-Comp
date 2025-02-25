@@ -2,12 +2,17 @@ package frc.robot.Utils.ControlBoard;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 
 public class ControlBoardHelpers {
     private static final NetworkTableInstance ntInstance = NetworkTableInstance.getDefault();
 
     private static NetworkTableEntry getEntry(String key) {
         return ntInstance.getEntry(key);
+    }
+
+    public static void updateGameTime() {
+        getEntry("/ControlBoard/GameTime").setDouble(DriverStation.getMatchTime());
     }
 
     public static int getLevel() {
