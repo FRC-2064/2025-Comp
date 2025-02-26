@@ -21,6 +21,7 @@ import frc.robot.Subsystems.Arm.ArmSubsystem;
 import frc.robot.Subsystems.Arm.ClampSubsystem;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem;
 import frc.robot.Subsystems.Arm.WristSubsystem;
+import frc.robot.Subsystems.Arm.ClampSubsystem.ClampState;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem.EndEffectorState;
 import frc.robot.Subsystems.Drive.SwerveSubsystem;
 import frc.robot.Subsystems.LEDs.LEDSubsystem;
@@ -148,6 +149,17 @@ public class RobotContainer {
       () -> endEffector.setState(EndEffectorState.REMOVING_LOW_ALGAE),
       () -> endEffector.setState(EndEffectorState.STOPPED),
       endEffector);
+
+  Command winchIn = new StartEndCommand(
+    clamp::winchIn,
+    clamp::winchStop,
+    clamp);
+  
+  Command winchOut = new StartEndCommand(
+    clamp::winchOut,
+    clamp::winchStop,
+    clamp);
+
 
   /// Joystick Commands for manual practice
   Command frontTroughReef = new InstantCommand(
@@ -347,7 +359,7 @@ public class RobotContainer {
   operatorXbox.x().onTrue(backTroughReef);
   operatorXbox.leftBumper().onTrue(backL2Reef);
   operatorXbox.y().onTrue(backL3Reef);
-  driverXbox.b().onTrue(backHighAlgaeRemoval);
+  operatorXbox.b().onTrue(backHighAlgaeRemoval);
 
   // new JoystickButton(driverJoystick, 12).onTrue(frontFeeder);
   // new JoystickButton(driverJoystick, 6).onTrue(backFeeder);
@@ -355,9 +367,15 @@ public class RobotContainer {
   operatorXbox.rightTrigger().onTrue(frontFeeder);
   operatorXbox.leftTrigger().onTrue(backFeeder);
 
+  driverXbox.x().onTrue(new InstantCommand(() -> clamp.setState(ClampState.CLOSED)));
+  driverXbox.y().onTrue(new InstantCommand(() -> clamp.setState(ClampState.OPEN)));
+
+  driverXbox.a().whileTrue(winchIn);
+  driverXbox.b().whileTrue(winchOut);
+
+  driverXbox.povDown().onTrue(new InstantCommand(() -> arm.setTargetAngle(ArmConstants.ARM_CLIMB_DOWN_ANGLE)));
+  driverXbox.povUp().onTrue(new InstantCommand(() -> arm.setTargetAngle(ArmConstants.ARM_CLIMB_UP_ANGLE)));
   
-
-
 
   }
 

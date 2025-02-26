@@ -10,6 +10,7 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Utils.Constants.ClampConstants;
@@ -20,13 +21,20 @@ public class ClampSubsystem extends SubsystemBase {
     private SparkClosedLoopController clampController;
     private SparkMaxConfig clampConfig;
 
+    private SparkMax winch;
+    private SparkClosedLoopController winchController;
+    private SparkMaxConfig winchConfig;
+
     private ClampState currentState = ClampState.OPEN;
     private ClampState desiredState = ClampState.OPEN;
 
     public ClampSubsystem() {
         clamp = new SparkMax(ClampConstants.CLAMP_ID, MotorType.kBrushless);
+        winch = new SparkMax(ClampConstants.WINCH_ID, MotorType.kBrushless);
 
         clampConfig = new SparkMaxConfig();
+        winchConfig = new SparkMaxConfig();
+
         clampConfig
                 .idleMode(IdleMode.kBrake)
                 .smartCurrentLimit(20).closedLoop
@@ -54,6 +62,7 @@ public class ClampSubsystem extends SubsystemBase {
             manageState();
         }
         SmartDashboard.putString("Logging/Clamp/State", currentState.toString());
+        SmartDashboard.putNumber("Logging/Clamp/WinchAngle", clamp.getAbsoluteEncoder().getPosition());
 
     }
 
@@ -80,6 +89,22 @@ public class ClampSubsystem extends SubsystemBase {
         clampController.setReference(ClampConstants.CLAMP_CLOSED_VAL, ControlType.kPosition);
         currentState = ClampState.CLOSED;
         ControlBoardHelpers.setClamped(true);
+    }
+
+    // negative speed is winch in!!!
+    public void winchIn(){
+        if (DriverStation.getMatchTime() > 30) {
+            return;
+        }
+        winch.set(0.5);
+    }
+
+    public void winchOut(){
+        winch.set(0.03);
+    }
+
+    public void winchStop(){
+        winch.set(0);
     }
 
 

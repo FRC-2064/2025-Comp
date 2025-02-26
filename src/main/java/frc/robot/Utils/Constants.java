@@ -46,7 +46,9 @@ public class Constants {
         //CLIMB
         public static final int CLAMP_ID = 21;
         public static final double CLAMP_CLOSED_VAL = 0.32;
-        public static final double CLAMP_OPEN_VAL = 0.137;
+        public static final double CLAMP_OPEN_VAL = 0.143;
+
+        public static final int WINCH_ID = 48;
         
     }
 
@@ -75,7 +77,8 @@ public class Constants {
         public static final double ARM_LOW_ALGAE_REMOVAL_ANGLE = 52.7;
         public static final double ARM_HIGH_ALGAE_REMOVAL_ANGLE = 95.8;
 
-        public static final double ARM_CLIMB_ANGLE = 68.0;
+        public static final double ARM_CLIMB_UP_ANGLE = 84.32;
+        public static final double ARM_CLIMB_DOWN_ANGLE = 30.8;
         
         public static final double ARM_GROUND_INTAKE = 3.88;
 
