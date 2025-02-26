@@ -5,6 +5,7 @@ import java.util.EnumMap;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Utils.TOF;
@@ -61,9 +62,9 @@ public class EndEffectorSubsystem extends SubsystemBase {
         return state;
     }
 
-    public double getGamePieceOffset() {
+    public Translation2d getGamePieceOffset() {
         double currentReading = tof.getDistance();
-        return EndEffectorConstants.EE_BASE_OFFSET - currentReading;
+        return new Translation2d(EndEffectorConstants.EE_BASE_OFFSET - currentReading, 0.0);
     }
 
     private void stopWithCoral() { 

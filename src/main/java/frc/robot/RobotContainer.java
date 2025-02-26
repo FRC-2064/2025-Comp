@@ -261,27 +261,27 @@ public class RobotContainer {
       Command driveFieldOrientedAnglularVelocityJoystick = drivebase.driveFieldOriented(driveAngularVelocityJoystick);
       
   public RobotContainer() {
-    // REGISTER AUTO COMMANDS
-    // NamedCommands.registerCommand("Intake", new InstantCommand(wrist::intakeCoral));
-    // NamedCommands.registerCommand("stopIntake", new InstantCommand(wrist::stopIntakeMotors));
-    // NamedCommands.registerCommand("Outtake", new InstantCommand(wrist::outtakeCoral));
-    // NamedCommands.registerCommand("armToFloor", homeArm);
-
-    NamedCommands.registerCommand("ArmToTrough", troughFront);
+    // ARM LOCATIONS
+    NamedCommands.registerCommand("FrontL1", troughFront);
     NamedCommands.registerCommand("FrontL2", frontL2Reef);
+    NamedCommands.registerCommand("BackL2", backL2Reef);
     NamedCommands.registerCommand("BackL3", backL3Reef);
+    NamedCommands.registerCommand("FrontFeeder", frontFeeder);
+    NamedCommands.registerCommand("BackFeeder", backFeeder);
+    NamedCommands.registerCommand("HighAlgae", highAlgae);
+    NamedCommands.registerCommand("LowAlgae", lowAlgae);
+    
+    // INTAKE STATES
     NamedCommands.registerCommand("OuttakeEE", new InstantCommand(() -> endEffector.setState(EndEffectorState.OUTTAKING_CORAL)));
-    NamedCommands.registerCommand("StopEE", new InstantCommand(() -> endEffector.setState(EndEffectorState.STOPPED)));
     NamedCommands.registerCommand("IntakeEE", new InstantCommand(() -> endEffector.setState(EndEffectorState.INTAKING_CORAL)));
-    NamedCommands.registerCommand("FeederFront", frontFeeder);
+    NamedCommands.registerCommand("HighEE", new InstantCommand(() -> endEffector.setState(EndEffectorState.REMOVING_HIGH_ALGAE)));
+    NamedCommands.registerCommand("LowEE", new InstantCommand(() -> endEffector.setState(EndEffectorState.REMOVING_LOW_ALGAE)));
+    NamedCommands.registerCommand("StopEE", new InstantCommand(() -> endEffector.setState(EndEffectorState.STOPPED)));
     configureBindings();
 
   }
 
   private void configureBindings() {
-
-    ControlBoardHelpers.setScoreLocation("TEST");
-
     // 'GO TO' BINDINGS
     // UNTESTED DO NOT USE
     // driverXbox.a().onTrue(new InstantCommand(robot::goToFeeder));

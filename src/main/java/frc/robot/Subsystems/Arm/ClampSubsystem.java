@@ -70,9 +70,11 @@ public class ClampSubsystem extends SubsystemBase {
         switch (desiredState) {
             case OPEN:
                 open();
+                ControlBoardHelpers.setClamped(false);
                 break;
             case CLOSED:
                 close();
+                ControlBoardHelpers.setClamped(true);
                 break;
             default:
                 break;

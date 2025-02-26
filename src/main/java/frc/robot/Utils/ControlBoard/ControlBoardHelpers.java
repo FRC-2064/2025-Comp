@@ -2,12 +2,22 @@ package frc.robot.Utils.ControlBoard;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 
 public class ControlBoardHelpers {
     private static final NetworkTableInstance ntInstance = NetworkTableInstance.getDefault();
 
     private static NetworkTableEntry getEntry(String key) {
         return ntInstance.getEntry(key);
+    }
+
+    public static void updateRobotStatus() {
+        getEntry("/ControlBoard/Robot/GameTime").setDouble(DriverStation.getMatchTime());
+        getEntry("/ControlBoard/Robot/Reef/Location").setString(getReefLocation());
+        getEntry("/ControlBoard/Robot/Reef/Level").setNumber(getLevel());
+        getEntry("/ControlBoard/Robot/Feeder").setString(getFeeder());
+        getEntry("/ControlBoard/Robot/Barge/Cage").setString(getCage());
+        getEntry("/ControlBoard/Robot/ScoreLocation").setString(getScoreLocation());
     }
 
     public static int getLevel() {

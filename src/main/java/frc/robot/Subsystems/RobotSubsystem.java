@@ -1,5 +1,6 @@
 package frc.robot.Subsystems;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Subsystems.Arm.ArmSubsystem;
@@ -42,6 +43,7 @@ public class RobotSubsystem extends SubsystemBase{
     @Override
     public void periodic() {
         SmartDashboard.putString("Logging/Robot/State", getState().toString());
+        ControlBoardHelpers.updateRobotStatus();
         switch (robotState) {
             case T_TRAVELING:
                 arm.setTargetAngle(config.travelArmAngle);
