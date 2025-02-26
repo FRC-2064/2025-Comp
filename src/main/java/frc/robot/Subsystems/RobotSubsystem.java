@@ -43,7 +43,7 @@ public class RobotSubsystem extends SubsystemBase{
     @Override
     public void periodic() {
         SmartDashboard.putString("Logging/Robot/State", getState().toString());
-        ControlBoardHelpers.updateGameTime();
+        ControlBoardHelpers.updateRobotStatus();
         switch (robotState) {
             case T_TRAVELING:
                 arm.setTargetAngle(config.travelArmAngle);

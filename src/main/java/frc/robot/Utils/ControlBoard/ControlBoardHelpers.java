@@ -11,8 +11,13 @@ public class ControlBoardHelpers {
         return ntInstance.getEntry(key);
     }
 
-    public static void updateGameTime() {
-        getEntry("/ControlBoard/GameTime").setDouble(DriverStation.getMatchTime());
+    public static void updateRobotStatus() {
+        getEntry("/ControlBoard/Robot/GameTime").setDouble(DriverStation.getMatchTime());
+        getEntry("/ControlBoard/Robot/Reef/Location").setString(getReefLocation());
+        getEntry("/ControlBoard/Robot/Reef/Level").setNumber(getLevel());
+        getEntry("/ControlBoard/Robot/Feeder").setString(getFeeder());
+        getEntry("/ControlBoard/Robot/Barge/Cage").setString(getCage());
+        getEntry("/ControlBoard/Robot/ScoreLocation").setString(getScoreLocation());
     }
 
     public static int getLevel() {
