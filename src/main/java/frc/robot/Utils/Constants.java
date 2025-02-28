@@ -161,7 +161,7 @@ public class Constants {
         // public static final double WRIST_HIGH_ALGAE_REMOVAL_ANGLE = 95.15;
         // public static final double WRIST_LOW_ALGAE_REMOVAL_ANGLE = 60;
 
-        public static final double WRIST_CLIMB_ANGLE = 60;
+        public static final double WRIST_CLIMB_ANGLE = 10;
 
         public static final double DEGREES_PER_ROTATION = 360.0;
         public static final double ALLOWED_ERROR_DEGREES = 1.0;

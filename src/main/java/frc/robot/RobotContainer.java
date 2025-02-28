@@ -18,10 +18,10 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Subsystems.RobotSubsystem;
 import frc.robot.Subsystems.Arm.ArmSubsystem;
-import frc.robot.Subsystems.Arm.ClampSubsystem;
+import frc.robot.Subsystems.Arm.ClimbSubsystem;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem;
 import frc.robot.Subsystems.Arm.WristSubsystem;
-import frc.robot.Subsystems.Arm.ClampSubsystem.ClampState;
+import frc.robot.Subsystems.Arm.ClimbSubsystem.ClimbState;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem.EndEffectorState;
 import frc.robot.Subsystems.Drive.SwerveSubsystem;
 import frc.robot.Subsystems.LEDs.LEDSubsystem;
@@ -41,7 +41,7 @@ public class RobotContainer {
   final ArmSubsystem arm = new ArmSubsystem();
   final WristSubsystem wrist = new WristSubsystem();
   final EndEffectorSubsystem endEffector = new EndEffectorSubsystem();
-  final ClampSubsystem clamp = new ClampSubsystem();
+  final ClimbSubsystem clamp = new ClimbSubsystem();
   final LEDSubsystem leds = new LEDSubsystem();
   final SwerveSubsystem drivebase = new SwerveSubsystem(
       new File(
@@ -367,8 +367,8 @@ public class RobotContainer {
   operatorXbox.rightTrigger().onTrue(frontFeeder);
   operatorXbox.leftTrigger().onTrue(backFeeder);
 
-  driverXbox.x().onTrue(new InstantCommand(() -> clamp.setState(ClampState.CLOSED)));
-  driverXbox.y().onTrue(new InstantCommand(() -> clamp.setState(ClampState.OPEN)));
+  driverXbox.x().onTrue(new InstantCommand(() -> clamp.setState(ClimbState.CLOSED)));
+  driverXbox.y().onTrue(new InstantCommand(() -> clamp.setState(ClimbState.OPEN)));
 
   driverXbox.a().whileTrue(winchIn);
   driverXbox.b().whileTrue(winchOut);

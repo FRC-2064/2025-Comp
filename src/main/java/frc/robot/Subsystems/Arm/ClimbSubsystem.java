@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Utils.Constants.ClampConstants;
 import frc.robot.Utils.ControlBoard.ControlBoardHelpers;
 
-public class ClampSubsystem extends SubsystemBase {
+public class ClimbSubsystem extends SubsystemBase {
     private SparkMax clamp;
     private SparkClosedLoopController clampController;
     private SparkMaxConfig clampConfig;
@@ -25,10 +25,10 @@ public class ClampSubsystem extends SubsystemBase {
     private SparkClosedLoopController winchController;
     private SparkMaxConfig winchConfig;
 
-    private ClampState currentState = ClampState.OPEN;
-    private ClampState desiredState = ClampState.OPEN;
+    private ClimbState currentState = ClimbState.OPEN;
+    private ClimbState desiredState = ClimbState.OPEN;
 
-    public ClampSubsystem() {
+    public ClimbSubsystem() {
         clamp = new SparkMax(ClampConstants.CLAMP_ID, MotorType.kBrushless);
         winch = new SparkMax(ClampConstants.WINCH_ID, MotorType.kBrushless);
 
@@ -48,11 +48,11 @@ public class ClampSubsystem extends SubsystemBase {
         clampController = clamp.getClosedLoopController();
     }
 
-    public void setState(ClampState state) {
+    public void setState(ClimbState state) {
         desiredState = state;
     }
 
-    public ClampState getState() {
+    public ClimbState getState() {
         return currentState;
     }
 
@@ -83,13 +83,13 @@ public class ClampSubsystem extends SubsystemBase {
 
     private void open() {
         clampController.setReference(ClampConstants.CLAMP_OPEN_VAL, ControlType.kPosition);
-        currentState = ClampState.OPEN;
+        currentState = ClimbState.OPEN;
         ControlBoardHelpers.setClamped(false);
     }
 
     private void close() {
         clampController.setReference(ClampConstants.CLAMP_CLOSED_VAL, ControlType.kPosition);
-        currentState = ClampState.CLOSED;
+        currentState = ClimbState.CLOSED;
         ControlBoardHelpers.setClamped(true);
     }
 
@@ -110,7 +110,7 @@ public class ClampSubsystem extends SubsystemBase {
     }
 
 
-    public enum ClampState {
+    public enum ClimbState {
         OPEN,
         CLOSED,
         CLAMPED

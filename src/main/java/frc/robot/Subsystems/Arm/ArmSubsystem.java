@@ -43,15 +43,8 @@ public class ArmSubsystem extends SubsystemBase {
                 .inverted(true)
                 .idleMode(IdleMode.kBrake).closedLoop
                 .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-                .pid(10, 0, 0)
+                .pid(10, 0, 2)
                 .positionWrappingEnabled(false);
-
-        armLeaderConfig
-                .idleMode(IdleMode.kBrake).closedLoop.maxMotion
-                .maxVelocity(8000)
-                .maxAcceleration(4000)
-                .allowedClosedLoopError(ArmConstants.ALLOWED_ERROR_DEGREES / ArmConstants.DEGREES_PER_ROTATION)
-                .positionMode(MAXMotionPositionMode.kMAXMotionTrapezoidal);
 
         armFollowerConfig.idleMode(IdleMode.kBrake);
         armFollowerConfig.follow(ArmConstants.ARM_LEADER_ID, true);

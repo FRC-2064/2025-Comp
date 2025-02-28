@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Subsystems.Arm.ArmSubsystem;
-import frc.robot.Subsystems.Arm.ClampSubsystem;
+import frc.robot.Subsystems.Arm.ClimbSubsystem;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem;
 import frc.robot.Subsystems.Arm.WristSubsystem;
 import frc.robot.Subsystems.Arm.ArmSubsystem.ArmState;
@@ -20,7 +20,7 @@ import frc.robot.Utils.ControlBoard.RobotConfiguration;
 
 public class RobotSubsystem extends SubsystemBase{
     ArmSubsystem arm;
-    ClampSubsystem clamp;
+    ClimbSubsystem clamp;
     SwerveSubsystem drivebase;
     EndEffectorSubsystem endEffector;
     WristSubsystem wrist;
@@ -30,7 +30,7 @@ public class RobotSubsystem extends SubsystemBase{
     private RobotState endRobotState = RobotState.I_IDLE;
     private RobotConfiguration config;
 
-    public RobotSubsystem(ArmSubsystem arm, ClampSubsystem clamp, SwerveSubsystem drivebase, EndEffectorSubsystem endEffector, WristSubsystem wrist, LEDSubsystem leds) {
+    public RobotSubsystem(ArmSubsystem arm, ClimbSubsystem clamp, SwerveSubsystem drivebase, EndEffectorSubsystem endEffector, WristSubsystem wrist, LEDSubsystem leds) {
         this.arm = arm;
         this.clamp = clamp;
         this.drivebase = drivebase;
@@ -51,7 +51,7 @@ public class RobotSubsystem extends SubsystemBase{
 
                 double armAngle = arm.getArmAngle();
                 if (armAngle >= ArmConstants.ARM_SAFE_MIN_ANGLE && armAngle <= ArmConstants.ARM_SAFE_MAX_ANGLE) {
-                    drivebase.pathfindToOTFPath(config.desiredStartPose, config.desiredEndPose).schedule();
+                    // drivebase.pathfindToOTFPath(config.desiredStartPose, config.desiredEndPose).schedule();
                     robotState = RobotState.P_PATHING;
                 }
                 break;
