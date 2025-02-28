@@ -3,7 +3,6 @@
   "robotLength": 1.0,
   "holonomicMode": true,
   "pathFolders": [
-    "ControlBoard Paths",
     "Auto Paths"
   ],
   "autoFolders": [],

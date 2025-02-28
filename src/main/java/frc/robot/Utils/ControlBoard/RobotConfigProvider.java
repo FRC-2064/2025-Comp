@@ -254,7 +254,7 @@ public class RobotConfigProvider {
                         return (cagePose != null) ? new RobotConfiguration(
                                         cagePose,
                                         computeStartPose(cagePose, false),
-                                        ArmConstants.ARM_CLIMB_UP_ANGLE,
+                                        ArmConstants.ARM_CLIMB_DOWN_ANGLE,
                                         ArmConstants.ARM_CLIMB_DOWN_ANGLE,
                                         WristConstants.WRIST_CLIMB_ANGLE,
                                         WristConstants.WRIST_CLIMB_ANGLE,
