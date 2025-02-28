@@ -254,10 +254,10 @@ public class RobotConfigProvider {
                         return (cagePose != null) ? new RobotConfiguration(
                                         cagePose,
                                         computeStartPose(cagePose, false),
-                                        ArmConstants.ARM_CLIMB_ANGLE,
-                                        ArmConstants.ARM_HOME_ANGLE,
+                                        ArmConstants.ARM_CLIMB_DOWN_ANGLE,
+                                        ArmConstants.ARM_CLIMB_DOWN_ANGLE,
                                         WristConstants.WRIST_CLIMB_ANGLE,
-                                        WristConstants.WRIST_HOME_ANGLE,
+                                        WristConstants.WRIST_CLIMB_ANGLE,
                                         EndEffectorState.STOPPED)
                                         : null;
                 } catch (Exception e) {

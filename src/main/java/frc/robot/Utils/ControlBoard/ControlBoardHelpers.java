@@ -18,7 +18,9 @@ public class ControlBoardHelpers {
         getEntry("/ControlBoard/Robot/Feeder").setString(getFeeder());
         getEntry("/ControlBoard/Robot/Barge/Cage").setString(getCage());
         getEntry("/ControlBoard/Robot/ScoreLocation").setString(getScoreLocation());
+        getEntry("/ControlBoard/Robot/SelectedAuto").setString(getAuto());
     }
+
 
     public static int getLevel() {
         return (int) getEntry("/ControlBoard/Reef/Level").getDouble(0);
@@ -29,11 +31,11 @@ public class ControlBoardHelpers {
     }
 
     public static String getAuto() {
-        return getEntry("/ControlBoard/Robot/SelectedAuto").getString("");
+        return getEntry("/ControlBoard/SelectedAuto").getString("");
     }
 
     public static void setAuto(String value) {
-        getEntry("/ControlBoard/Robot/SelectedAuto").setString(value);
+        getEntry("/ControlBoard/SelectedAuto").setString(value);
     }
 
     public static String getCage() {

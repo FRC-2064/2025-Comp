@@ -378,11 +378,7 @@ public class RobotContainer {
   
 
   }
-
-  public Command getAutonomousCommand() {
-    return drivebase.getAutonomousCommand("Big Brain 3");
-  }
-
+  
   public void setDriveMode() {
     configureBindings();
   }
