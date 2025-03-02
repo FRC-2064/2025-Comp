@@ -196,8 +196,8 @@ public class SwerveSubsystem extends SubsystemBase {
                         }
                     },
                     new PPHolonomicDriveController(
-                            new PIDConstants(4.0, 0.0, 0.0),
-                            new PIDConstants(2.0, 0.0, 0.0)),
+                            new PIDConstants(3.0, 0.0, 0.0),
+                            new PIDConstants(1.0, 0.0, 0.0)),
                     config,
                     () -> {
                         var alliance = DriverStation.getAlliance();
@@ -388,7 +388,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public Command pathfindToPath(PathPlannerPath currPath) {
         PathConstraints constraints = new PathConstraints(
-                swerveDrive.getMaximumChassisVelocity(),
+                swerveDrive.getMaximumChassisVelocity() / 4,
                 4.0,
                 swerveDrive.getMaximumChassisAngularVelocity(),
                 Units.degreesToRadians(720));
@@ -414,10 +414,10 @@ public class SwerveSubsystem extends SubsystemBase {
         // need to find out what angles these should be at, its direction its driving in, not orientation
         List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
                 new Pose2d(startPose.getX(), startPose.getY(), startRotation),
-                new Pose2d(endPose.getX(), endPose.getY(), new Rotation2d()));
+                new Pose2d(endPose.getX(), endPose.getY(), startRotation.rotateBy(Rotation2d.k180deg)));
 
         PathConstraints constraints = new PathConstraints(
-                swerveDrive.getMaximumChassisVelocity(),
+                swerveDrive.getMaximumChassisVelocity() / 4,
                 0.5,
                 swerveDrive.getMaximumChassisAngularVelocity(),
                 Units.degreesToRadians(720));

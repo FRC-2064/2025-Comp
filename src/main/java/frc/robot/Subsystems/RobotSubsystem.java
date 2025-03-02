@@ -2,6 +2,7 @@ package frc.robot.Subsystems;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Subsystems.Arm.ArmSubsystem;
 import frc.robot.Subsystems.Arm.ClimbSubsystem;
@@ -30,6 +31,8 @@ public class RobotSubsystem extends SubsystemBase{
     private RobotState endRobotState = RobotState.I_IDLE;
     private RobotConfiguration config;
 
+    private Command currentPathCommand;
+
     public RobotSubsystem(ArmSubsystem arm, ClimbSubsystem clamp, SwerveSubsystem drivebase, EndEffectorSubsystem endEffector, WristSubsystem wrist, LEDSubsystem leds) {
         this.arm = arm;
         this.clamp = clamp;
@@ -42,7 +45,6 @@ public class RobotSubsystem extends SubsystemBase{
 
     @Override
     public void periodic() {
-        SmartDashboard.putString("Logging/Robot/State", getState().toString());
         ControlBoardHelpers.updateRobotStatus();
         switch (robotState) {
             case T_TRAVELING:
@@ -50,10 +52,11 @@ public class RobotSubsystem extends SubsystemBase{
                 wrist.setTargetAngle(config.travelWristAngle);
 
                 double armAngle = arm.getArmAngle();
-                if (armAngle >= ArmConstants.ARM_SAFE_MIN_ANGLE && armAngle <= ArmConstants.ARM_SAFE_MAX_ANGLE) {
-                    // drivebase.pathfindToOTFPath(config.desiredStartPose, config.desiredEndPose).schedule();
+                //if (armAngle >= ArmConstants.ARM_SAFE_MIN_ANGLE && armAngle <= ArmConstants.ARM_SAFE_MAX_ANGLE) {
+                    currentPathCommand = drivebase.pathfindToOTFPath(config.desiredStartPose, config.desiredEndPose);
+                    currentPathCommand.schedule();
                     robotState = RobotState.P_PATHING;
-                }
+                //}
                 break;
         
             case P_PATHING:
@@ -62,6 +65,12 @@ public class RobotSubsystem extends SubsystemBase{
                     wrist.setTargetAngle(config.finalWristAngle);
                     robotState = endRobotState;
                 }
+
+                if (drivebase.getDriveState() == DriveState.USER_CONTROLLED) {
+                    currentPathCommand.cancel();
+                    robotState = RobotState.I_IDLE;
+                }
+
                 break;
 
             case F_FEEDER:
@@ -71,6 +80,12 @@ public class RobotSubsystem extends SubsystemBase{
                     arm.getState() == ArmState.STATIONARY &&
                     wrist.getWristState() == WristState.STATIONARY) {
                         // endEffector.setState(config.endEffectorState);
+                        robotState = RobotState.I_IDLE;
+                    }
+            case G_GROUND:
+                    if(endEffector.hasCoral){
+                        arm.setTargetAngle(config.travelArmAngle);
+                        wrist.setTargetAngle(config.travelWristAngle);
                         robotState = RobotState.I_IDLE;
                     }
             case C_CLIMBING:
@@ -119,6 +134,15 @@ public class RobotSubsystem extends SubsystemBase{
         robotState = RobotState.T_TRAVELING;
     }
 
+    public void setArm() {
+        RobotConfiguration locconfig = RobotConfigProvider.getGamePieceConfiguration(drivebase.getHeading().getDegrees(), endEffector.getGamePieceOffset());
+        if (locconfig == null) {
+            return;
+        }
+        arm.setTargetAngle(locconfig.finalArmAngle);
+        wrist.setTargetAngle(locconfig.finalWristAngle);
+    }
+
 
     public RobotState getState() {
         return robotState;
@@ -135,6 +159,7 @@ public class RobotSubsystem extends SubsystemBase{
         T_TRAVELING,
         P_PATHING,
         F_FEEDER,
+        G_GROUND,
         S_SCORING,
         M_MANUAL,
         W_WIN

@@ -81,6 +81,20 @@ public class ClimbSubsystem extends SubsystemBase {
         }
     }
 
+    public void toggleClamp() {
+        switch (currentState) {
+            case OPEN:
+                close();
+                break;
+        
+            case CLOSED:
+                open();
+            break;
+            default:
+                break;
+        }
+    }
+
     private void open() {
         clampController.setReference(ClampConstants.CLAMP_OPEN_VAL, ControlType.kPosition);
         currentState = ClimbState.OPEN;

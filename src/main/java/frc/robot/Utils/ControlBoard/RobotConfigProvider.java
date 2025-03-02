@@ -32,9 +32,6 @@ public class RobotConfigProvider {
         public static RobotConfiguration getGamePieceConfiguration(double currHeading, Translation2d offset) {
                 try {
                         String scoreLocation = ControlBoardHelpers.getScoreLocation();
-                        if (scoreLocation.equals("TEST")) {
-                                return createTestConfiguration();
-                        }
 
                         if (scoreLocation.equals(ControlBoardConstants.SCORE_PROCESSOR)) {
                                 return createProcessorConfiguration();
@@ -42,6 +39,10 @@ public class RobotConfigProvider {
 
                         String reefLocation = ControlBoardHelpers.getReefLocation();
                         int reefLevel = (int) ControlBoardHelpers.getLevel();
+
+                        if (reefLocation.equals("")) {
+                                return null;
+                        } 
 
                         return switch (reefLevel) {
                                 case ControlBoardConstants.REEF_LEVEL_ALGAE ->
@@ -62,21 +63,6 @@ public class RobotConfigProvider {
                 }
         }
 
-        /**
-         * Creates a test configuration for the robot.
-         *
-         * @return A RobotConfiguration object for the test location.
-         */
-        private static RobotConfiguration createTestConfiguration() {
-                return new RobotConfiguration(
-                                OTFPaths.TEST_LOCATION,
-                                computeStartPose(OTFPaths.TEST_LOCATION, true),
-                                ArmConstants.ARM_TROUGH_FRONT_ANGLE,
-                                ArmConstants.ARM_TROUGH_FRONT_ANGLE,
-                                WristConstants.WRIST_TROUGH_FRONT_ANGLE,
-                                WristConstants.WRIST_TROUGH_FRONT_ANGLE,
-                                EndEffectorState.STOPPED);
-        }
 
         /**
          * Creates a configuration for processor scoring.
@@ -312,8 +298,8 @@ public class RobotConfigProvider {
          */
         private static Pose2d computeStartPose(Pose2d endPose, boolean isUsingFront) {
                 double theta = endPose.getRotation().getRadians();
-                double dx = 1.0 * Math.cos(theta) * (isUsingFront ? 1 : -1);
-                double dy = 1.0 * Math.sin(theta) * (isUsingFront ? 1 : -1);
+                double dx = 0.5 * Math.cos(theta) * (isUsingFront ? 1 : -1);
+                double dy = 0.5 * Math.sin(theta) * (isUsingFront ? 1 : -1);
                 return new Pose2d(endPose.getX() - dx, endPose.getY() - dy, Rotation2d.fromDegrees(0.0));
         }
 

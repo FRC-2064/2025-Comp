@@ -5,21 +5,9 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "IntakeEE"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "BackL3"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "intermediate"
+            "pathName": "Left Start To J1"
           }
         },
         {
@@ -31,7 +19,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.5
           }
         },
         {

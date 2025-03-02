@@ -10,10 +10,15 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Utils.ControlBoard.ControlBoardHelpers;
+import frc.robot.sensors.TOF;
 
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
+  private TOF tof;
+  private int lastDistance = 0;
+  private int[] distanceArray = new int[10];
+  private int distanceArrayIndex = 0;
 
   private final RobotContainer m_robotContainer;
   public Robot() {
@@ -38,8 +43,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.drivebase.getAutonomousCommand(ControlBoardHelpers.getAuto());
+    // m_autonomousCommand = m_robotContainer.drivebase.getAutonomousCommand(ControlBoardHelpers.getAuto());
+    m_autonomousCommand = m_robotContainer.drivebase.getAutonomousCommand("J1");
 
+    
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
@@ -59,7 +66,8 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+  }
 
   @Override
   public void teleopExit() {}

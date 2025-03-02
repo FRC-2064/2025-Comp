@@ -1,0 +1,229 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left Start To J1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "OuttakeEE"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.1
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopEE"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "J1 To Feeder"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeEE"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopEE"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Feeder To K1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "OuttakeEE"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.1
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopEE"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "K1 To Feeder"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeEE"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopEE"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Feeder To L1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "OuttakeEE"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.1
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopEE"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "L1 To Feeder"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeEE"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopEE"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Feeder To L1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "OuttakeEE"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.1
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopEE"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "L1 To Feeder"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeEE"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopEE"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Feeder To K1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "OuttakeEE"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.1
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopEE"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

@@ -32,11 +32,11 @@ public class WristSubsystem extends SubsystemBase {
 
         wristConfig
                 .smartCurrentLimit(20)
-                .inverted(true)
+                .inverted(false)
                 .idleMode(IdleMode.kBrake).closedLoop
                 .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
                 .positionWrappingEnabled(false)
-                .pid(5, 0, 1)
+                .pid(3, 0, 1)
                 .maxMotion
                 .maxVelocity(5676)
                 .maxAcceleration(10000)

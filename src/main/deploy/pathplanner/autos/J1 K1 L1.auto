@@ -5,21 +5,9 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "IntakeEE"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ArmToTrough"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "Basic"
+            "pathName": "Left Start To J1"
           }
         },
         {
@@ -31,7 +19,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.1
           }
         },
         {
@@ -43,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "ReefToFeeder"
+            "pathName": "J1 To Feeder"
           }
         },
         {
@@ -55,13 +43,19 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopEE"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "FeederToReef"
+            "pathName": "Feeder To K1"
           }
         },
         {
@@ -73,7 +67,55 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.1
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopEE"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "K1 To Feeder"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeEE"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopEE"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Feeder To L1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "OuttakeEE"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.1
           }
         },
         {

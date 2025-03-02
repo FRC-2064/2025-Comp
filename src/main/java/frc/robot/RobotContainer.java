@@ -6,7 +6,6 @@ package frc.robot;
 
 import java.io.File;
 
-import com.fasterxml.jackson.databind.util.Named;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
@@ -16,14 +15,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Commands.AlgaeIntakeCmd;
+import frc.robot.Commands.GroundIntakeCmd;
 import frc.robot.Subsystems.RobotSubsystem;
 import frc.robot.Subsystems.Arm.ArmSubsystem;
 import frc.robot.Subsystems.Arm.ClimbSubsystem;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem;
 import frc.robot.Subsystems.Arm.WristSubsystem;
-import frc.robot.Subsystems.Arm.ClimbSubsystem.ClimbState;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem.EndEffectorState;
 import frc.robot.Subsystems.Drive.SwerveSubsystem;
+import frc.robot.Subsystems.Drive.SwerveSubsystem.DriveState;
 import frc.robot.Subsystems.LEDs.LEDSubsystem;
 import frc.robot.Utils.Constants.ArmConstants;
 import frc.robot.Utils.Constants.ControlBoardConstants;
@@ -34,7 +35,6 @@ import swervelib.SwerveInputStream;
 
 public class RobotContainer {
   final CommandXboxController driverXbox = new CommandXboxController(0);
-  final CommandXboxController operatorXbox = new CommandXboxController(1);
   //final CommandXboxController operatorXbox = new CommandXboxController(1);
   final Joystick driverJoystick = new Joystick(0);
   final Joystick driverTurnJoystick = new Joystick(1);
@@ -47,6 +47,9 @@ public class RobotContainer {
       new File(
           Filesystem.getDeployDirectory(),
           "swerve"));
+
+  final GroundIntakeCmd groundIntake = new GroundIntakeCmd(arm, wrist, endEffector);
+  final AlgaeIntakeCmd algaeIntake = new AlgaeIntakeCmd(arm, wrist, endEffector);
 
 
   final RobotSubsystem robot = new RobotSubsystem(arm, clamp, drivebase, endEffector, wrist, leds);
@@ -218,13 +221,6 @@ public class RobotContainer {
       arm.setTargetAngle(ArmConstants.ARM_BACK_INTAKE_ANGLE);
     wrist.setTargetAngle(WristConstants.WRIST_BACK_INTAKE_ANGLE);
     });
-
-    Command groundIntake = new InstantCommand(
-      () -> {
-        arm.setTargetAngle(ArmConstants.ARM_GROUND_INTAKE);
-        wrist.setTargetAngle(WristConstants.WRIST_GROUND_INTAKE);
-      }
-    );
   
 
   // DRIVE COMMANDS
@@ -282,101 +278,34 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    // 'GO TO' BINDINGS
-    // UNTESTED DO NOT USE
-    // driverXbox.a().onTrue(new InstantCommand(robot::goToFeeder));
-    // driverXbox.b().onTrue(new InstantCommand(robot::goToCage));
-    // driverXbox.x().onTrue(new InstantCommand(robot::goToScore));
-    // driverXbox.a().onTrue(new InstantCommand(() -> robot.setState(RobotState.P_PATHING)));
-    // driverXbox.b().onTrue(new InstantCommand(() -> robot.setState(RobotState.S_SCORING)));
-
-    driverXbox.y().onTrue(cb_set);
-    //driverXbox.x().onTrue(new InstantCommand(robot::goToScore));
 
 
-    // ARM BINDINGS
-    // driverXbox.y().onTrue(level3Back);
-    //driverXbox.x().onTrue(intakeBack);
-    // driverXbox.leftTrigger().onTrue(troughFront);
-    // driverXbox.leftTrigger().whileTrue(outtakeCoral);
-    // driverXbox.leftBumper().onTrue(level2Front);
-    // driverXbox.rightTrigger().whileTrue(intakeCoral);
+  // END EFFECTOR BASED
+  driverXbox.leftTrigger().whileTrue(intakeCoral);
+  driverXbox.rightTrigger().whileTrue(outtakeCoral);
+  driverXbox.leftBumper().whileTrue(groundIntake);
+  driverXbox.rightBumper().whileTrue(algaeIntake);
 
-    driverXbox.start().onTrue(toggleArmBrake);
+  // CONTROLBOARD BASED
 
-    // WRIST BINDINGS
-    //driverXbox.a().whileTrue(intake);
-    // driverXbox.x().whileTrue(outtake);
-    // driverXbox.a().whileTrue(intakeAlgae);
-    // driverXbox.x().whileTrue(outtakeAlgae);
-    // driverXbox.leftTrigger().whileTrue(intakeAlgae);
-    // driverXbox.leftBumper().whileTrue(outtakeAlgae);
-    //driverXbox.b().onTrue(intakeAlgaeCommand);
-    // driverXbox.y().onTrue(removeAlgaeHigh);
-
-    // DRIVE BINDINGS
-    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
-    // drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocityJoystick);
-    // drivebase.setDefaultCommand(driveFieldOrientedDirectAngleJoystick);
-    driverXbox.back().onTrue(new InstantCommand(drivebase::zeroGyro));
-    // driverXbox.leftBumper()
-    //     .whileTrue(drivebase.driveToPose(new Pose2d(11.6, 4, new Rotation2d(Units.degreesToRadians(1)))));
-    // driverXbox.leftBumper().whileTrue(drivebase.lineUpWithTag(frontTX));
-
-
-
-  // Intake outake
-  // new JoystickButton(driverJoystick, 1).whileTrue(outtakeCoral);
-  // new JoystickButton(driverTurnJoystick, 1).whileTrue(intakeCoral);
-
-  driverXbox.rightTrigger().whileTrue(intakeCoral);
-  driverXbox.leftTrigger().whileTrue(outtakeCoral);
-
-  // Algage
-  // new JoystickButton(driverTurnJoystick, 14).onTrue(intakeAlgaeCommand);
-  // new JoystickButton(driverTurnJoystick, 15).onTrue(outtakeAlgaeCommand);
-  
-  
-
-  // new JoystickButton(driverJoystick, 14).onTrue(frontTroughReef);
-  // new JoystickButton(driverJoystick, 15).onTrue(frontL2Reef);
-  // new JoystickButton(driverJoystick, 13).onTrue(frontLowAlgaeRemoval);
-
-  operatorXbox.rightBumper().onTrue(frontL2Reef);
-  operatorXbox.a().onTrue(frontTroughReef);
-  operatorXbox.povRight().onTrue(frontLowAlgaeRemoval);
-  operatorXbox.povLeft().onTrue(groundIntake);
-
-  operatorXbox.povUp().onTrue(intakeAlgaeCommand);
-
-
-
-  // new JoystickButton(driverJoystick, 8).onTrue(backTroughReef);
-  // new JoystickButton(driverJoystick, 9).onTrue(backL2Reef);
-  // new JoystickButton(driverJoystick, 10).onTrue(backL3Reef);
-  // new JoystickButton(driverJoystick, 7).onTrue(backHighAlgaeRemoval);
-
-  operatorXbox.x().onTrue(backTroughReef);
-  operatorXbox.leftBumper().onTrue(backL2Reef);
-  operatorXbox.y().onTrue(backL3Reef);
-  operatorXbox.b().onTrue(backHighAlgaeRemoval);
-
-  // new JoystickButton(driverJoystick, 12).onTrue(frontFeeder);
-  // new JoystickButton(driverJoystick, 6).onTrue(backFeeder);
-
-  operatorXbox.rightTrigger().onTrue(frontFeeder);
-  operatorXbox.leftTrigger().onTrue(backFeeder);
-
-  driverXbox.x().onTrue(new InstantCommand(() -> clamp.setState(ClimbState.CLOSED)));
-  driverXbox.y().onTrue(new InstantCommand(() -> clamp.setState(ClimbState.OPEN)));
-
-  driverXbox.a().whileTrue(winchIn);
-  driverXbox.b().whileTrue(winchOut);
-
+  driverXbox.a().onTrue(new InstantCommand(robot::goToScore));
+  driverXbox.b().onTrue(new InstantCommand(robot::goToFeeder));
+  driverXbox.y().onTrue(new InstantCommand(robot::setArm));
+  driverXbox.x().onTrue(frontFeeder);
+    
+  // CLIMB BINDINGS
   driverXbox.povDown().onTrue(new InstantCommand(() -> arm.setTargetAngle(ArmConstants.ARM_CLIMB_DOWN_ANGLE)));
   driverXbox.povUp().onTrue(new InstantCommand(() -> arm.setTargetAngle(ArmConstants.ARM_CLIMB_UP_ANGLE)));
-  
+  driverXbox.povRight().onTrue(winchIn);
+  driverXbox.povLeft().onTrue(new InstantCommand(clamp::toggleClamp));
 
+  //bad stuff
+  driverXbox.start().onTrue(new InstantCommand(drivebase::zeroGyro));
+  driverXbox.back().onTrue(toggleArmBrake);
+
+
+  // DEFAULT DRIVE
+  drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
   }
   
   public void setDriveMode() {
