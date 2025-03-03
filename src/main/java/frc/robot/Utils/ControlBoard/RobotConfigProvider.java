@@ -75,8 +75,8 @@ public class RobotConfigProvider {
                                 computeStartPose(OTFPaths.PROCESSOR, true),
                                 ArmConstants.ARM_ALGAE_CARRY_ANGLE,
                                 ArmConstants.ARM_ALGAE_CARRY_ANGLE,
-                                WristConstants.WRIST_ALGAE_CARRY_ANGLE,
-                                WristConstants.WRIST_ALGAE_CARRY_ANGLE,
+                                WristConstants.WRIST_ALGAE_ANGLE,
+                                WristConstants.WRIST_ALGAE_ANGLE,
                                 EndEffectorState.OUTTAKING_ALGAE);
         }
 
@@ -171,7 +171,7 @@ public class RobotConfigProvider {
                 if (endPose == null)
                         return null;
 
-                Pose2d basePose = endPose.rotateBy(Rotation2d.fromDegrees(180));
+                Pose2d basePose = new Pose2d(endPose.getTranslation(), endPose.getRotation().rotateBy(Rotation2d.fromDegrees(180)));
                 Pose2d adjustedPose = adjustPoseForOffset(basePose, coralOffset, false);
 
                 return new RobotConfiguration(
@@ -330,18 +330,21 @@ public class RobotConfigProvider {
                 targetHeading = normalizeAngle(targetHeading);
                 inverseHeading = normalizeAngle(inverseHeading);
 
-                return (Math.abs(currHeading - targetHeading) <= Math.abs(currHeading - inverseHeading)) ? targetHeading
-                                : inverseHeading;
+                double diffTarget = Math.abs(normalizeAngle(currHeading - targetHeading));
+                double diffInverse = Math.abs(normalizeAngle(currHeading - inverseHeading));
+            
+                return (diffTarget <= diffInverse) ? targetHeading : inverseHeading;
+
         }
 
         /**
-         * Normalizes an angle to be within the range (-180, 180] degrees.
+         * Normalizes an angle to be within the range [-180, 180) degrees.
          *
          * @param angle The angle in degrees.
          * @return The normalized angle in degrees.
          */
         private static double normalizeAngle(double angle) {
-                angle = angle % 360;
-                return (angle > 180) ? angle - 360 : (angle <= -180) ? angle + 360 : angle;
+                angle = ((angle % 360) + 360) % 360;
+                return (angle >= 180) ? angle - 360 : angle;
         }
 }

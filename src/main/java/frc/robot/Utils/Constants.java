@@ -54,123 +54,81 @@ public class Constants {
 
     public class ArmConstants {
         //ARM
-        // this is for PHASE 4 BOT, PHASE 3 bot is flipped
         public static final int ARM_LEADER_ID = 27;
         public static final int ARM_FOLLOWER_ID = 26;
         
         public static final double ARM_HOME_ANGLE = 45;
-
-        // FOR PHASE 4
-        public static final double ARM_FRONT_INTAKE_ANGLE = 56.9; //72
-        public static final double ARM_BACK_INTAKE_ANGLE = 123.05;
+        public static final double ARM_FRONT_INTAKE_ANGLE = 57;
+        public static final double ARM_BACK_INTAKE_ANGLE = 123;
         
-        public static final double ARM_TROUGH_FRONT_ANGLE = 43.2;
-        public static final double ARM_TROUGH_BACK_ANGLE = 120.3;
+        public static final double ARM_TROUGH_FRONT_ANGLE = 43;
+        public static final double ARM_TROUGH_BACK_ANGLE = 120;
 
-        public static final double ARM_L2_FRONT_ANGLE = 62.5;
-        public static final double ARM_L2_BACK_ANGLE = 83.25;
+        public static final double ARM_L2_FRONT_ANGLE = 63;
+        public static final double ARM_L2_BACK_ANGLE = 83;
 
-        public static final double ARM_L3_BACK_ANGLE = 83.5;
+        public static final double ARM_L3_BACK_ANGLE = 84;
 
-        public static final double ARM_ALGAE_CARRY_ANGLE = 22.5;
+        public static final double ARM_ALGAE_CARRY_ANGLE = 23;
 
-        public static final double ARM_LOW_ALGAE_REMOVAL_ANGLE = 52.7;
-        public static final double ARM_HIGH_ALGAE_REMOVAL_ANGLE = 95.8;
+        public static final double ARM_LOW_ALGAE_REMOVAL_ANGLE = 53;
+        public static final double ARM_HIGH_ALGAE_REMOVAL_ANGLE = 95;
 
-        public static final double ARM_CLIMB_UP_ANGLE = 84.32;
-        public static final double ARM_CLIMB_DOWN_ANGLE = 35.8;
+        public static final double ARM_CLIMB_UP_ANGLE = 85;
+        public static final double ARM_CLIMB_DOWN_ANGLE = 36;
         
-        public static final double ARM_GROUND_INTAKE = 3.88;
-
-        // FOR PHASE 3
-        // public static final double ARM_FRONT_INTAKE_ANGLE = 45.7; //72
-        // public static final double ARM_BACK_INTAKE_ANGLE = 102.2;
-        
-        // public static final double ARM_TROUGH_FRONT_ANGLE = 32.6;
-        // public static final double ARM_TROUGH_BACK_ANGLE = 120.3;
-
-        // public static final double ARM_L2_FRONT_ANGLE = 47.4;
-        // public static final double ARM_L2_BACK_ANGLE = 95.2;
-
-        // public static final double ARM_L3_BACK_ANGLE = 92.4;
-
-        // public static final double ARM_ALGAE_CARRY_ANGLE = 18.97;
-
-        // public static final double ARM_LOW_ALGAE_REMOVAL_ANGLE = 55.0;
-        // public static final double ARM_HIGH_ALGAE_REMOVAL_ANGLE = 106.0;
-
-        // public static final double ARM_CLIMB_ANGLE = 68.0;
-
-        public static final double DEGREES_PER_ROTATION = 360.0;
-        public static final double ALLOWED_ERROR_DEGREES = 1.0;
+        public static final double ARM_GROUND_INTAKE = 4;
 
         public static final double ARM_SAFE_MIN_ANGLE = 10;
         public static final double ARM_SAFE_MAX_ANGLE = 90;
-    }
-
-    public class EndEffectorConstants {
-        //INTAKE
-        public static final int EE_TOP_ID = 28;
-        public static final int EE_BOTTOM_ID = 29;
-        public static final int EE_LIMIT_ID = 1;
-        public static final double TOF_PORT = 0;
-        public static final double EE_BASE_OFFSET = 0;
-    }
-
-    public class WristConstants {
-        //WRIST
-        public static final int WRIST_ID = 47;
-
-        public static final double WRIST_HOME_ANGLE = 60.5;
-
-        // FOR PHASE 4
-        public static final double WRIST_FRONT_INTAKE_ANGLE = 102.2;
-        public static final double WRIST_BACK_INTAKE_ANGLE = 219.85;
-
-        public static final double WRIST_TROUGH_FRONT_ANGLE = 43.2;
-        public static final double WRIST_TROUGH_BACK_ANGLE = 227.6;
-        
-        public static final double WRIST_L2_FRONT_ANGLE = 54;
-        public static final double WRIST_L2_BACK_ANGLE = 250.0;
-        
-        public static final double WRIST_L3_BACK_ANGLE = 211;
-                      
-        public static final double WRIST_ALGAE_CARRY_ANGLE = 88.8;
-        public static final double WRIST_ALGAE_INTAKE_ANGLE = 88.8;
-        
-        public static final double WRIST_LOW_ALGAE_REMOVAL_ANGLE = 50.98;
-        public static final double WRIST_HIGH_ALGAE_REMOVAL_ANGLE = 205.78;
-
-        public static final double WRIST_GROUND_INTAKE = 80
-        ;
-
-        // FOR PHASE 3
-        // public static final double WRIST_FRONT_INTAKE_ANGLE = 133.1;
-        // public static final double WRIST_BACK_INTAKE_ANGLE = 174.9;
-
-        // public static final double WRIST_TROUGH_BACK_ANGLE = 227.6;
-        // public static final double WRIST_TROUGH_FRONT_ANGLE = 96.2;
-        
-        // public static final double WRIST_L2_FRONT_ANGLE = 81.8;
-        // public static final double WRIST_L2_BACK_ANGLE = 226.5;
-        
-        // public static final double WRIST_L3_BACK_ANGLE = 156.6;
-                      
-        // public static final double WRIST_ALGAE_CARRY_ANGLE = 0.0;
-        // public static final double WRIST_ALGAE_INTAKE_ANGLE = 109.22;
-        
-        // public static final double WRIST_HIGH_ALGAE_REMOVAL_ANGLE = 95.15;
-        // public static final double WRIST_LOW_ALGAE_REMOVAL_ANGLE = 60;
-
-        public static final double WRIST_CLIMB_ANGLE = 10;
 
         public static final double DEGREES_PER_ROTATION = 360.0;
         public static final double ALLOWED_ERROR_DEGREES = 1.0;
 
+    }
+    
+    public class WristConstants {
+        //WRIST
+        public static final int WRIST_ID = 47;
+        
+        public static final double WRIST_HOME_ANGLE = 60;
+        
+        public static final double WRIST_FRONT_INTAKE_ANGLE = 102;
+        public static final double WRIST_BACK_INTAKE_ANGLE = 220;
+        
+        public static final double WRIST_TROUGH_FRONT_ANGLE = 43;
+        public static final double WRIST_TROUGH_BACK_ANGLE = 228;
+        
+        public static final double WRIST_L2_FRONT_ANGLE = 54;
+        public static final double WRIST_L2_BACK_ANGLE = 250;
+        
+        public static final double WRIST_L3_BACK_ANGLE = 211;
+        
+        public static final double WRIST_ALGAE_ANGLE = 90;
+        
+        public static final double WRIST_LOW_ALGAE_REMOVAL_ANGLE = 50;
+        public static final double WRIST_HIGH_ALGAE_REMOVAL_ANGLE = 205;
+        
+        public static final double WRIST_GROUND_INTAKE = 80;
+        
+        public static final double WRIST_CLIMB_ANGLE = 10;
+        
         public static final double WRIST_SAFE_MIN_ANGLE = 10;
         public static final double WRIST_SAFE_MAX_ANGLE = 200;
+        
+        public static final double DEGREES_PER_ROTATION = 360.0;
+        public static final double ALLOWED_ERROR_DEGREES = 1.0;
     }
-
+    
+        public class EndEffectorConstants {
+            //INTAKE
+            public static final int EE_TOP_ID = 28;
+            public static final int EE_BOTTOM_ID = 29;
+            public static final int EE_LIMIT_ID = 1;
+            public static final double TOF_PORT = 0;
+            public static final double EE_BASE_OFFSET = 0;
+        }
+    
     public class ControlBoardConstants {
         // REEF LOCATION
         public static final String REEF_LOCATION_A = "A";
@@ -210,9 +168,9 @@ public class Constants {
 
     public class OTFPaths {
         // CAGE
-        public static final Pose2d CAGE_LEFT = new Pose2d(8.715, 7.25, Rotation2d.fromDegrees(180.0)); // Done
-        public static final Pose2d CAGE_CENTER = new Pose2d(8.715, 6.15, Rotation2d.fromDegrees(180.0)); // Done
-        public static final Pose2d CAGE_RIGHT = new Pose2d(8.715, 5.1, Rotation2d.fromDegrees(180.0)); // Done
+        public static final Pose2d CAGE_LEFT = new Pose2d(8.715, 7.25, Rotation2d.fromDegrees(180.0)); 
+        public static final Pose2d CAGE_CENTER = new Pose2d(8.715, 6.15, Rotation2d.fromDegrees(180.0)); 
+        public static final Pose2d CAGE_RIGHT = new Pose2d(8.715, 5.1, Rotation2d.fromDegrees(180.0));
 
         // ALGAE REMOVAL
         public static final Pose2d ALGAE_LOCATION_AB = new Pose2d(3.19405, 4.0259, Rotation2d.fromDegrees(0.0)); // tag 18

@@ -1,15 +1,14 @@
 package frc.robot.Subsystems;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.Subsystems.Arm.ArmSubsystem;
 import frc.robot.Subsystems.Arm.ClimbSubsystem;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem;
 import frc.robot.Subsystems.Arm.WristSubsystem;
 import frc.robot.Subsystems.Arm.ArmSubsystem.ArmState;
-import frc.robot.Subsystems.Arm.EndEffectorSubsystem.EndEffectorState;
 import frc.robot.Subsystems.Arm.WristSubsystem.WristState;
 import frc.robot.Subsystems.Drive.SwerveSubsystem;
 import frc.robot.Subsystems.Drive.SwerveSubsystem.DriveState;
@@ -19,7 +18,7 @@ import frc.robot.Utils.ControlBoard.ControlBoardHelpers;
 import frc.robot.Utils.ControlBoard.RobotConfigProvider;
 import frc.robot.Utils.ControlBoard.RobotConfiguration;
 
-public class RobotSubsystem extends SubsystemBase{
+public class RobotSubsystem extends SubsystemBase {
     ArmSubsystem arm;
     ClimbSubsystem clamp;
     SwerveSubsystem drivebase;
@@ -33,7 +32,8 @@ public class RobotSubsystem extends SubsystemBase{
 
     private Command currentPathCommand;
 
-    public RobotSubsystem(ArmSubsystem arm, ClimbSubsystem clamp, SwerveSubsystem drivebase, EndEffectorSubsystem endEffector, WristSubsystem wrist, LEDSubsystem leds) {
+    public RobotSubsystem(ArmSubsystem arm, ClimbSubsystem clamp, SwerveSubsystem drivebase,
+            EndEffectorSubsystem endEffector, WristSubsystem wrist, LEDSubsystem leds) {
         this.arm = arm;
         this.clamp = clamp;
         this.drivebase = drivebase;
@@ -52,13 +52,14 @@ public class RobotSubsystem extends SubsystemBase{
                 wrist.setTargetAngle(config.travelWristAngle);
 
                 double armAngle = arm.getArmAngle();
-                //if (armAngle >= ArmConstants.ARM_SAFE_MIN_ANGLE && armAngle <= ArmConstants.ARM_SAFE_MAX_ANGLE) {
+                if ((armAngle >= ArmConstants.ARM_SAFE_MIN_ANGLE && armAngle <= ArmConstants.ARM_SAFE_MAX_ANGLE)
+                        || Robot.isSimulation()) {
                     currentPathCommand = drivebase.pathfindToOTFPath(config.desiredStartPose, config.desiredEndPose);
                     currentPathCommand.schedule();
                     robotState = RobotState.P_PATHING;
-                //}
+                }
                 break;
-        
+
             case P_PATHING:
                 if (drivebase.getDriveState() == DriveState.FOLLOWING_PATH) {
                     arm.setTargetAngle(config.finalArmAngle);
@@ -75,29 +76,29 @@ public class RobotSubsystem extends SubsystemBase{
 
             case F_FEEDER:
             case S_SCORING:
-            //endEffector.setState(config.endEffectorState);
+                // endEffector.setState(config.endEffectorState);
                 if (drivebase.getDriveState() == DriveState.USER_CONTROLLED &&
-                    arm.getState() == ArmState.STATIONARY &&
-                    wrist.getWristState() == WristState.STATIONARY) {
-                        // endEffector.setState(config.endEffectorState);
-                        robotState = RobotState.I_IDLE;
-                    }
-            case G_GROUND:
-                    if(endEffector.hasCoral){
-                        arm.setTargetAngle(config.travelArmAngle);
-                        wrist.setTargetAngle(config.travelWristAngle);
-                        robotState = RobotState.I_IDLE;
-                    }
-            case C_CLIMBING:
-                    // do climb stuff {}
-                    // if robot has climbed then brake climb
-                    robotState = RobotState.B_BRAKINGCLIMB;
-            case B_BRAKINGCLIMB:
-                    // if braking is complete
-                    robotState = RobotState.W_WIN;
-            case W_WIN:
-                    // do win stuff {}
+                        arm.getState() == ArmState.STATIONARY &&
+                        wrist.getWristState() == WristState.STATIONARY) {
+                    // endEffector.setState(config.endEffectorState);
                     robotState = RobotState.I_IDLE;
+                }
+            case G_GROUND:
+                if (endEffector.hasCoral) {
+                    arm.setTargetAngle(config.travelArmAngle);
+                    wrist.setTargetAngle(config.travelWristAngle);
+                    robotState = RobotState.I_IDLE;
+                }
+            case C_CLIMBING:
+                // do climb stuff {}
+                // if robot has climbed then brake climb
+                robotState = RobotState.B_BRAKINGCLIMB;
+            case B_BRAKINGCLIMB:
+                // if braking is complete
+                robotState = RobotState.W_WIN;
+            case W_WIN:
+                // do win stuff {}
+                robotState = RobotState.I_IDLE;
             case I_IDLE:
             default:
                 break;
@@ -115,7 +116,8 @@ public class RobotSubsystem extends SubsystemBase{
     }
 
     public void goToScore() {
-        config = RobotConfigProvider.getGamePieceConfiguration(drivebase.getHeading().getDegrees(), endEffector.getGamePieceOffset());
+        config = RobotConfigProvider.getGamePieceConfiguration(drivebase.getHeading().getDegrees(),
+                endEffector.getGamePieceOffset());
         if (config == null) {
             return;
         }
@@ -135,14 +137,14 @@ public class RobotSubsystem extends SubsystemBase{
     }
 
     public void setArm() {
-        RobotConfiguration locconfig = RobotConfigProvider.getGamePieceConfiguration(drivebase.getHeading().getDegrees(), endEffector.getGamePieceOffset());
+        RobotConfiguration locconfig = RobotConfigProvider
+                .getGamePieceConfiguration(drivebase.getHeading().getDegrees(), endEffector.getGamePieceOffset());
         if (locconfig == null) {
             return;
         }
         arm.setTargetAngle(locconfig.finalArmAngle);
         wrist.setTargetAngle(locconfig.finalWristAngle);
     }
-
 
     public RobotState getState() {
         return robotState;

@@ -22,7 +22,6 @@ public class ClimbSubsystem extends SubsystemBase {
     private SparkMaxConfig clampConfig;
 
     private SparkMax winch;
-    private SparkClosedLoopController winchController;
     private SparkMaxConfig winchConfig;
 
     private ClimbState currentState = ClimbState.OPEN;
@@ -46,6 +45,11 @@ public class ClimbSubsystem extends SubsystemBase {
         clampConfig.absoluteEncoder.inverted(false);
         clamp.configure(clampConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         clampController = clamp.getClosedLoopController();
+
+        winchConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(20);
+        
+        winch.configure(winchConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
     }
 
     public void setState(ClimbState state) {
