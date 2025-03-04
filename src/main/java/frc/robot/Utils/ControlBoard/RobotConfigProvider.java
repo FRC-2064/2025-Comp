@@ -29,7 +29,7 @@ public class RobotConfigProvider {
          * @return A RobotConfiguration object representing the desired configuration,
          *         or null if an error occurs.
          */
-        public static RobotConfiguration getGamePieceConfiguration(double currHeading, Translation2d offset) {
+        public static RobotConfiguration getGameScoreConfiguration(double currHeading, Translation2d offset) {
                 try {
                         String scoreLocation = ControlBoardHelpers.getScoreLocation();
 
@@ -37,12 +37,16 @@ public class RobotConfigProvider {
                                 return createProcessorConfiguration();
                         }
 
+                        if (scoreLocation.equals(ControlBoardConstants.SCORE_CAGE)) {
+                                return getCageConfiguration();
+                        }
+
                         String reefLocation = ControlBoardHelpers.getReefLocation();
                         int reefLevel = (int) ControlBoardHelpers.getLevel();
 
                         if (reefLocation.equals("")) {
                                 return null;
-                        } 
+                        }
 
                         return switch (reefLevel) {
                                 case ControlBoardConstants.REEF_LEVEL_ALGAE ->
@@ -62,7 +66,6 @@ public class RobotConfigProvider {
                         return null;
                 }
         }
-
 
         /**
          * Creates a configuration for processor scoring.
@@ -139,7 +142,8 @@ public class RobotConfigProvider {
                         return null;
 
                 double closestHeading = getClosestHeading(currHeading, endPose.getRotation().getDegrees());
-                boolean isUsingFront = (closestHeading == endPose.getRotation().getDegrees());
+                double tolerance = 1e-6;
+                boolean isUsingFront = Math.abs(normalizeAngle(closestHeading) - normalizeAngle(endPose.getRotation().getDegrees())) < tolerance;
                 Pose2d basePose = new Pose2d(endPose.getTranslation(), Rotation2d.fromDegrees(closestHeading));
                 Pose2d adjustedPose = adjustPoseForOffset(basePose, coralOffset, isUsingFront);
 
@@ -171,7 +175,8 @@ public class RobotConfigProvider {
                 if (endPose == null)
                         return null;
 
-                Pose2d basePose = new Pose2d(endPose.getTranslation(), endPose.getRotation().rotateBy(Rotation2d.fromDegrees(180)));
+                Pose2d basePose = new Pose2d(endPose.getTranslation(),
+                                endPose.getRotation().rotateBy(Rotation2d.fromDegrees(180)));
                 Pose2d adjustedPose = adjustPoseForOffset(basePose, coralOffset, false);
 
                 return new RobotConfiguration(
@@ -192,25 +197,19 @@ public class RobotConfigProvider {
          * @return A RobotConfiguration object representing the feeder configuration, or
          *         null if an error occurs.
          */
-        public static RobotConfiguration getFeederConfiguration(double currHeading) {
+        public static RobotConfiguration getFeederConfiguration() {
                 try {
                         String feeder = ControlBoardHelpers.getFeeder();
                         Pose2d endPose = feeder.equals(ControlBoardConstants.FEEDER_LEFT)
                                         ? OTFPaths.FEEDER_LOCATION_LEFT
                                         : OTFPaths.FEEDER_LOCATION_RIGHT;
-                        double closestHeading = getClosestHeading(currHeading, endPose.getRotation().getDegrees());
-                        boolean usingFront = closestHeading == endPose.getRotation().getDegrees();
-                        Pose2d adjustedPose = new Pose2d(endPose.getX(), endPose.getY(),
-                                        Rotation2d.fromDegrees(closestHeading));
 
                         return new RobotConfiguration(
-                                        adjustedPose,
-                                        computeStartPose(adjustedPose, usingFront),
-                                        usingFront ? ArmConstants.ARM_FRONT_INTAKE_ANGLE
-                                                        : ArmConstants.ARM_BACK_INTAKE_ANGLE,
+                                        endPose,
+                                        computeStartPose(endPose, true),
+                                        ArmConstants.ARM_FRONT_INTAKE_ANGLE,
                                         ArmConstants.ARM_HOME_ANGLE,
-                                        usingFront ? WristConstants.WRIST_FRONT_INTAKE_ANGLE
-                                                        : WristConstants.WRIST_BACK_INTAKE_ANGLE,
+                                        WristConstants.WRIST_FRONT_INTAKE_ANGLE,
                                         WristConstants.WRIST_HOME_ANGLE,
                                         EndEffectorState.INTAKING_CORAL);
 
@@ -300,7 +299,7 @@ public class RobotConfigProvider {
                 double theta = endPose.getRotation().getRadians();
                 double dx = 0.5 * Math.cos(theta) * (isUsingFront ? 1 : -1);
                 double dy = 0.5 * Math.sin(theta) * (isUsingFront ? 1 : -1);
-                return new Pose2d(endPose.getX() - dx, endPose.getY() - dy, Rotation2d.fromDegrees(0.0));
+                return new Pose2d(endPose.getX() - dx, endPose.getY() - dy, endPose.getRotation());
         }
 
         /**
@@ -332,7 +331,7 @@ public class RobotConfigProvider {
 
                 double diffTarget = Math.abs(normalizeAngle(currHeading - targetHeading));
                 double diffInverse = Math.abs(normalizeAngle(currHeading - inverseHeading));
-            
+
                 return (diffTarget <= diffInverse) ? targetHeading : inverseHeading;
 
         }

@@ -388,7 +388,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public Command pathfindToPath(PathPlannerPath currPath) {
         PathConstraints constraints = new PathConstraints(
-                swerveDrive.getMaximumChassisVelocity() / 4,
+                swerveDrive.getMaximumChassisVelocity() / 3,
                 4.0,
                 swerveDrive.getMaximumChassisAngularVelocity(),
                 Units.degreesToRadians(720));
@@ -417,7 +417,7 @@ public class SwerveSubsystem extends SubsystemBase {
                 new Pose2d(endPose.getX(), endPose.getY(), startRotation.rotateBy(Rotation2d.k180deg)));
 
         PathConstraints constraints = new PathConstraints(
-                swerveDrive.getMaximumChassisVelocity() / 4,
+                swerveDrive.getMaximumChassisVelocity() / 3,
                 0.5,
                 swerveDrive.getMaximumChassisAngularVelocity(),
                 Units.degreesToRadians(720));

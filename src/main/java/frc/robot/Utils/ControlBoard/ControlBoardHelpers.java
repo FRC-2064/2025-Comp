@@ -1,5 +1,7 @@
 package frc.robot.Utils.ControlBoard;
 
+import java.util.List;
+
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -21,6 +23,9 @@ public class ControlBoardHelpers {
         getEntry("/ControlBoard/Robot/SelectedAuto").setString(getAuto());
     }
 
+    public static void setAutos(String[] autos) {
+        getEntry("/ControlBoard/Robot/Autos").setStringArray(autos);
+    }
 
     public static int getLevel() {
         return (int) getEntry("/ControlBoard/Reef/Level").getDouble(0);

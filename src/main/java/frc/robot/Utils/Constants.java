@@ -159,6 +159,7 @@ public class Constants {
         // SCORE LOCATION
         public static final String SCORE_REEF = "REEF";
         public static final String SCORE_PROCESSOR = "PROCESSOR";
+        public static final String SCORE_CAGE = "CAGE";
 
         // FEEDER LOCATION
         public static final String FEEDER_LEFT = "LEFT";
@@ -173,27 +174,40 @@ public class Constants {
         public static final Pose2d CAGE_RIGHT = new Pose2d(8.715, 5.1, Rotation2d.fromDegrees(180.0));
 
         // ALGAE REMOVAL
-        public static final Pose2d ALGAE_LOCATION_AB = new Pose2d(3.19405, 4.0259, Rotation2d.fromDegrees(0.0)); // tag 18
-        public static final Pose2d ALGAE_LOCATION_CD = new Pose2d(3.842131, 2.904871924, Rotation2d.fromDegrees(60.0)); // tag 17
-        public static final Pose2d ALGAE_LOCATION_EF = new Pose2d(5.136515, 2.904871924, Rotation2d.fromDegrees(120.0)); // tag 22
-        public static final Pose2d ALGAE_LOCATION_GH = new Pose2d(5.784596, 4.0259, Rotation2d.fromDegrees(180.0)); // tag 21
-        public static final Pose2d ALGAE_LOCATION_IJ = new Pose2d(5.136515, 5.146928076, Rotation2d.fromDegrees(240.0)); // tag 20
+        public static final Pose2d ALGAE_END_LOCATION_AB = new Pose2d(3.19405, 4.0259, Rotation2d.fromDegrees(180.0)); // tag 18
+        public static final Pose2d ALGAE_END_LOCATION_CD = new Pose2d(3.842131, 2.904871924, Rotation2d.fromDegrees(60.0)); // tag 17
+        public static final Pose2d ALGAE_END_LOCATION_EF = new Pose2d(5.136515, 2.904871924, Rotation2d.fromDegrees(300)); // tag 22
+        public static final Pose2d ALGAE_END_LOCATION_GH = new Pose2d(5.784596, 4.0259, Rotation2d.fromDegrees(180.0)); // tag 21
+        public static final Pose2d ALGAE_LOCATION_IJ = new Pose2d(5.136515, 5.146928076, Rotation2d.fromDegrees(60.0)); // tag 20
         public static final Pose2d ALGAE_LOCATION_KL = new Pose2d(3.842131, 5.146928076, Rotation2d.fromDegrees(300.0)); // tag 19
         
         // SCORE
         public static final Pose2d PROCESSOR = new Pose2d(5.987542, 0.45974, Rotation2d.fromDegrees(270)); // tag 16
-        public static final Pose2d CORAL_LOCATION_A = new Pose2d(3.19405,4.1909, Rotation2d.fromDegrees(0.0)); // tag 18
-        public static final Pose2d CORAL_LOCATION_B = new Pose2d(3.19405,3.8609, Rotation2d.fromDegrees(0.0)); // tag 18
-        public static final Pose2d CORAL_LOCATION_C = new Pose2d(3.699236808,2.987371924, Rotation2d.fromDegrees(60.0)); // tag 17
-        public static final Pose2d CORAL_LOCATION_D = new Pose2d(3.985025192,2.822371924, Rotation2d.fromDegrees(60.0)); // tag 17
-        public static final Pose2d CORAL_LOCATION_E = new Pose2d(5.279409192,2.987371924, Rotation2d.fromDegrees(120.0)); // tag 22
-        public static final Pose2d CORAL_LOCATION_F = new Pose2d(4.993620808,2.822371924, Rotation2d.fromDegrees(120.0)); // tag 22
-        public static final Pose2d CORAL_LOCATION_G = new Pose2d(5.784596,3.8609, Rotation2d.fromDegrees(180.0)); // tag 21
-        public static final Pose2d CORAL_LOCATION_H = new Pose2d(5.784596,4.1909, Rotation2d.fromDegrees(180.0)); // tag 21
-        public static final Pose2d CORAL_LOCATION_I = new Pose2d(5.279409192,5.064428076, Rotation2d.fromDegrees(240.0)); // tag 20
-        public static final Pose2d CORAL_LOCATION_J = new Pose2d(4.993620808,5.229428076, Rotation2d.fromDegrees(240.0)); // tag 20
-        public static final Pose2d CORAL_LOCATION_K = new Pose2d(3.985025192, 5.229428076, Rotation2d.fromDegrees(300.0)); // tag 19
-        public static final Pose2d CORAL_LOCATION_L = new Pose2d(3.699236808, 5.064428076, Rotation2d.fromDegrees(300.0)); // tag 19
+        public static final Pose2d CORAL_END_LOCATION_A = new Pose2d(3.19405,4.1909, Rotation2d.fromDegrees(0.0)); // tag 18
+        public static final Pose2d CORAL_END_LOCATION_B = new Pose2d(3.19405,3.8609, Rotation2d.fromDegrees(0.0)); // tag 18
+        public static final Pose2d CORAL_END_LOCATION_C = new Pose2d(3.699236808,2.987371924, Rotation2d.fromDegrees(60.0)); // tag 17
+        public static final Pose2d CORAL_END_LOCATION_D = new Pose2d(3.985025192,2.822371924, Rotation2d.fromDegrees(60.0)); // tag 17
+        public static final Pose2d CORAL_END_LOCATION_E = new Pose2d(4.993620808,2.822371924, Rotation2d.fromDegrees(120.0)); // tag 22
+        public static final Pose2d CORAL_END_LOCATION_F = new Pose2d(5.279409192,2.987371924, Rotation2d.fromDegrees(120.0)); // tag 22
+        public static final Pose2d CORAL_END_LOCATION_G = new Pose2d(5.784596,3.8609, Rotation2d.fromDegrees(180.0)); // tag 21
+        public static final Pose2d CORAL_END_LOCATION_H = new Pose2d(5.784596,4.1909, Rotation2d.fromDegrees(180.0)); // tag 21
+        public static final Pose2d CORAL_END_LOCATION_I = new Pose2d(5.279409192,5.064428076, Rotation2d.fromDegrees(240.0)); // tag 20
+        public static final Pose2d CORAL_END_LOCATION_J = new Pose2d(4.993620808,5.229428076, Rotation2d.fromDegrees(240.0)); // tag 20
+        public static final Pose2d CORAL_END_LOCATION_K = new Pose2d(3.985025192, 5.229428076, Rotation2d.fromDegrees(300.0)); // tag 19
+        public static final Pose2d CORAL_END_LOCATION_L = new Pose2d(3.699236808, 5.064428076, Rotation2d.fromDegrees(300.0)); // tag 19
+
+        public static final Pose2d CORAL_START_LOCATION_A = new Pose2d(3.19405,4.1909, Rotation2d.fromDegrees(0.0)); // tag 18
+        public static final Pose2d CORAL_START_LOCATION_B = new Pose2d(3.19405,3.8609, Rotation2d.fromDegrees(0.0)); // tag 18
+        public static final Pose2d CORAL_START_LOCATION_C = new Pose2d(3.699236808,2.987371924, Rotation2d.fromDegrees(60.0)); // tag 17
+        public static final Pose2d CORAL_START_LOCATION_D = new Pose2d(3.985025192,2.822371924, Rotation2d.fromDegrees(60.0)); // tag 17
+        public static final Pose2d CORAL_START_LOCATION_E = new Pose2d(4.993620808,2.822371924, Rotation2d.fromDegrees(120.0)); // tag 22
+        public static final Pose2d CORAL_START_LOCATION_F = new Pose2d(5.279409192,2.987371924, Rotation2d.fromDegrees(120.0)); // tag 22
+        public static final Pose2d CORAL_START_LOCATION_G = new Pose2d(5.784596,3.8609, Rotation2d.fromDegrees(180.0)); // tag 21
+        public static final Pose2d CORAL_START_LOCATION_H = new Pose2d(5.784596,4.1909, Rotation2d.fromDegrees(180.0)); // tag 21
+        public static final Pose2d CORAL_START_LOCATION_I = new Pose2d(5.279409192,5.064428076, Rotation2d.fromDegrees(240.0)); // tag 20
+        public static final Pose2d CORAL_START_LOCATION_J = new Pose2d(4.993620808,5.229428076, Rotation2d.fromDegrees(240.0)); // tag 20
+        public static final Pose2d CORAL_START_LOCATION_K = new Pose2d(3.985025192, 5.229428076, Rotation2d.fromDegrees(300.0)); // tag 19
+        public static final Pose2d CORAL_START_LOCATION_L = new Pose2d(3.699236808, 5.064428076, Rotation2d.fromDegrees(300.0)); // tag 19
 
         // FEEDER
         public static final Pose2d FEEDER_LOCATION_LEFT = new Pose2d(1.123621854, 7.021460172, Rotation2d.fromDegrees(126.0)); // tag 13

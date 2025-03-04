@@ -107,7 +107,7 @@ public class RobotSubsystem extends SubsystemBase {
     }
 
     public void goToFeeder() {
-        config = RobotConfigProvider.getFeederConfiguration(drivebase.getHeading().getDegrees());
+        config = RobotConfigProvider.getFeederConfiguration();
         if (config == null) {
             return;
         }
@@ -116,7 +116,7 @@ public class RobotSubsystem extends SubsystemBase {
     }
 
     public void goToScore() {
-        config = RobotConfigProvider.getGamePieceConfiguration(drivebase.getHeading().getDegrees(),
+        config = RobotConfigProvider.getGameScoreConfiguration(drivebase.getHeading().getDegrees(),
                 endEffector.getGamePieceOffset());
         if (config == null) {
             return;
@@ -127,18 +127,18 @@ public class RobotSubsystem extends SubsystemBase {
 
     }
 
-    public void goToCage() {
-        config = RobotConfigProvider.getCageConfiguration();
-        if (config == null) {
-            return;
-        }
-        endRobotState = RobotState.C_CLIMBING;
-        robotState = RobotState.T_TRAVELING;
-    }
+    // public void goToCage() {
+    //     config = RobotConfigProvider.getCageConfiguration();
+    //     if (config == null) {
+    //         return;
+    //     }
+    //     endRobotState = RobotState.C_CLIMBING;
+    //     robotState = RobotState.T_TRAVELING;
+    // }
 
     public void setArm() {
         RobotConfiguration locconfig = RobotConfigProvider
-                .getGamePieceConfiguration(drivebase.getHeading().getDegrees(), endEffector.getGamePieceOffset());
+                .getGameScoreConfiguration(drivebase.getHeading().getDegrees(), endEffector.getGamePieceOffset());
         if (locconfig == null) {
             return;
         }
