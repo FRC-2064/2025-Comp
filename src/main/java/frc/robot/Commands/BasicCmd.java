@@ -7,6 +7,7 @@ import frc.robot.Subsystems.Arm.ArmSubsystem;
 import frc.robot.Subsystems.Arm.ClimbSubsystem;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem;
 import frc.robot.Subsystems.Arm.WristSubsystem;
+import frc.robot.Subsystems.Arm.EndEffectorSubsystem.EndEffectorState;
 import frc.robot.Utils.Constants.ArmConstants;
 import frc.robot.Utils.Constants.WristConstants;
 
@@ -94,16 +95,44 @@ public class BasicCmd {
     }
 
     public class EndEffectorCommands {
-        public Command OuttakeEE = new InstantCommand(
+        public Command PPOuttakeEE = new InstantCommand(
                 () -> endEffector.setState(EndEffectorSubsystem.EndEffectorState.OUTTAKING_CORAL));
-        public Command IntakeEE = new InstantCommand(
+        public Command PPIntakeEE = new InstantCommand(
                 () -> endEffector.setState(EndEffectorSubsystem.EndEffectorState.INTAKING_CORAL));
-        public Command HighEE = new InstantCommand(
+        public Command PPHighEE = new InstantCommand(
                 () -> endEffector.setState(EndEffectorSubsystem.EndEffectorState.REMOVING_HIGH_ALGAE));
-        public Command LowEE = new InstantCommand(
+        public Command PPLowEE = new InstantCommand(
                 () -> endEffector.setState(EndEffectorSubsystem.EndEffectorState.REMOVING_LOW_ALGAE));
-        public Command StopEE = new InstantCommand(
+        public Command PPStopEE = new InstantCommand(
                 () -> endEffector.setState(EndEffectorSubsystem.EndEffectorState.STOPPED));
+
+        public Command OuttakeEE = new StartEndCommand(
+            () -> endEffector.setState(EndEffectorState.OUTTAKING_CORAL),
+            () -> endEffector.setState(EndEffectorState.STOPPED),
+            endEffector
+        );
+        public Command IntakeEE = new StartEndCommand(
+            () -> endEffector.setState(EndEffectorState.INTAKING_CORAL),
+            () -> endEffector.setState(EndEffectorState.STOPPED),
+            endEffector
+        );
+        public Command HighEE = new StartEndCommand(
+            () -> endEffector.setState(EndEffectorState.REMOVING_HIGH_ALGAE),
+            () -> endEffector.setState(EndEffectorState.STOPPED),
+            endEffector
+        );
+        public Command LowEE = new StartEndCommand(
+            () -> endEffector.setState(EndEffectorState.REMOVING_LOW_ALGAE),
+            () -> endEffector.setState(EndEffectorState.STOPPED),
+            endEffector
+        );
+
+        // public Command StopEE = new StartEndCommand(
+        //     () -> endEffector.setState(EndEffectorState.STOPPED), 
+        //     () -> endEffector.setState(EndEffectorState.STOPPED),
+        //     endEffector);
+       
+
     }
 
     public class ClimbCommands {

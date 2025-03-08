@@ -6,9 +6,12 @@ package frc.robot;
 
 import java.io.File;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -55,13 +58,15 @@ public class RobotContainer {
   final EndEffectorCommands eeCmd = base.eeCmd;
   final ClimbCommands climbCmd = base.climbCmd;
 
+  private final SendableChooser<Command> autoChooser;
+
 
   // DRIVE COMMANDS
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(
       drivebase.getSwerveDrive(),
-      () -> driverXbox.getLeftY() * -1 * (driverXbox.getHID().getBButton() ? 0.25 : 1),
-      () -> driverXbox.getLeftX() * -1 * (driverXbox.getHID().getBButton() ? 0.25 : 1))
-      .withControllerRotationAxis(() -> -driverXbox.getRightX() * (driverXbox.getHID().getBButton() ? 0.25 : 1))
+      () -> driverXbox.getLeftY() * -1 * (driverXbox.getHID().getRightBumperButton() ? 0.25 : 0.75),
+      () -> driverXbox.getLeftX() * -1 * (driverXbox.getHID().getRightBumperButton() ? 0.25 : 0.75))
+      .withControllerRotationAxis(() -> -driverXbox.getRightX() * (driverXbox.getHID().getRightBumperButton() ? 0.25 : 0.75))
       .deadband(OperatorConstants.DEADBAND)
       .allianceRelativeControl(true);
 
@@ -79,11 +84,15 @@ public class RobotContainer {
     NamedCommands.registerCommand("GroundIntake", groundIntake);
 
     // INTAKE STATES
-    NamedCommands.registerCommand("OuttakeEE", eeCmd.OuttakeEE);
-    NamedCommands.registerCommand("IntakeEE", eeCmd.IntakeEE);
-    NamedCommands.registerCommand("HighEE", eeCmd.HighEE);
-    NamedCommands.registerCommand("LowEE", eeCmd.LowEE);
-    NamedCommands.registerCommand("StopEE", eeCmd.StopEE);
+    NamedCommands.registerCommand("OuttakeEE", eeCmd.PPOuttakeEE);
+    NamedCommands.registerCommand("IntakeEE", eeCmd.PPIntakeEE);
+    NamedCommands.registerCommand("HighEE", eeCmd.PPHighEE);
+    NamedCommands.registerCommand("LowEE", eeCmd.PPLowEE);
+    NamedCommands.registerCommand("StopEE", eeCmd.PPStopEE);
+
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
+
     configureBindings();
 
   }
@@ -91,11 +100,11 @@ public class RobotContainer {
   private void configureBindings() {
 
     // GAME PIECE MANIPULATION
-    driverXbox.leftTrigger().whileTrue(eeCmd.IntakeEE);
-    driverXbox.rightTrigger().whileTrue(eeCmd.OuttakeEE);
+    driverXbox.leftTrigger().whileTrue(eeCmd.OuttakeEE);
+    driverXbox.rightTrigger().whileTrue(eeCmd.IntakeEE);
     driverXbox.leftBumper().whileTrue(groundIntake);
-    driverXbox.rightBumper().whileTrue(algaeIntake);
-
+    
+    driverXbox.b().onTrue(new InstantCommand(robot::goToFeeder));
     driverXbox.a().onTrue(new InstantCommand(robot::goToScore));
     driverXbox.y().onTrue(new InstantCommand(robot::setArm));
     driverXbox.x().onTrue(armCmd.FrontFeeder);
@@ -103,7 +112,7 @@ public class RobotContainer {
     // CLIMB BINDINGS
     driverXbox.povDown().onTrue(armCmd.climbDown);
     driverXbox.povUp().onTrue(armCmd.climbUp);
-    driverXbox.povRight().onTrue(climbCmd.winchIn);
+    driverXbox.povRight().whileTrue(climbCmd.winchIn);
     driverXbox.povLeft().onTrue(climbCmd.toggleClamp);
 
     // UTILITY BINDINGS
@@ -118,6 +127,10 @@ public class RobotContainer {
                   Math.abs(driverXbox.getLeftX()) > OperatorConstants.DEADBAND ||
                   Math.abs(driverXbox.getRightX()) > OperatorConstants.DEADBAND)
     .onTrue(new InstantCommand(() -> drivebase.setState(DriveState.USER_CONTROLLED), drivebase));
+  }
+
+  public Command getAuto() {
+    return autoChooser.getSelected();
   }
 
 }

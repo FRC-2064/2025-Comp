@@ -102,51 +102,39 @@ public class SwerveSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putString("Logging/Drive/State", getDriveState().toString());
-        SmartDashboard.putNumber("Logging/Drive/Heading",getHeading().getDegrees());
+        SmartDashboard.putNumber("Logging/Drive/Heading", getHeading().getDegrees());
 
-        
         manageDriveState();
 
         swerveDrive.updateOdometry();
+        swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
         if (Robot.isReal()) {
             // LIMELIGHT 1 : FONT
-            boolean doRejectUpdate = false;
-
+            // boolean doRejectUpdate = false;
+            double degrees = swerveDrive.getYaw().getDegrees();
             LimelightHelpers.SetRobotOrientation(
                     Limelight1Constants.LIMELIGHT_NAME,
-                    swerveDrive.getYaw().getDegrees(),
+                    // swerveDrive.getYaw().getDegrees(),
+                    degrees,
                     0, 0, 0, 0, 0);
 
             LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(
                     Limelight1Constants.LIMELIGHT_NAME);
-            if (mt2 == null) {
-                return;
-            }
-            if (mt2.tagCount == 0) {
-                doRejectUpdate = true;
-            }
-            if (!doRejectUpdate) {
-                swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
+            if (mt2 != null && mt2.tagCount != 0) {
                 swerveDrive.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
             }
 
             // LIMELIGHT 2 : BACK
-            doRejectUpdate = false;
+            // doRejectUpdate = false;
             LimelightHelpers.SetRobotOrientation(
                     Limelight2Constants.LIMELIGHT_NAME,
-                    swerveDrive.getYaw().getDegrees(),
+                    // swerveDrive.getYaw().getDegrees(),
+                    degrees,
                     0, 0, 0, 0, 0);
 
             mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(
                     Limelight2Constants.LIMELIGHT_NAME);
-            if (mt2 == null) {
-                return;
-            }
-            if (mt2.tagCount == 0) {
-                doRejectUpdate = true;
-            }
-            if (!doRejectUpdate) {
-                swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
+            if (mt2 != null && mt2.tagCount != 0) {
                 swerveDrive.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
             }
         }
@@ -388,7 +376,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public Command pathfindToPath(PathPlannerPath currPath) {
         PathConstraints constraints = new PathConstraints(
-                swerveDrive.getMaximumChassisVelocity() / 3,
+                swerveDrive.getMaximumChassisVelocity() * 0.75,
                 4.0,
                 swerveDrive.getMaximumChassisAngularVelocity(),
                 Units.degreesToRadians(720));
@@ -398,7 +386,8 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public Command pathfindToOTFPath(Pose2d startPose, Pose2d endPose) {
         if (endPose == null) {
-            return new Command() {};
+            return new Command() {
+            };
         }
         driveState = DriveState.PATHFINDING;
 
@@ -410,14 +399,14 @@ public class SwerveSubsystem extends SubsystemBase {
         double angleRadians = Math.atan2(dy, dx);
         Rotation2d startRotation = new Rotation2d(angleRadians);
 
-
-        // need to find out what angles these should be at, its direction its driving in, not orientation
+        // need to find out what angles these should be at, its direction its driving
+        // in, not orientation
         List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
                 new Pose2d(startPose.getX(), startPose.getY(), startRotation),
                 new Pose2d(endPose.getX(), endPose.getY(), startRotation.rotateBy(Rotation2d.k180deg)));
 
         PathConstraints constraints = new PathConstraints(
-                swerveDrive.getMaximumChassisVelocity() / 3,
+                swerveDrive.getMaximumChassisVelocity() / 4,
                 0.5,
                 swerveDrive.getMaximumChassisAngularVelocity(),
                 Units.degreesToRadians(720));
@@ -429,7 +418,7 @@ public class SwerveSubsystem extends SubsystemBase {
                 new GoalEndState(0.0, endPose.getRotation()));
 
         var alliance = DriverStation.getAlliance();
-        
+
         if (alliance.isPresent()) {
             if (alliance.get() == DriverStation.Alliance.Red) {
                 generatedPath.flipPath();
@@ -461,23 +450,19 @@ public class SwerveSubsystem extends SubsystemBase {
         double field_length = Units.inchesToMeters(649);
         double field_width = Units.inchesToMeters(319);
 
-
-
         double center_x = field_length / 2;
         double center_y = field_width / 2;
-        
+
         double x_centered = absX - center_x;
         double y_centered = absY - center_y;
-        
+
         double x_rotated = -x_centered;
         double y_rotated = -y_centered;
-        
+
         double x_final = x_rotated + center_x;
         double y_final = y_rotated + center_y;
 
-
         return new Pose2d(x_final, y_final, new Rotation2d());
-        
 
     }
 
@@ -493,14 +478,13 @@ public class SwerveSubsystem extends SubsystemBase {
                 currentPose = getRelativePose();
             }
         }
-        
 
         Translation2d diffTranslation = currentPose.getTranslation().minus(otfStartPose.getTranslation());
         double positionError = diffTranslation.getNorm();
 
         SmartDashboard.putNumber("Logging/Drive/PositionError", positionError);
 
-        if (positionError < Constants.DRIVESTATE_ALLOWED_ERROR) { 
+        if (positionError < Constants.DRIVESTATE_ALLOWED_ERROR) {
             driveState = DriveState.FOLLOWING_PATH;
         }
 
@@ -517,7 +501,7 @@ public class SwerveSubsystem extends SubsystemBase {
         Translation2d diffTranslation = currentPose.getTranslation().minus(otfEndPose.getTranslation());
         double positionError = diffTranslation.getNorm();
 
-        if (positionError < Constants.DRIVESTATE_ALLOWED_ERROR) { 
+        if (positionError < Constants.DRIVESTATE_ALLOWED_ERROR) {
             driveState = DriveState.USER_CONTROLLED;
         }
     }

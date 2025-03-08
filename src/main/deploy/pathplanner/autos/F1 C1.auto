@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Start To J1"
+            "pathName": "Right Start to F1"
           }
         },
         {
@@ -31,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "J To Feeder"
+            "pathName": "F to Feeder"
           }
         },
         {
@@ -55,7 +55,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Feeder To K1"
+            "pathName": "Feeder to C1"
           }
         },
         {

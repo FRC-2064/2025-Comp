@@ -9,22 +9,25 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Utils.TOF;
+import frc.robot.Subsystems.DistanceSensorUSB;
 import frc.robot.Utils.Constants.EndEffectorConstants;
 import frc.robot.Utils.ControlBoard.ControlBoardHelpers;
 
 public class EndEffectorSubsystem extends SubsystemBase {
     private SparkMax top;
     private SparkMax bottom;
-    private TOF tof;
+    private DistanceSensorUSB tof;
     private SparkFlexConfig topConfig;
     private SparkFlexConfig bottomConfig;
     private EndEffectorState state = EndEffectorState.STOPPED;
 
+    private DigitalInput endEffectorLimitSwitch;
+
     public boolean hasCoral = false;
-    private boolean HasAlgae = false;
 
     private final EnumMap<EndEffectorState, Runnable> stateActions;
 
@@ -35,7 +38,9 @@ public class EndEffectorSubsystem extends SubsystemBase {
         topConfig = new SparkFlexConfig();
         bottomConfig = new SparkFlexConfig();
 
-        tof = new TOF(EndEffectorConstants.TOF_PORT);
+        endEffectorLimitSwitch = new DigitalInput(0);
+
+        tof = new DistanceSensorUSB();
 
         stateActions = new EnumMap<>(EndEffectorState.class);
         stateActions.put(EndEffectorState.INTAKING_CORAL, this::intakeCoral);
@@ -60,16 +65,21 @@ public class EndEffectorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        stopWithCoral();
-        ControlBoardHelpers.setHasAlgae(HasAlgae);
+        tof.periodicUpdate();
+        hasCoral = endEffectorLimitSwitch.get();
+        // stopWithCoral();
         ControlBoardHelpers.setHasCoral(hasCoral);
         SmartDashboard.putString("Logging/EE/State", getState().toString());
+        SmartDashboard.putNumber("Logging/DistanceSensor", tof.getDistance());
+        //System.out.println(tof.getDistance());
     }
 
     public void setState(EndEffectorState newState) {
         if (state == newState) {
             return;
         }
+
+
 
         state = newState;
         Runnable action = stateActions.get(newState);
@@ -84,7 +94,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
 
     public Translation2d getGamePieceOffset() {
         double currentReading = tof.getDistance();
-        return new Translation2d(EndEffectorConstants.EE_BASE_OFFSET - currentReading, 0.0);
+        return new Translation2d((-(EndEffectorConstants.EE_BASE_OFFSET - currentReading)/1000), 0.0);
     }
 
     private void stopWithCoral() { 
@@ -108,8 +118,8 @@ public class EndEffectorSubsystem extends SubsystemBase {
     }
 
     public void outtakeCoral(){
-        top.set(-0.75);
-        bottom.set(-0.75);
+        top.set(-0.35);
+        bottom.set(-0.35);
     }
 
     private void intakeAlgae(){

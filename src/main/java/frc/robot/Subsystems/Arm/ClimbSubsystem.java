@@ -47,6 +47,7 @@ public class ClimbSubsystem extends SubsystemBase {
         clampController = clamp.getClosedLoopController();
 
         winchConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(20);
+        winchConfig.absoluteEncoder.inverted(false);
         
         winch.configure(winchConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -62,34 +63,17 @@ public class ClimbSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (currentState != desiredState) {
-            manageState();
-        }
         SmartDashboard.putString("Logging/Clamp/State", currentState.toString());
-        SmartDashboard.putNumber("Logging/Clamp/WinchAngle", clamp.getAbsoluteEncoder().getPosition());
+        SmartDashboard.putNumber("Logging/Clamp/ClampAngle", clamp.getAbsoluteEncoder().getPosition());
+        // SmartDashboard.putNumber("Logging/Clamp/ClampAngle", clamp)
 
-    }
-
-    private void manageState() {
-        switch (desiredState) {
-            case OPEN:
-                open();
-                ControlBoardHelpers.setClamped(false);
-                break;
-            case CLOSED:
-                close();
-                ControlBoardHelpers.setClamped(true);
-                break;
-            default:
-                break;
-        }
     }
 
     public void toggleClamp() {
         switch (currentState) {
             case OPEN:
                 close();
-                break;
+            break;
         
             case CLOSED:
                 open();
@@ -116,7 +100,7 @@ public class ClimbSubsystem extends SubsystemBase {
         if (DriverStation.getMatchTime() > 30) {
             return;
         }
-        winch.set(0.5);
+        winch.set(-0.5);
     }
 
     public void winchOut(){

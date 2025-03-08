@@ -141,21 +141,20 @@ public class RobotConfigProvider {
                 if (endPose == null)
                         return null;
 
-                double closestHeading = getClosestHeading(currHeading, endPose.getRotation().getDegrees());
+                //double closestHeading = getClosestHeading(currHeading, endPose.getRotation().getDegrees());
                 double tolerance = 1e-6;
-                boolean isUsingFront = Math.abs(normalizeAngle(closestHeading) - normalizeAngle(endPose.getRotation().getDegrees())) < tolerance;
-                Pose2d basePose = new Pose2d(endPose.getTranslation(), Rotation2d.fromDegrees(closestHeading));
-                Pose2d adjustedPose = adjustPoseForOffset(basePose, coralOffset, isUsingFront);
+                //boolean isUsingFront = Math.abs(normalizeAngle(closestHeading) - normalizeAngle(endPose.getRotation().getDegrees())) < tolerance;
+                //Pose2d basePose = new Pose2d(endPose.getTranslation(), Rotation2d.fromDegrees(closestHeading));
+                Pose2d adjustedPose = adjustPoseForOffset(endPose, coralOffset, true);
 
                 SmartDashboard.putNumber("Logging/Heading/targetHeading", endPose.getRotation().getDegrees());
-                SmartDashboard.putNumber("Logging/Heading/closestHeading", closestHeading);
 
                 return new RobotConfiguration(
                                 adjustedPose,
-                                computeStartPose(adjustedPose, isUsingFront),
-                                isUsingFront ? ArmConstants.ARM_L2_FRONT_ANGLE : ArmConstants.ARM_L2_BACK_ANGLE,
+                                computeStartPose(adjustedPose, true),
+                                ArmConstants.ARM_L2_FRONT_ANGLE,
                                 ArmConstants.ARM_HOME_ANGLE,
-                                isUsingFront ? WristConstants.WRIST_L2_FRONT_ANGLE : WristConstants.WRIST_L2_BACK_ANGLE,
+                                WristConstants.WRIST_L2_FRONT_ANGLE,
                                 WristConstants.WRIST_HOME_ANGLE,
                                 EndEffectorState.OUTTAKING_CORAL);
         }
