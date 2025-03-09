@@ -65,6 +65,8 @@ public class EndEffectorSubsystem extends SubsystemBase {
         tof.periodicUpdate();
         checkCoralAcquisition();
         ControlBoardHelpers.setHasCoral(coralAcquired);
+        checkCoralAcquisition();
+        ControlBoardHelpers.setHasCoral(coralAcquired);
         SmartDashboard.putString("Logging/EE/State", getState().toString());
         SmartDashboard.putNumber("Logging/DistanceSensor", tof.getDistance());
         SmartDashboard.putNumber("Logging/EE/IntakeVeloctiy", top.getEncoder().getVelocity());
@@ -120,37 +122,44 @@ public class EndEffectorSubsystem extends SubsystemBase {
         coralAcquired = false;
         coralIntakeStartTime = System.currentTimeMillis();
         coralIntakeDetectCount = 0;
+        coralAcquired = false;
+        coralIntakeStartTime = System.currentTimeMillis();
+        coralIntakeDetectCount = 0;
     }
 
     public void outtakeCoral() {
         top.set(-0.35);
         bottom.set(-0.35);
         coralAcquired = false;
+        coralAcquired = false;
     }
 
     private void intakeAlgae(){
         top.set(-0.5);
         bottom.set(0.0);
+        top.set(-0.5);
+        bottom.set(0.0);
     }
 
-    private void outtakeAlgae() {
+    private void outtakeAlgae()  {
         top.set(0.5);
         bottom.set(0.0);
     }
 
-    private void removeHighAlgae() {
+    private void removeHighAlgae()  {
         top.set(-0.75);
         bottom.set(0.0);
     }
 
-    private void removeLowAlgae() {
+    private void removeLowAlgae()  {
         top.set(0.0);
         bottom.set(-0.75);
     }
 
-    private void OuttakePeg() {
+    private void OuttakePeg()  {
         top.set(-0.5);
         bottom.set(-0.5);
+        coralAcquired = false;
         coralAcquired = false;
     }
 
