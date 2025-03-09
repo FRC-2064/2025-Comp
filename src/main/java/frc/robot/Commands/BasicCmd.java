@@ -38,11 +38,7 @@ public class BasicCmd {
     }
 
     public class ArmCommands {
-        public Command FrontFeeder = new InstantCommand(
-                () -> {
-                    arm.setTargetAngle(ArmConstants.ARM_FRONT_INTAKE_ANGLE);
-                    wrist.setTargetAngle(WristConstants.WRIST_FRONT_INTAKE_ANGLE);
-                });
+        public Command FrontFeeder = new InstantCommand(robot::armToFeeder);
 
         public Command FrontL1 = new InstantCommand(() -> {
             arm.setTargetAngle(ArmConstants.ARM_TROUGH_FRONT_ANGLE);
@@ -131,8 +127,15 @@ public class BasicCmd {
             endEffector
         );
 
-        public Command ControlBoardEE = new StartEndCommand(
-            robot::runIntake,
+
+        public Command ControlBoardEEIntake = new StartEndCommand(
+            robot::runIntakeConfig,
+            () -> endEffector.setState(EndEffectorState.STOPPED), 
+             robot, endEffector
+             );
+
+        public Command ControlBoardEEOuttake = new StartEndCommand(
+            robot::runOuttakeConfig,
             () -> endEffector.setState(EndEffectorState.STOPPED), 
              robot, endEffector
              );

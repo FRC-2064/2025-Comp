@@ -111,10 +111,9 @@ public class SwerveSubsystem extends SubsystemBase {
         if (Robot.isReal()) {
             // LIMELIGHT 1 : FONT
             // boolean doRejectUpdate = false;
-            double degrees = swerveDrive.getYaw().getDegrees();
+            double degrees = swerveDrive.getOdometryHeading().getDegrees();
             LimelightHelpers.SetRobotOrientation(
                     Limelight1Constants.LIMELIGHT_NAME,
-                    // swerveDrive.getYaw().getDegrees(),
                     degrees,
                     0, 0, 0, 0, 0);
 
@@ -128,7 +127,6 @@ public class SwerveSubsystem extends SubsystemBase {
             // doRejectUpdate = false;
             LimelightHelpers.SetRobotOrientation(
                     Limelight2Constants.LIMELIGHT_NAME,
-                    // swerveDrive.getYaw().getDegrees(),
                     degrees,
                     0, 0, 0, 0, 0);
 

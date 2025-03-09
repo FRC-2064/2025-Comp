@@ -49,7 +49,7 @@ public class RobotContainer {
   final RobotSubsystem robot = new RobotSubsystem(arm, climb, drivebase, endEffector, wrist, leds);
 
   // CUSTOM COMMANDS
-  final GroundIntakeCmd groundIntake = new GroundIntakeCmd(arm, wrist, endEffector);
+  final GroundIntakeCmd groundIntake = new GroundIntakeCmd(arm, wrist, endEffector, robot);
   final AlgaeIntakeCmd algaeIntake = new AlgaeIntakeCmd(arm, wrist, endEffector);
 
   // BASIC COMMANDS
@@ -100,13 +100,13 @@ public class RobotContainer {
   private void configureBindings() {
 
     // GAME PIECE MANIPULATION
-    driverXbox.leftTrigger().whileTrue(eeCmd.ControlBoardEE);
-    driverXbox.rightTrigger().whileTrue(eeCmd.IntakeEE);
+    driverXbox.leftTrigger().whileTrue(eeCmd.ControlBoardEEOuttake);
+    driverXbox.rightTrigger().whileTrue(eeCmd.ControlBoardEEIntake);
     driverXbox.leftBumper().whileTrue(groundIntake);
     
     driverXbox.b().onTrue(new InstantCommand(robot::goToFeeder));
     driverXbox.a().onTrue(new InstantCommand(robot::goToScore));
-    driverXbox.y().onTrue(new InstantCommand(robot::setArm));
+    driverXbox.y().onTrue(new InstantCommand(robot::armToScore));
     driverXbox.x().onTrue(armCmd.FrontFeeder);
 
     // CLIMB BINDINGS

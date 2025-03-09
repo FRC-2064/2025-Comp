@@ -80,6 +80,7 @@ public class RobotConfigProvider {
                                 ArmConstants.ARM_ALGAE_CARRY_ANGLE,
                                 WristConstants.WRIST_ALGAE_ANGLE,
                                 WristConstants.WRIST_ALGAE_ANGLE,
+                                EndEffectorState.INTAKING_ALGAE,
                                 EndEffectorState.OUTTAKING_ALGAE);
         }
 
@@ -103,6 +104,8 @@ public class RobotConfigProvider {
                                                 : WristConstants.WRIST_LOW_ALGAE_REMOVAL_ANGLE,
                                 WristConstants.WRIST_HOME_ANGLE,
                                 isHighAlgae ? EndEffectorState.REMOVING_HIGH_ALGAE
+                                                : EndEffectorState.REMOVING_LOW_ALGAE,
+                                isHighAlgae ? EndEffectorState.REMOVING_HIGH_ALGAE
                                                 : EndEffectorState.REMOVING_LOW_ALGAE);
         }
 
@@ -122,6 +125,7 @@ public class RobotConfigProvider {
                                 ArmConstants.ARM_HOME_ANGLE,
                                 WristConstants.WRIST_TROUGH_FRONT_ANGLE,
                                 WristConstants.WRIST_HOME_ANGLE,
+                                EndEffectorState.INTAKING_CORAL,
                                 EndEffectorState.OUTTAKING_CORAL) : null;
         }
 
@@ -156,6 +160,7 @@ public class RobotConfigProvider {
                                 ArmConstants.ARM_HOME_ANGLE,
                                 WristConstants.WRIST_L2_FRONT_ANGLE,
                                 WristConstants.WRIST_HOME_ANGLE,
+                                EndEffectorState.INTAKING_CORAL,
                                 EndEffectorState.OUTTAKING_PEG);
         }
 
@@ -185,6 +190,7 @@ public class RobotConfigProvider {
                                 ArmConstants.ARM_HOME_ANGLE,
                                 WristConstants.WRIST_L3_BACK_ANGLE,
                                 WristConstants.WRIST_HOME_ANGLE,
+                                EndEffectorState.INTAKING_CORAL,
                                 EndEffectorState.OUTTAKING_PEG);
         }
 
@@ -210,7 +216,8 @@ public class RobotConfigProvider {
                                         ArmConstants.ARM_HOME_ANGLE,
                                         WristConstants.WRIST_FRONT_INTAKE_ANGLE,
                                         WristConstants.WRIST_HOME_ANGLE,
-                                        EndEffectorState.INTAKING_CORAL);
+                                        EndEffectorState.INTAKING_CORAL,
+                                        EndEffectorState.OUTTAKING_CORAL);
 
                 } catch (Exception e) {
                         System.out.println("Error in getFeederConfiguration");
@@ -242,6 +249,7 @@ public class RobotConfigProvider {
                                         ArmConstants.ARM_CLIMB_DOWN_ANGLE,
                                         WristConstants.WRIST_CLIMB_ANGLE,
                                         WristConstants.WRIST_CLIMB_ANGLE,
+                                        EndEffectorState.STOPPED,
                                         EndEffectorState.STOPPED)
                                         : null;
                 } catch (Exception e) {

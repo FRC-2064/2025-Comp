@@ -10,7 +10,8 @@ public class RobotConfiguration {
     public final double travelArmAngle;
     public final double finalWristAngle;
     public final double travelWristAngle;
-    public final EndEffectorState endEffectorState;
+    public final EndEffectorState startEndEffectorState;
+    public EndEffectorState finalEndEffectorState;
 
     
     public RobotConfiguration(
@@ -20,7 +21,8 @@ public class RobotConfiguration {
         double travelArmAngle, 
         double finalWristAngle,  
         double travelWristAngle,
-        EndEffectorState endEffectorState) {
+        EndEffectorState startEndEffectorState,
+        EndEffectorState finalEndEffectorState) {
 
         this.desiredEndPose = desiredEndPose;
         this.desiredStartPose = desiredStartPose;
@@ -28,7 +30,12 @@ public class RobotConfiguration {
         this.travelArmAngle = travelArmAngle;
         this.finalWristAngle = finalWristAngle;
         this.travelWristAngle = travelWristAngle;
-        this.endEffectorState = endEffectorState;
+        this.startEndEffectorState = startEndEffectorState;
+        this.finalEndEffectorState = finalEndEffectorState;
+    }
+
+    public void setFinalEndEffectorState(EndEffectorState eeState){
+        finalEndEffectorState = eeState;
     }
 
 }

@@ -5,9 +5,12 @@
 package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
+import frc.robot.Subsystems.RobotSubsystem;
 import frc.robot.Subsystems.Arm.ArmSubsystem;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem;
 import frc.robot.Subsystems.Arm.WristSubsystem;
+import frc.robot.Subsystems.Arm.EndEffectorSubsystem.EndEffectorState;
 import frc.robot.Utils.Constants.ArmConstants;
 import frc.robot.Utils.Constants.WristConstants;
 
@@ -16,11 +19,13 @@ public class GroundIntakeCmd extends Command {
   private EndEffectorSubsystem endEffector;
   private WristSubsystem wrist;
   private boolean isFinished = false;
+  private RobotSubsystem robot;
   
-  public GroundIntakeCmd(ArmSubsystem arm, WristSubsystem wrist, EndEffectorSubsystem endEffector) {
+  public GroundIntakeCmd(ArmSubsystem arm, WristSubsystem wrist, EndEffectorSubsystem endEffector, RobotSubsystem robot) {
     this.arm = arm;
     this.wrist = wrist;
     this.endEffector = endEffector;
+    this.robot = robot;
   }
 
   @Override
@@ -28,18 +33,21 @@ public class GroundIntakeCmd extends Command {
     arm.setTargetAngle(ArmConstants.ARM_GROUND_INTAKE);
     wrist.setTargetAngle(WristConstants.WRIST_GROUND_INTAKE);
     endEffector.intakeCoral();
+    if(robot.config != null){
+      robot.config.setFinalEndEffectorState(EndEffectorState.OUTTAKING_CORAL);      
+    }
   }
 
   @Override
   public void execute() {
     // CHECK IF WE HAVE PIECE HERE
-    if(endEffector.hasCoral){
+    if(endEffector.coralAcquired){
       isFinished = true;
     }
     else{
       isFinished = false;
     }
-  }
+   }
 
 
   @Override
