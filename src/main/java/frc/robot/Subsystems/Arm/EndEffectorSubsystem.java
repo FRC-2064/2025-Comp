@@ -125,8 +125,8 @@ public class EndEffectorSubsystem extends SubsystemBase {
     }
 
     private void intakeAlgae(){
-        top.set(0.0);
-        bottom.set(0.5);
+        top.set(-0.5);
+        bottom.set(0.0);
     }
 
     private void outtakeAlgae(){

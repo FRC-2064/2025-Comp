@@ -29,7 +29,7 @@ public class RobotSubsystem extends SubsystemBase {
 
     private RobotState robotState = RobotState.I_IDLE;
     private RobotState endRobotState = RobotState.I_IDLE;
-    private RobotConfiguration config;
+    public RobotConfiguration config;
 
     private Command currentPathCommand;
 
@@ -122,7 +122,7 @@ public class RobotSubsystem extends SubsystemBase {
         if (config == null) {
             return;
         }
-        SmartDashboard.putString("Logging/Robot/EEConfig", config.endEffectorState.toString());
+        SmartDashboard.putString("Logging/Robot/EEConfig", config.finalEndEffectorState.toString());
         endRobotState = RobotState.S_SCORING;
         robotState = RobotState.T_TRAVELING;
 
@@ -137,10 +137,21 @@ public class RobotSubsystem extends SubsystemBase {
     //     robotState = RobotState.T_TRAVELING;
     // }
 
-    public void setArm() {
+    public void armToScore() {
         robotState = RobotState.I_IDLE;
         config = RobotConfigProvider
                 .getGameScoreConfiguration(drivebase.getHeading().getDegrees(), endEffector.getGamePieceOffset());
+        if (config == null) {
+            return;
+        }
+        arm.setTargetAngle(config.finalArmAngle);
+        wrist.setTargetAngle(config.finalWristAngle);
+    }
+
+    public void armToFeeder() {
+        robotState = RobotState.I_IDLE;
+        config = RobotConfigProvider
+                .getFeederConfiguration();
         if (config == null) {
             return;
         }
@@ -156,12 +167,20 @@ public class RobotSubsystem extends SubsystemBase {
         robotState = state;
     }
 
-    public void runIntake() {
+    public void runIntakeConfig() {
         if (config == null) {
             endEffector.setState(EndEffectorState.OUTTAKING_CORAL);
             return;
         }
-        endEffector.setState(config.endEffectorState);
+        endEffector.setState(config.startEndEffectorState);
+    }
+
+    public void runOuttakeConfig() {
+        if (config == null) {
+            endEffector.setState(EndEffectorState.OUTTAKING_CORAL);
+            return;
+        }
+        endEffector.setState(config.finalEndEffectorState);
     }
 
     public enum RobotState {
