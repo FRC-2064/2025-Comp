@@ -84,12 +84,7 @@ public class RobotSubsystem extends SubsystemBase {
                     // endEffector.setState(config.endEffectorState);
                     robotState = RobotState.I_IDLE;
                 }
-            case G_GROUND:
-                if (endEffector.hasCoral) {
-                    arm.setTargetAngle(config.travelArmAngle);
-                    wrist.setTargetAngle(config.travelWristAngle);
-                    robotState = RobotState.I_IDLE;
-                }
+
             case C_CLIMBING:
                 // do climb stuff {}
                 // if robot has climbed then brake climb
@@ -129,12 +124,12 @@ public class RobotSubsystem extends SubsystemBase {
     }
 
     // public void goToCage() {
-    //     config = RobotConfigProvider.getCageConfiguration();
-    //     if (config == null) {
-    //         return;
-    //     }
-    //     endRobotState = RobotState.C_CLIMBING;
-    //     robotState = RobotState.T_TRAVELING;
+    // config = RobotConfigProvider.getCageConfiguration();
+    // if (config == null) {
+    // return;
+    // }
+    // endRobotState = RobotState.C_CLIMBING;
+    // robotState = RobotState.T_TRAVELING;
     // }
 
     public void armToScore() {

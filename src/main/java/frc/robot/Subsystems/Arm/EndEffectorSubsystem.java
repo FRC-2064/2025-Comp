@@ -9,8 +9,6 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.units.Units;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Subsystems.DistanceSensorUSB;
@@ -18,6 +16,7 @@ import frc.robot.Utils.Constants.EndEffectorConstants;
 import frc.robot.Utils.ControlBoard.ControlBoardHelpers;
 
 public class EndEffectorSubsystem extends SubsystemBase {
+    private static final long CORAL_INTAKE_DETECT_DELAY_MS = 250;
     private SparkMax top;
     private SparkMax bottom;
     private DistanceSensorUSB tof;
@@ -25,11 +24,11 @@ public class EndEffectorSubsystem extends SubsystemBase {
     private SparkFlexConfig bottomConfig;
     private EndEffectorState state = EndEffectorState.STOPPED;
 
-    private DigitalInput endEffectorLimitSwitch;
-
-    public boolean hasCoral = false;
-
     private final EnumMap<EndEffectorState, Runnable> stateActions;
+
+    public boolean coralAcquired = false;
+    private long coralIntakeStartTime;
+    private int coralIntakeDetectCount;
 
     public EndEffectorSubsystem() {
         top = new SparkMax(EndEffectorConstants.EE_TOP_ID, MotorType.kBrushless);
@@ -37,8 +36,6 @@ public class EndEffectorSubsystem extends SubsystemBase {
 
         topConfig = new SparkFlexConfig();
         bottomConfig = new SparkFlexConfig();
-
-        endEffectorLimitSwitch = new DigitalInput(0);
 
         tof = new DistanceSensorUSB();
 
@@ -52,36 +49,31 @@ public class EndEffectorSubsystem extends SubsystemBase {
         stateActions.put(EndEffectorState.OUTTAKING_PEG, this::OuttakePeg);
         stateActions.put(EndEffectorState.STOPPED, this::stop);
 
-
         topConfig
-            .smartCurrentLimit(40);
+                .smartCurrentLimit(40);
 
         bottomConfig
-            .smartCurrentLimit(40);
+                .smartCurrentLimit(40);
 
         top.configure(topConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         bottom.configure(bottomConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        
     }
 
     @Override
     public void periodic() {
         tof.periodicUpdate();
-        hasCoral = endEffectorLimitSwitch.get();
-        // stopWithCoral();
-        ControlBoardHelpers.setHasCoral(hasCoral);
+        checkCoralAcquisition();
+        ControlBoardHelpers.setHasCoral(coralAcquired);
         SmartDashboard.putString("Logging/EE/State", getState().toString());
         SmartDashboard.putNumber("Logging/DistanceSensor", tof.getDistance());
-        //System.out.println(tof.getDistance());
+        // System.out.println(tof.getDistance());
     }
 
     public void setState(EndEffectorState newState) {
         if (state == newState) {
             return;
         }
-
-
 
         state = newState;
         Runnable action = stateActions.get(newState);
@@ -96,16 +88,23 @@ public class EndEffectorSubsystem extends SubsystemBase {
 
     public Translation2d getGamePieceOffset() {
         double currentReading = tof.getDistance();
-        return new Translation2d((-(EndEffectorConstants.EE_BASE_OFFSET - currentReading)/1000), 0.0);
+        return new Translation2d((-(EndEffectorConstants.EE_BASE_OFFSET - currentReading) / 1000), 0.0);
     }
 
-    private void stopWithCoral() { 
+    private void checkCoralAcquisition() {
         if (state != EndEffectorState.INTAKING_CORAL) {
             return;
         }
-
-        if (hasCoral) {
-            setState(EndEffectorState.STOPPED);
+        if ((System.currentTimeMillis() - coralIntakeStartTime) > CORAL_INTAKE_DETECT_DELAY_MS) {
+            if (Math.abs(top.getEncoder().getVelocity()) < 100) {
+                if (++coralIntakeDetectCount >= 2) {
+                    setState(EndEffectorState.STOPPED);
+                    coralAcquired = true;
+                }
+            } else {
+                // If sped back up reset count
+                coralIntakeDetectCount = 0;
+            }
         }
     }
 
@@ -114,14 +113,18 @@ public class EndEffectorSubsystem extends SubsystemBase {
         bottom.set(0.0);
     }
 
-    public void intakeCoral(){
+    public void intakeCoral() {
         top.set(0.5);
         bottom.set(0.5);
+        coralAcquired = false;
+        coralIntakeStartTime = System.currentTimeMillis();
+        coralIntakeDetectCount = 0;
     }
 
-    public void outtakeCoral(){
+    public void outtakeCoral() {
         top.set(-0.35);
         bottom.set(-0.35);
+        coralAcquired = false;
     }
 
     private void intakeAlgae(){
@@ -129,27 +132,26 @@ public class EndEffectorSubsystem extends SubsystemBase {
         bottom.set(0.0);
     }
 
-    private void outtakeAlgae(){
+    private void outtakeAlgae() {
         top.set(0.5);
         bottom.set(0.0);
     }
 
-    private void removeHighAlgae(){
+    private void removeHighAlgae() {
         top.set(-0.75);
         bottom.set(0.0);
     }
 
-    private void removeLowAlgae(){
+    private void removeLowAlgae() {
         top.set(0.0);
         bottom.set(-0.75);
     }
 
-    private void OuttakePeg(){
+    private void OuttakePeg() {
         top.set(-0.5);
         bottom.set(-0.5);
+        coralAcquired = false;
     }
-
-
 
     public enum EndEffectorState {
         INTAKING_CORAL,
@@ -162,4 +164,3 @@ public class EndEffectorSubsystem extends SubsystemBase {
         STOPPED
     }
 }
-
