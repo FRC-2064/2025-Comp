@@ -49,7 +49,9 @@ public class EndEffectorSubsystem extends SubsystemBase {
         stateActions.put(EndEffectorState.OUTTAKING_ALGAE, this::outtakeAlgae);
         stateActions.put(EndEffectorState.REMOVING_HIGH_ALGAE, this::removeHighAlgae);
         stateActions.put(EndEffectorState.REMOVING_LOW_ALGAE, this::removeLowAlgae);
+        stateActions.put(EndEffectorState.OUTTAKING_PEG, this::OuttakePeg);
         stateActions.put(EndEffectorState.STOPPED, this::stop);
+
 
         topConfig
             .smartCurrentLimit(40);
@@ -128,18 +130,23 @@ public class EndEffectorSubsystem extends SubsystemBase {
     }
 
     private void outtakeAlgae(){
-        top.set(0.0);
-        bottom.set(-0.5);
+        top.set(0.5);
+        bottom.set(0.0);
     }
 
     private void removeHighAlgae(){
-        top.set(0.5);
+        top.set(-0.75);
         bottom.set(0.0);
     }
 
     private void removeLowAlgae(){
         top.set(0.0);
-        bottom.set(0.5);
+        bottom.set(-0.75);
+    }
+
+    private void OuttakePeg(){
+        top.set(-0.5);
+        bottom.set(-0.5);
     }
 
 
@@ -151,6 +158,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
         OUTTAKING_ALGAE,
         REMOVING_HIGH_ALGAE,
         REMOVING_LOW_ALGAE,
+        OUTTAKING_PEG,
         STOPPED
     }
 }

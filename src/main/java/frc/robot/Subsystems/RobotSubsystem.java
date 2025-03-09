@@ -9,6 +9,7 @@ import frc.robot.Subsystems.Arm.ClimbSubsystem;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem;
 import frc.robot.Subsystems.Arm.WristSubsystem;
 import frc.robot.Subsystems.Arm.ArmSubsystem.ArmState;
+import frc.robot.Subsystems.Arm.EndEffectorSubsystem.EndEffectorState;
 import frc.robot.Subsystems.Arm.WristSubsystem.WristState;
 import frc.robot.Subsystems.Drive.SwerveSubsystem;
 import frc.robot.Subsystems.Drive.SwerveSubsystem.DriveState;
@@ -137,13 +138,14 @@ public class RobotSubsystem extends SubsystemBase {
     // }
 
     public void setArm() {
-        RobotConfiguration locconfig = RobotConfigProvider
+        robotState = RobotState.I_IDLE;
+        config = RobotConfigProvider
                 .getGameScoreConfiguration(drivebase.getHeading().getDegrees(), endEffector.getGamePieceOffset());
-        if (locconfig == null) {
+        if (config == null) {
             return;
         }
-        arm.setTargetAngle(locconfig.finalArmAngle);
-        wrist.setTargetAngle(locconfig.finalWristAngle);
+        arm.setTargetAngle(config.finalArmAngle);
+        wrist.setTargetAngle(config.finalWristAngle);
     }
 
     public RobotState getState() {
@@ -152,6 +154,14 @@ public class RobotSubsystem extends SubsystemBase {
 
     public void setState(RobotState state) {
         robotState = state;
+    }
+
+    public void runIntake() {
+        if (config == null) {
+            endEffector.setState(EndEffectorState.OUTTAKING_CORAL);
+            return;
+        }
+        endEffector.setState(config.endEffectorState);
     }
 
     public enum RobotState {

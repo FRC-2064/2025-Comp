@@ -67,6 +67,7 @@ public class Constants {
         public static final double ARM_L2_FRONT_ANGLE = 63;
         public static final double ARM_L2_BACK_ANGLE = 83;
 
+        // public static final double ARM_L3_BACK_ANGLE = 84;
         public static final double ARM_L3_BACK_ANGLE = 84;
 
         public static final double ARM_ALGAE_CARRY_ANGLE = 23;
@@ -102,7 +103,8 @@ public class Constants {
         public static final double WRIST_L2_FRONT_ANGLE = 54;
         public static final double WRIST_L2_BACK_ANGLE = 250;
         
-        public static final double WRIST_L3_BACK_ANGLE = 211;
+        // public static final double WRIST_L3_BACK_ANGLE = 207;
+        public static final double WRIST_L3_BACK_ANGLE = 205;
         
         public static final double WRIST_ALGAE_ANGLE = 93;
         

@@ -53,7 +53,7 @@ public class RobotContainer {
   final AlgaeIntakeCmd algaeIntake = new AlgaeIntakeCmd(arm, wrist, endEffector);
 
   // BASIC COMMANDS
-  final BasicCmd base = new BasicCmd(wrist, arm, endEffector, climb);
+  final BasicCmd base = new BasicCmd(wrist, arm, endEffector, climb, robot);
   final ArmCommands armCmd = base.armCmd;
   final EndEffectorCommands eeCmd = base.eeCmd;
   final ClimbCommands climbCmd = base.climbCmd;
@@ -100,7 +100,7 @@ public class RobotContainer {
   private void configureBindings() {
 
     // GAME PIECE MANIPULATION
-    driverXbox.leftTrigger().whileTrue(eeCmd.OuttakeEE);
+    driverXbox.leftTrigger().whileTrue(eeCmd.ControlBoardEE);
     driverXbox.rightTrigger().whileTrue(eeCmd.IntakeEE);
     driverXbox.leftBumper().whileTrue(groundIntake);
     

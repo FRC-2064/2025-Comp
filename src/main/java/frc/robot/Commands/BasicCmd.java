@@ -3,6 +3,7 @@ package frc.robot.Commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import frc.robot.Subsystems.RobotSubsystem;
 import frc.robot.Subsystems.Arm.ArmSubsystem;
 import frc.robot.Subsystems.Arm.ClimbSubsystem;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem;
@@ -17,16 +18,19 @@ public class BasicCmd {
     ArmSubsystem arm;
     EndEffectorSubsystem endEffector;
     ClimbSubsystem climb;
+    RobotSubsystem robot;
 
     public final ArmCommands armCmd;
     public final EndEffectorCommands eeCmd;
     public final ClimbCommands climbCmd;
 
-    public BasicCmd(WristSubsystem wrist, ArmSubsystem arm, EndEffectorSubsystem endEffector, ClimbSubsystem climb) {
+    public BasicCmd(WristSubsystem wrist, ArmSubsystem arm, EndEffectorSubsystem endEffector, ClimbSubsystem climb, RobotSubsystem robot) {
         this.wrist = wrist;
         this.arm = arm;
         this.endEffector = endEffector;
         this.climb = climb;
+        this.robot = robot;
+
 
         this.armCmd = new ArmCommands();
         this.eeCmd = new EndEffectorCommands();
@@ -126,6 +130,12 @@ public class BasicCmd {
             () -> endEffector.setState(EndEffectorState.STOPPED),
             endEffector
         );
+
+        public Command ControlBoardEE = new StartEndCommand(
+            robot::runIntake,
+            () -> endEffector.setState(EndEffectorState.STOPPED), 
+             robot, endEffector
+             );
 
         // public Command StopEE = new StartEndCommand(
         //     () -> endEffector.setState(EndEffectorState.STOPPED), 

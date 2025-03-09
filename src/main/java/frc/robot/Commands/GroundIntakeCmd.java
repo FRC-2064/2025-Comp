@@ -33,6 +33,12 @@ public class GroundIntakeCmd extends Command {
   @Override
   public void execute() {
     // CHECK IF WE HAVE PIECE HERE
+    if(endEffector.hasCoral){
+      isFinished = true;
+    }
+    else{
+      isFinished = false;
+    }
   }
 
 

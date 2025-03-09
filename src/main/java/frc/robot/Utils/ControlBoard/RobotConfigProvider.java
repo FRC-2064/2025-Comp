@@ -156,7 +156,7 @@ public class RobotConfigProvider {
                                 ArmConstants.ARM_HOME_ANGLE,
                                 WristConstants.WRIST_L2_FRONT_ANGLE,
                                 WristConstants.WRIST_HOME_ANGLE,
-                                EndEffectorState.OUTTAKING_CORAL);
+                                EndEffectorState.OUTTAKING_PEG);
         }
 
         /**
@@ -185,7 +185,7 @@ public class RobotConfigProvider {
                                 ArmConstants.ARM_HOME_ANGLE,
                                 WristConstants.WRIST_L3_BACK_ANGLE,
                                 WristConstants.WRIST_HOME_ANGLE,
-                                EndEffectorState.OUTTAKING_CORAL);
+                                EndEffectorState.OUTTAKING_PEG);
         }
 
         /**
