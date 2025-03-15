@@ -183,7 +183,7 @@ public class SwerveSubsystem extends SubsystemBase {
                     },
                     new PPHolonomicDriveController(
                             new PIDConstants(3.0, 0.0, 0.0),
-                            new PIDConstants(1.0, 0.0, 0.0)),
+                            new PIDConstants(2.0, 0.0, 0.0)),
                     config,
                     () -> {
                         var alliance = DriverStation.getAlliance();
@@ -374,7 +374,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public Command pathfindToPath(PathPlannerPath currPath) {
         PathConstraints constraints = new PathConstraints(
-                swerveDrive.getMaximumChassisVelocity() * 0.75,
+                swerveDrive.getMaximumChassisVelocity() * 0.4,//.286,
                 4.0,
                 swerveDrive.getMaximumChassisAngularVelocity(),
                 Units.degreesToRadians(720));
@@ -404,7 +404,7 @@ public class SwerveSubsystem extends SubsystemBase {
                 new Pose2d(endPose.getX(), endPose.getY(), startRotation.rotateBy(Rotation2d.k180deg)));
 
         PathConstraints constraints = new PathConstraints(
-                swerveDrive.getMaximumChassisVelocity() / 4,
+                swerveDrive.getMaximumChassisVelocity() / 8,
                 0.5,
                 swerveDrive.getMaximumChassisAngularVelocity(),
                 Units.degreesToRadians(720));

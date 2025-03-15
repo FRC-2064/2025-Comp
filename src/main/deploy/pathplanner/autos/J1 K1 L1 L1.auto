@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right Start to F1"
+            "pathName": "Left Start To J1"
           }
         },
         {
@@ -17,21 +17,9 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.1
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StopEE"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "F to Feeder"
+            "pathName": "J To Feeder"
           }
         },
         {
@@ -41,21 +29,9 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StopEE"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "Feeder to C1"
+            "pathName": "Feeder To K1"
           }
         },
         {
@@ -65,21 +41,9 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.1
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StopEE"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "C to Feeder"
+            "pathName": "K To Feeder"
           }
         },
         {
@@ -89,21 +53,9 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StopEE"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "Feeder to D1"
+            "pathName": "Feeder To L1"
           }
         },
         {
@@ -113,21 +65,9 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.1
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StopEE"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "D to Feeder"
+            "pathName": "L To Feeder"
           }
         },
         {
@@ -137,39 +77,15 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StopEE"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "Feeder to D1"
+            "pathName": "Feeder To L1"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "OuttakeEE"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.1
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StopEE"
           }
         }
       ]

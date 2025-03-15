@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystems.Arm.ArmSubsystem;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem;
 import frc.robot.Subsystems.Arm.WristSubsystem;
+import frc.robot.Subsystems.Arm.EndEffectorSubsystem.EndEffectorState;
 import frc.robot.Utils.Constants.ArmConstants;
 import frc.robot.Utils.Constants.WristConstants;
 
@@ -27,12 +28,12 @@ public class AlgaeIntakeCmd extends Command {
   public void initialize() {
     arm.setTargetAngle(ArmConstants.ARM_ALGAE_CARRY_ANGLE);
     wrist.setTargetAngle(WristConstants.WRIST_ALGAE_ANGLE);
-    endEffector.outtakeCoral();
+    endEffector.setState(EndEffectorState.INTAKING_ALGAE);
   }
 
   @Override
   public void end(boolean interrupted) {
-    endEffector.stop();
+    endEffector.setState(EndEffectorState.STOPPED);
   }
 
   @Override

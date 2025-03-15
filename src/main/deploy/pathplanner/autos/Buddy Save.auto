@@ -21,6 +21,30 @@
           "data": {
             "name": "OuttakeEE"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "H1 to Left Feeder"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeEE"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left Feeder to H1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "OuttakeEE"
+          }
         }
       ]
     }

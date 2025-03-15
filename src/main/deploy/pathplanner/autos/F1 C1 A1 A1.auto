@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Start To J1"
+            "pathName": "Right Start to F1"
           }
         },
         {
@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "J To Feeder"
+            "pathName": "F to Feeder"
           }
         },
         {
@@ -31,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Feeder To K1"
+            "pathName": "Feeder to C1"
           }
         },
         {
@@ -43,7 +43,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "K To Feeder"
+            "pathName": "C to Feeder"
           }
         },
         {
@@ -55,7 +55,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Feeder To L1"
+            "pathName": "Right Feeder to A1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "OuttakeEE"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "A1 to Right Feeder"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeEE"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Feeder to A1"
           }
         },
         {

@@ -75,6 +75,10 @@ public class ArmSubsystem extends SubsystemBase {
         return currentState;
     }
 
+    public double getTargetArmAngle() {
+        return armTarget;
+    }
+
     public void setTargetAngle(double angle) {
         if (armTarget == angle) {
             return;

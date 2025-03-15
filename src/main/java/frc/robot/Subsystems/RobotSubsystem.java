@@ -2,8 +2,12 @@ package frc.robot.Subsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Robot;
+import frc.robot.Commands.BasicCmd;
 import frc.robot.Subsystems.Arm.ArmSubsystem;
 import frc.robot.Subsystems.Arm.ClimbSubsystem;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem;
@@ -15,13 +19,14 @@ import frc.robot.Subsystems.Drive.SwerveSubsystem;
 import frc.robot.Subsystems.Drive.SwerveSubsystem.DriveState;
 import frc.robot.Subsystems.LEDs.LEDSubsystem;
 import frc.robot.Utils.Constants.ArmConstants;
+import frc.robot.Utils.Constants.WristConstants;
 import frc.robot.Utils.ControlBoard.ControlBoardHelpers;
 import frc.robot.Utils.ControlBoard.RobotConfigProvider;
 import frc.robot.Utils.ControlBoard.RobotConfiguration;
 
 public class RobotSubsystem extends SubsystemBase {
     ArmSubsystem arm;
-    ClimbSubsystem clamp;
+    ClimbSubsystem climb;
     SwerveSubsystem drivebase;
     EndEffectorSubsystem endEffector;
     WristSubsystem wrist;
@@ -36,7 +41,7 @@ public class RobotSubsystem extends SubsystemBase {
     public RobotSubsystem(ArmSubsystem arm, ClimbSubsystem clamp, SwerveSubsystem drivebase,
             EndEffectorSubsystem endEffector, WristSubsystem wrist, LEDSubsystem leds) {
         this.arm = arm;
-        this.clamp = clamp;
+        this.climb = clamp;
         this.drivebase = drivebase;
         this.endEffector = endEffector;
         this.wrist = wrist;
@@ -139,6 +144,11 @@ public class RobotSubsystem extends SubsystemBase {
         if (config == null) {
             return;
         }
+        if (config.finalArmAngle == ArmConstants.ARM_CLIMB_DOWN_ANGLE
+                && arm.getTargetArmAngle() == ArmConstants.ARM_CLIMB_DOWN_ANGLE) {
+                climbSequence();
+            return;
+        }
         arm.setTargetAngle(config.finalArmAngle);
         wrist.setTargetAngle(config.finalWristAngle);
     }
@@ -177,6 +187,17 @@ public class RobotSubsystem extends SubsystemBase {
         }
         endEffector.setState(config.finalEndEffectorState);
     }
+
+        public void climbSequence(){
+         new SequentialCommandGroup(
+            new InstantCommand(() -> arm.setTargetAngle(ArmConstants.ARM_CLIMB_UP_ANGLE)),
+            new WaitCommand(0.75),
+            new InstantCommand(climb::toggleClamp),
+            new WaitCommand(0.2),
+            new InstantCommand(() -> arm.setTargetAngle(ArmConstants.ARM_CLIMB_DOWN_ANGLE))
+        ).schedule();
+        }
+            
 
     public enum RobotState {
         I_IDLE,

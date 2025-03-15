@@ -17,7 +17,6 @@ public class GroundIntakeCmd extends Command {
   private ArmSubsystem arm;
   private EndEffectorSubsystem endEffector;
   private WristSubsystem wrist;
-  private boolean isFinished = false;
   private RobotSubsystem robot;
   
   public GroundIntakeCmd(ArmSubsystem arm, WristSubsystem wrist, EndEffectorSubsystem endEffector, RobotSubsystem robot) {
@@ -31,33 +30,25 @@ public class GroundIntakeCmd extends Command {
   public void initialize() {
     arm.setTargetAngle(ArmConstants.ARM_GROUND_INTAKE);
     wrist.setTargetAngle(WristConstants.WRIST_GROUND_INTAKE);
-    endEffector.intakeCoral();
+    endEffector.setState(EndEffectorState.INTAKING_CORAL);;
     if(robot.config != null){
       robot.config.setFinalEndEffectorState(EndEffectorState.OUTTAKING_CORAL);      
     }
   }
 
   @Override
-  public void execute() {
-    // CHECK IF WE HAVE PIECE HERE
-    if(endEffector.coralAcquired){
-      isFinished = true;
-    }
-    else{
-      isFinished = false;
-    }
-   }
+  public void execute() {}
 
 
   @Override
   public void end(boolean interrupted) {
-    endEffector.stop();
+    endEffector.setState(EndEffectorState.STOPPED);
     arm.setTargetAngle(ArmConstants.ARM_TROUGH_FRONT_ANGLE);
     wrist.setTargetAngle(WristConstants.WRIST_TROUGH_FRONT_ANGLE);
   }
 
   @Override
   public boolean isFinished() {
-    return isFinished;
+    return endEffector.hasCoral;
   }
 }

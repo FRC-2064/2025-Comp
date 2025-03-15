@@ -10,6 +10,8 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Utils.Constants.Limelight1Constants;
+import frc.robot.Utils.Constants.Limelight2Constants;
 import frc.robot.Utils.ControlBoard.AutoPoster;
 import frc.robot.Utils.ControlBoard.ControlBoardHelpers;
 
@@ -32,13 +34,22 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    LimelightHelpers.SetThrottle(Limelight1Constants.LIMELIGHT_NAME, 200);
+    LimelightHelpers.SetThrottle(Limelight2Constants.LIMELIGHT_NAME, 200);
+  }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+
+  }
 
   @Override
-  public void disabledExit() {}
+  public void disabledExit() {
+    LimelightHelpers.SetThrottle(Limelight1Constants.LIMELIGHT_NAME, 0);
+    LimelightHelpers.SetThrottle(Limelight2Constants.LIMELIGHT_NAME, 0);
+
+  }
 
   @Override
   public void autonomousInit() {

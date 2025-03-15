@@ -304,8 +304,8 @@ public class RobotConfigProvider {
          */
         private static Pose2d computeStartPose(Pose2d endPose, boolean isUsingFront) {
                 double theta = endPose.getRotation().getRadians();
-                double dx = 0.5 * Math.cos(theta) * (isUsingFront ? 1 : -1);
-                double dy = 0.5 * Math.sin(theta) * (isUsingFront ? 1 : -1);
+                double dx = 0.75 * Math.cos(theta) * (isUsingFront ? 1 : -1);
+                double dy = 0.75 * Math.sin(theta) * (isUsingFront ? 1 : -1);
                 return new Pose2d(endPose.getX() - dx, endPose.getY() - dy, endPose.getRotation());
         }
 

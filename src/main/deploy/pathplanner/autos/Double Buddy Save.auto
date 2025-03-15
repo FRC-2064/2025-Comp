@@ -7,7 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Start To J1"
+            "pathName": "Center Start to H1"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
           }
         },
         {
@@ -19,7 +25,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "J To Feeder"
+            "pathName": "H1 to Left Feeder"
           }
         },
         {

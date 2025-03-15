@@ -17,18 +17,6 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.1
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StopEE"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "F to Feeder"
@@ -41,18 +29,6 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StopEE"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "Feeder to C1"
@@ -62,18 +38,6 @@
           "type": "named",
           "data": {
             "name": "OuttakeEE"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.1
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StopEE"
           }
         }
       ]

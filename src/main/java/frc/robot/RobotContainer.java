@@ -45,21 +45,21 @@ public class RobotContainer {
       new File(
           Filesystem.getDeployDirectory(),
           "swerve"));
-
-  final RobotSubsystem robot = new RobotSubsystem(arm, climb, drivebase, endEffector, wrist, leds);
-
-  // CUSTOM COMMANDS
-  final GroundIntakeCmd groundIntake = new GroundIntakeCmd(arm, wrist, endEffector, robot);
-  final AlgaeIntakeCmd algaeIntake = new AlgaeIntakeCmd(arm, wrist, endEffector);
-
-  // BASIC COMMANDS
-  final BasicCmd base = new BasicCmd(wrist, arm, endEffector, climb, robot);
-  final ArmCommands armCmd = base.armCmd;
-  final EndEffectorCommands eeCmd = base.eeCmd;
-  final ClimbCommands climbCmd = base.climbCmd;
-
-  private final SendableChooser<Command> autoChooser;
-
+          
+          final RobotSubsystem robot = new RobotSubsystem(arm, climb, drivebase, endEffector, wrist, leds);
+          
+          // CUSTOM COMMANDS
+          final GroundIntakeCmd groundIntake = new GroundIntakeCmd(arm, wrist, endEffector, robot);
+          final AlgaeIntakeCmd algaeIntake = new AlgaeIntakeCmd(arm, wrist, endEffector);
+          
+          // BASIC COMMANDS
+          final BasicCmd base = new BasicCmd(wrist, arm, endEffector, climb, robot);
+          final ArmCommands armCmd = base.armCmd;
+          final EndEffectorCommands eeCmd = base.eeCmd;
+          final ClimbCommands climbCmd = base.climbCmd;
+          
+          private final SendableChooser<Command> autoChooser;
+          
 
   // DRIVE COMMANDS
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(
@@ -101,7 +101,8 @@ public class RobotContainer {
 
     // GAME PIECE MANIPULATION
     driverXbox.leftTrigger().whileTrue(eeCmd.ControlBoardEEOuttake);
-    driverXbox.rightTrigger().whileTrue(eeCmd.ControlBoardEEIntake);
+    // driverXbox.rightTrigger().whileTrue(eeCmd.ControlBoardEEIntake);
+    driverXbox.rightTrigger().whileTrue(eeCmd.PPIntakeEE);
     driverXbox.leftBumper().whileTrue(groundIntake);
     
     driverXbox.b().onTrue(new InstantCommand(robot::goToFeeder));

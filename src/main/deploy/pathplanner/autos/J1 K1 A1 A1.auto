@@ -55,7 +55,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Feeder To L1"
+            "pathName": "Left Feeder to A1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "OuttakeEE"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "A1 to Left Feeder"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeEE"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left Feeder to A1"
           }
         },
         {

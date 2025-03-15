@@ -17,18 +17,6 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.1
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StopEE"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "F to Feeder"
@@ -38,18 +26,6 @@
           "type": "named",
           "data": {
             "name": "IntakeEE"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StopEE"
           }
         },
         {
@@ -65,18 +41,6 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.1
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StopEE"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "C to Feeder"
@@ -89,18 +53,6 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StopEE"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "Feeder to D1"
@@ -110,18 +62,6 @@
           "type": "named",
           "data": {
             "name": "OuttakeEE"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.1
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StopEE"
           }
         }
       ]

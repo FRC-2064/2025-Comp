@@ -58,7 +58,7 @@ public class Constants {
         public static final int ARM_FOLLOWER_ID = 26;
         
         public static final double ARM_HOME_ANGLE = 45;
-        public static final double ARM_FRONT_INTAKE_ANGLE = 57;
+        public static final double ARM_FRONT_INTAKE_ANGLE = 59;
         public static final double ARM_BACK_INTAKE_ANGLE = 123;
         
         public static final double ARM_TROUGH_FRONT_ANGLE = 43;
@@ -76,7 +76,7 @@ public class Constants {
         public static final double ARM_HIGH_ALGAE_REMOVAL_ANGLE = 95;
 
         public static final double ARM_CLIMB_UP_ANGLE = 85;
-        public static final double ARM_CLIMB_DOWN_ANGLE = 31;
+        public static final double ARM_CLIMB_DOWN_ANGLE = 15;
         
         public static final double ARM_GROUND_INTAKE = 4;
 
@@ -128,7 +128,7 @@ public class Constants {
             public static final int EE_BOTTOM_ID = 29;
             public static final int EE_LIMIT_ID = 1;
             public static final double TOF_PORT = 0;
-            public static final double EE_BASE_OFFSET = 77;
+            public static final double EE_BASE_OFFSET = 77; //7
         }
     
     public class ControlBoardConstants {

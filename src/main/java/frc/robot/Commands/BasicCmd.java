@@ -2,13 +2,15 @@ package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Subsystems.RobotSubsystem;
 import frc.robot.Subsystems.Arm.ArmSubsystem;
 import frc.robot.Subsystems.Arm.ClimbSubsystem;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem;
-import frc.robot.Subsystems.Arm.WristSubsystem;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem.EndEffectorState;
+import frc.robot.Subsystems.Arm.WristSubsystem;
 import frc.robot.Utils.Constants.ArmConstants;
 import frc.robot.Utils.Constants.WristConstants;
 
@@ -95,14 +97,22 @@ public class BasicCmd {
     }
 
     public class EndEffectorCommands {
-        public Command PPOuttakeEE = new InstantCommand(
-                () -> endEffector.setState(EndEffectorSubsystem.EndEffectorState.OUTTAKING_CORAL));
-        public Command PPIntakeEE = new InstantCommand(
-                () -> endEffector.setState(EndEffectorSubsystem.EndEffectorState.INTAKING_CORAL));
-        public Command PPHighEE = new InstantCommand(
-                () -> endEffector.setState(EndEffectorSubsystem.EndEffectorState.REMOVING_HIGH_ALGAE));
-        public Command PPLowEE = new InstantCommand(
-                () -> endEffector.setState(EndEffectorSubsystem.EndEffectorState.REMOVING_LOW_ALGAE));
+        public Command PPOuttakeEE = new SequentialCommandGroup(
+                new InstantCommand(() -> endEffector.setState(EndEffectorSubsystem.EndEffectorState.OUTTAKING_CORAL)),
+                new WaitCommand(0.5),
+                new InstantCommand(() -> endEffector.setState(EndEffectorSubsystem.EndEffectorState.STOPPED))
+                );
+        public Command PPIntakeEE = new AutoIntake(endEffector);
+        public Command PPHighEE = new SequentialCommandGroup(
+            new InstantCommand(() -> endEffector.setState(EndEffectorSubsystem.EndEffectorState.REMOVING_HIGH_ALGAE)),
+            new WaitCommand(0.5),
+            new InstantCommand(() -> endEffector.setState(EndEffectorSubsystem.EndEffectorState.STOPPED))
+            );
+        public Command PPLowEE = new SequentialCommandGroup(
+            new InstantCommand(() -> endEffector.setState(EndEffectorSubsystem.EndEffectorState.REMOVING_LOW_ALGAE)),
+            new WaitCommand(0.85),
+            new InstantCommand(() -> endEffector.setState(EndEffectorSubsystem.EndEffectorState.STOPPED))
+            );
         public Command PPStopEE = new InstantCommand(
                 () -> endEffector.setState(EndEffectorSubsystem.EndEffectorState.STOPPED));
 
@@ -126,7 +136,6 @@ public class BasicCmd {
             () -> endEffector.setState(EndEffectorState.STOPPED),
             endEffector
         );
-
 
         public Command ControlBoardEEIntake = new StartEndCommand(
             robot::runIntakeConfig,
@@ -155,6 +164,8 @@ public class BasicCmd {
                 climb);
 
         public Command toggleClamp = new InstantCommand(climb::toggleClamp);
+
+
     }
     
 }
