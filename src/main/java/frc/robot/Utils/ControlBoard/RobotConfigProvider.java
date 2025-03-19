@@ -29,7 +29,7 @@ public class RobotConfigProvider {
          * @return A RobotConfiguration object representing the desired configuration,
          *         or null if an error occurs.
          */
-        public static RobotConfiguration getGameScoreConfiguration(double currHeading, Translation2d offset) {
+        public static RobotConfiguration getGameScoreConfiguration(double currHeading) {
                 try {
                         String scoreLocation = ControlBoardHelpers.getScoreLocation();
 
@@ -54,9 +54,9 @@ public class RobotConfigProvider {
                                 case ControlBoardConstants.REEF_LEVEL_TROUGH ->
                                         createTroughScoringConfiguration(reefLocation);
                                 case ControlBoardConstants.REEF_LEVEL_2 ->
-                                        createLevel2ScoringConfiguration(reefLocation, currHeading, offset);
+                                        createLevel2ScoringConfiguration(reefLocation, currHeading);
                                 case ControlBoardConstants.REEF_LEVEL_3 ->
-                                        createLevel3ScoringConfiguration(reefLocation, offset);
+                                        createLevel3ScoringConfiguration(reefLocation);
                                 default -> null;
                         };
 
@@ -139,23 +139,16 @@ public class RobotConfigProvider {
          * @return A RobotConfiguration object for level 2 scoring, or null if the reef
          *         location is not defined.
          */
-        private static RobotConfiguration createLevel2ScoringConfiguration(String reefLocation, double currHeading,
-                        Translation2d coralOffset) {
+        private static RobotConfiguration createLevel2ScoringConfiguration(String reefLocation, double currHeading) {
                 Pose2d endPose = ReefLookup.coralPoses.get(reefLocation);
                 if (endPose == null)
                         return null;
-
-                //double closestHeading = getClosestHeading(currHeading, endPose.getRotation().getDegrees());
-                double tolerance = 1e-6;
-                //boolean isUsingFront = Math.abs(normalizeAngle(closestHeading) - normalizeAngle(endPose.getRotation().getDegrees())) < tolerance;
-                //Pose2d basePose = new Pose2d(endPose.getTranslation(), Rotation2d.fromDegrees(closestHeading));
-                Pose2d adjustedPose = adjustPoseForOffset(endPose, coralOffset, true);
-
+        
                 SmartDashboard.putNumber("Logging/Heading/targetHeading", endPose.getRotation().getDegrees());
 
                 return new RobotConfiguration(
-                                adjustedPose,
-                                computeStartPose(adjustedPose, true),
+                                endPose,
+                                computeStartPose(endPose, true),
                                 ArmConstants.ARM_L2_FRONT_ANGLE,
                                 ArmConstants.ARM_HOME_ANGLE,
                                 WristConstants.WRIST_L2_FRONT_ANGLE,
@@ -173,19 +166,17 @@ public class RobotConfigProvider {
          * @return A RobotConfiguration object for level 3 scoring, or null if the reef
          *         location is not defined.
          */
-        private static RobotConfiguration createLevel3ScoringConfiguration(String reefLocation,
-                        Translation2d coralOffset) {
+        private static RobotConfiguration createLevel3ScoringConfiguration(String reefLocation) {
                 Pose2d endPose = ReefLookup.coralPoses.get(reefLocation);
                 if (endPose == null)
                         return null;
 
                 Pose2d basePose = new Pose2d(endPose.getTranslation(),
                                 endPose.getRotation().rotateBy(Rotation2d.fromDegrees(180)));
-                Pose2d adjustedPose = adjustPoseForOffset(basePose, coralOffset, false);
 
                 return new RobotConfiguration(
-                                adjustedPose,
-                                computeStartPose(adjustedPose, false),
+                                basePose,
+                                computeStartPose(basePose, false),
                                 ArmConstants.ARM_L3_BACK_ANGLE,
                                 ArmConstants.ARM_HOME_ANGLE,
                                 WristConstants.WRIST_L3_BACK_ANGLE,

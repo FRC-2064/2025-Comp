@@ -100,8 +100,9 @@ public class RobotContainer {
   private void configureBindings() {
 
     // GAME PIECE MANIPULATION
-    driverXbox.leftTrigger().whileTrue(eeCmd.ControlBoardEEOuttake);
+    // driverXbox.leftTrigger().whileTrue(eeCmd.ControlBoardEEOuttake);
     // driverXbox.rightTrigger().whileTrue(eeCmd.ControlBoardEEIntake);
+    driverXbox.leftTrigger().whileTrue(eeCmd.PPOuttakeEE);
     driverXbox.rightTrigger().whileTrue(eeCmd.PPIntakeEE);
     driverXbox.leftBumper().whileTrue(groundIntake);
     
@@ -110,11 +111,17 @@ public class RobotContainer {
     driverXbox.y().onTrue(new InstantCommand(robot::armToScore));
     driverXbox.x().onTrue(armCmd.FrontFeeder);
 
-    // CLIMB BINDINGS
-    driverXbox.povDown().onTrue(armCmd.climbDown);
-    driverXbox.povUp().onTrue(armCmd.climbUp);
-    driverXbox.povRight().whileTrue(climbCmd.winchIn);
-    driverXbox.povLeft().onTrue(climbCmd.toggleClamp);
+    // // CLIMB BINDINGS
+    // driverXbox.povDown().onTrue(armCmd.climbDown);
+    // driverXbox.povUp().onTrue(armCmd.climbUp);
+    // driverXbox.povRight().whileTrue(climbCmd.winchIn);
+    // driverXbox.povLeft().onTrue(climbCmd.toggleClamp);
+
+    // TEST BINDINGS FOR NEW HEAD
+    driverXbox.povDown().onTrue(armCmd.BackL3);
+    driverXbox.povLeft().onTrue(armCmd.FrontL2);
+    driverXbox.povUp().onTrue(armCmd.FrontFeeder);
+    driverXbox.povRight().onTrue(armCmd.groundIntake);
 
     // UTILITY BINDINGS
     driverXbox.start().onTrue(new InstantCommand(drivebase::zeroGyro));

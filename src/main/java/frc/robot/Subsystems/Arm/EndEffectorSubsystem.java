@@ -6,6 +6,8 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.geometry.Translation2d;
@@ -18,26 +20,23 @@ import frc.robot.Utils.ControlBoard.ControlBoardHelpers;
 public class EndEffectorSubsystem extends SubsystemBase {
     private static final long CORAL_INTAKE_DETECT_DELAY_MS = 500;
     private SparkMax top;
-    private SparkMax bottom;
-    private DistanceSensorUSB tof;
-    private SparkFlexConfig topConfig;
-    private SparkFlexConfig bottomConfig;
+    private SparkMax left;
+    private SparkMax right;
+
+    private SparkMaxConfig topConfig = new SparkMaxConfig();
+    private SparkMaxConfig leftConfig = new SparkMaxConfig();
+    private SparkMaxConfig rightConfig = new SparkMaxConfig();
+
     private EndEffectorState state = EndEffectorState.STOPPED;
 
     private final EnumMap<EndEffectorState, Runnable> stateActions;
 
     public boolean hasCoral = false;
-    private long coralIntakeStartTime;
-    private int coralIntakeDetectCount;
 
     public EndEffectorSubsystem() {
         top = new SparkMax(EndEffectorConstants.EE_TOP_ID, MotorType.kBrushless);
-        bottom = new SparkMax(EndEffectorConstants.EE_BOTTOM_ID, MotorType.kBrushless);
-
-        topConfig = new SparkFlexConfig();
-        bottomConfig = new SparkFlexConfig();
-
-        tof = new DistanceSensorUSB();
+        left = new SparkMax(EndEffectorConstants.EE_LEFT_ID, MotorType.kBrushless);
+        right = new SparkMax(EndEffectorConstants.EE_RIGHT_ID, MotorType.kBrushless);
 
         stateActions = new EnumMap<>(EndEffectorState.class);
         stateActions.put(EndEffectorState.INTAKING_CORAL, this::intakeCoral);
@@ -49,28 +48,20 @@ public class EndEffectorSubsystem extends SubsystemBase {
         stateActions.put(EndEffectorState.OUTTAKING_PEG, this::OuttakePeg);
         stateActions.put(EndEffectorState.STOPPED, this::stop);
 
-        topConfig
-                .smartCurrentLimit(40);
-
-        bottomConfig
-                .smartCurrentLimit(40);
+        topConfig.smartCurrentLimit(40).idleMode(IdleMode.kBrake).inverted(true);
+        leftConfig.smartCurrentLimit(40).idleMode(IdleMode.kBrake).inverted(true);
+        rightConfig.smartCurrentLimit(40).idleMode(IdleMode.kBrake).inverted(false);
 
         top.configure(topConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        bottom.configure(bottomConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        left.configure(leftConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        right.configure(rightConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     }
 
     @Override
     public void periodic() {
-        tof.periodicUpdate();
-        checkCoralAcquisition();
-        ControlBoardHelpers.setHasCoral(hasCoral);
-        checkCoralAcquisition();
         ControlBoardHelpers.setHasCoral(hasCoral);
         SmartDashboard.putString("Logging/EE/State", getState().toString());
-        SmartDashboard.putNumber("Logging/DistanceSensor", tof.getDistance());
-        SmartDashboard.putNumber("Logging/EE/IntakeVeloctiy", top.getEncoder().getVelocity());
-        // System.out.println(tof.getDistance());
     }
 
     public void setState(EndEffectorState newState) {
@@ -89,77 +80,52 @@ public class EndEffectorSubsystem extends SubsystemBase {
         return state;
     }
 
-    public Translation2d getGamePieceOffset() {
-        double currentReading = tof.getDistance();
-        SmartDashboard.putNumber("TOF Offset",(-(EndEffectorConstants.EE_BASE_OFFSET - currentReading) / 1000));
-        return new Translation2d((-(EndEffectorConstants.EE_BASE_OFFSET - currentReading) / 1000), 0.0);
-    }
-
-    private void checkCoralAcquisition() {
-        if (state != EndEffectorState.INTAKING_CORAL) {
-            return;
-        }
-        if ((System.currentTimeMillis() - coralIntakeStartTime) > CORAL_INTAKE_DETECT_DELAY_MS) {
-            if (Math.abs(top.getEncoder().getVelocity()) < 4000) {
-                if (++coralIntakeDetectCount >= 1) {
-                    setState(EndEffectorState.STOPPED);
-                    hasCoral = true;
-                }
-            } else {
-                // If sped back up reset count
-                coralIntakeDetectCount = 0;
-            }
-        }
-    }
-
     private void stop() {
         top.set(0.0);
-        bottom.set(0.0);
+        left.set(0.0);
+        right.set(0.0);
     }
 
     private void intakeCoral() {
         top.set(0.5);
-        bottom.set(0.5);
-        hasCoral = false;
-        coralIntakeStartTime = System.currentTimeMillis();
-        coralIntakeDetectCount = 0;
-        hasCoral = false;
-        coralIntakeStartTime = System.currentTimeMillis();
-        coralIntakeDetectCount = 0;
+        left.set(0.5);
+        right.set(0.5);
     }
 
     private void outtakeCoral() {
         top.set(-0.35);
-        bottom.set(-0.35);
-        hasCoral = false;
-        hasCoral = false;
+        left.set(-0.35);
+        right.set(-0.35);
     }
 
     private void intakeAlgae(){
         top.set(-0.5);
-        bottom.set(0.0);
+        left.set(0.0);
+        right.set(0.0);
     }
 
     private void outtakeAlgae()  {
         top.set(0.5);
-        bottom.set(0.0);
+        left.set(0.0);
+        right.set(0.0);
     }
 
     private void removeHighAlgae()  {
         top.set(-0.75);
-        bottom.set(0.0);
+        left.set(0.0);
+        right.set(0.0);
     }
 
     private void removeLowAlgae()  {
-        top.set(0.0);
-        bottom.set(-0.75);
+        top.set(-0.75);
+        left.set(0.0);
+        right.set(0.0);
     }
 
     private void OuttakePeg()  {
         top.set(-0.75);
-        bottom.set(-0.75);
-        hasCoral = false;
-        hasCoral = false;
+        left.set(-0.75);
+        right.set(-0.75);
     }
 
     public enum EndEffectorState {

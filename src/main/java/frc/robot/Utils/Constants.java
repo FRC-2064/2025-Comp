@@ -103,7 +103,6 @@ public class Constants {
         public static final double WRIST_L2_FRONT_ANGLE = 54;
         public static final double WRIST_L2_BACK_ANGLE = 250;
         
-        // public static final double WRIST_L3_BACK_ANGLE = 207;
         public static final double WRIST_L3_BACK_ANGLE = 205;
         
         public static final double WRIST_ALGAE_ANGLE = 93;
@@ -124,11 +123,10 @@ public class Constants {
     
         public class EndEffectorConstants {
             //INTAKE
-            public static final int EE_TOP_ID = 28;
-            public static final int EE_BOTTOM_ID = 29;
-            public static final int EE_LIMIT_ID = 1;
-            public static final double TOF_PORT = 0;
-            public static final double EE_BASE_OFFSET = 77; //7
+            public static final int EE_TOP_ID = 30;
+            public static final int EE_LEFT_ID = 28;
+            public static final int EE_RIGHT_ID = 29;
+            public static final int EE_BB_ID = 1;
         }
     
     public class ControlBoardConstants {

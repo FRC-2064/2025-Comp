@@ -117,8 +117,7 @@ public class RobotSubsystem extends SubsystemBase {
     }
 
     public void goToScore() {
-        config = RobotConfigProvider.getGameScoreConfiguration(drivebase.getHeading().getDegrees(),
-                endEffector.getGamePieceOffset());
+        config = RobotConfigProvider.getGameScoreConfiguration(drivebase.getHeading().getDegrees());
         if (config == null) {
             return;
         }
@@ -140,7 +139,7 @@ public class RobotSubsystem extends SubsystemBase {
     public void armToScore() {
         robotState = RobotState.I_IDLE;
         config = RobotConfigProvider
-                .getGameScoreConfiguration(drivebase.getHeading().getDegrees(), endEffector.getGamePieceOffset());
+                .getGameScoreConfiguration(drivebase.getHeading().getDegrees());
         if (config == null) {
             return;
         }

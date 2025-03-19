@@ -94,6 +94,11 @@ public class BasicCmd {
             wrist.wristToggleCoast();
         });
 
+        public Command groundIntake = new InstantCommand(() -> {
+            arm.setTargetAngle(ArmConstants.ARM_GROUND_INTAKE);
+            wrist.setTargetAngle(WristConstants.WRIST_GROUND_INTAKE);
+        });
+
     }
 
     public class EndEffectorCommands {
