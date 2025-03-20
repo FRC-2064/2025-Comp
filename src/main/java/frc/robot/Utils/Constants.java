@@ -61,14 +61,16 @@ public class Constants {
         public static final double ARM_FRONT_INTAKE_ANGLE = 59;
         public static final double ARM_BACK_INTAKE_ANGLE = 123;
         
-        public static final double ARM_TROUGH_FRONT_ANGLE = 43;
+        public static final double ARM_TROUGH_FRONT_ANGLE = 35;
         public static final double ARM_TROUGH_BACK_ANGLE = 120;
 
-        public static final double ARM_L2_FRONT_ANGLE = 63;
+        public static final double ARM_L2_FRONT_ANGLE = 45;
         public static final double ARM_L2_BACK_ANGLE = 83;
 
         // public static final double ARM_L3_BACK_ANGLE = 84;
         public static final double ARM_L3_BACK_ANGLE = 84;
+
+        public static final double ARM_L4_BACK_ANGLE = 94;
 
         public static final double ARM_ALGAE_CARRY_ANGLE = 23;
 
@@ -78,7 +80,7 @@ public class Constants {
         public static final double ARM_CLIMB_UP_ANGLE = 85;
         public static final double ARM_CLIMB_DOWN_ANGLE = 15;
         
-        public static final double ARM_GROUND_INTAKE = 4;
+        public static final double ARM_GROUND_INTAKE = 1;
 
         public static final double ARM_SAFE_MIN_ANGLE = 10;
         public static final double ARM_SAFE_MAX_ANGLE = 90;
@@ -97,20 +99,22 @@ public class Constants {
         public static final double WRIST_FRONT_INTAKE_ANGLE = 102;
         public static final double WRIST_BACK_INTAKE_ANGLE = 220;
         
-        public static final double WRIST_TROUGH_FRONT_ANGLE = 43;
+        public static final double WRIST_TROUGH_FRONT_ANGLE = 230;
         public static final double WRIST_TROUGH_BACK_ANGLE = 228;
         
-        public static final double WRIST_L2_FRONT_ANGLE = 54;
+        public static final double WRIST_L2_FRONT_ANGLE = 210;
         public static final double WRIST_L2_BACK_ANGLE = 250;
         
         public static final double WRIST_L3_BACK_ANGLE = 205;
+
+        public static final double WRIST_L4_BACK_ANGLE = 125;
         
         public static final double WRIST_ALGAE_ANGLE = 93;
         
         public static final double WRIST_LOW_ALGAE_REMOVAL_ANGLE = 50;
         public static final double WRIST_HIGH_ALGAE_REMOVAL_ANGLE = 205;
         
-        public static final double WRIST_GROUND_INTAKE = 80;
+        public static final double WRIST_GROUND_INTAKE = 105;
         
         public static final double WRIST_CLIMB_ANGLE = 10;
         

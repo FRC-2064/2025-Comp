@@ -36,7 +36,7 @@ public class WristSubsystem extends SubsystemBase {
                 .idleMode(IdleMode.kBrake).closedLoop
                 .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
                 .positionWrappingEnabled(false)
-                .pid(3, 0, 1)
+                .pid(2, 0, 1)
                 .maxMotion
                 .maxVelocity(5676)
                 .maxAcceleration(10000)

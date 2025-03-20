@@ -48,7 +48,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
         stateActions.put(EndEffectorState.OUTTAKING_PEG, this::OuttakePeg);
         stateActions.put(EndEffectorState.STOPPED, this::stop);
 
-        topConfig.smartCurrentLimit(40).idleMode(IdleMode.kBrake).inverted(true);
+        topConfig.smartCurrentLimit(40).idleMode(IdleMode.kBrake).inverted(false);
         leftConfig.smartCurrentLimit(40).idleMode(IdleMode.kBrake).inverted(true);
         rightConfig.smartCurrentLimit(40).idleMode(IdleMode.kBrake).inverted(false);
 
@@ -87,15 +87,15 @@ public class EndEffectorSubsystem extends SubsystemBase {
     }
 
     private void intakeCoral() {
-        top.set(0.5);
-        left.set(0.5);
-        right.set(0.5);
+        top.set(0.35);
+        left.set(0.35);
+        right.set(0.35);
     }
 
     private void outtakeCoral() {
-        top.set(-0.35);
-        left.set(-0.35);
-        right.set(-0.35);
+        top.set(-1.0);
+        left.set(-1.0);
+        right.set(-1.0);
     }
 
     private void intakeAlgae(){
