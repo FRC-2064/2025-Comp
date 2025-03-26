@@ -66,9 +66,9 @@ public class EndEffectorSubsystem extends SubsystemBase {
         ControlBoardHelpers.setHasCoral(hasCoral);
         SmartDashboard.putString("Logging/EE/State", getState().toString());
         
-        if (hasCoral == true && state == EndEffectorState.INTAKING_CORAL) {
-            setState(EndEffectorState.STOPPED);
-        }
+        // if (hasCoral == true && state == EndEffectorState.INTAKING_CORAL) {
+        //     setState(EndEffectorState.STOPPED);
+        // }
     }
 
     public void setState(EndEffectorState newState) {
@@ -94,9 +94,9 @@ public class EndEffectorSubsystem extends SubsystemBase {
     }
 
     private void intakeCoral() {
-        if (hasCoral) {
-            return;
-        }
+        // if (hasCoral) {
+        //     return;
+        // }
         top.set(0.35);
         left.set(0.75);
         right.set(0.25);

@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Robot;
 import frc.robot.Subsystems.Arm.ClimbSubsystem;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem;
+import frc.robot.Subsystems.Arm.ctre.KArmSubsystem;
+import frc.robot.Subsystems.Arm.ctre.KWristSubsystem;
 import frc.robot.Subsystems.Arm.rev.ArmSubsystem;
 import frc.robot.Subsystems.Arm.rev.WristSubsystem;
 import frc.robot.Subsystems.Drive.SwerveSubsystem;
@@ -26,11 +28,11 @@ import frc.robot.Utils.ControlBoard.RobotConfigProvider;
 import frc.robot.Utils.ControlBoard.RobotConfiguration;
 
 public class RobotSubsystem extends SubsystemBase {
-    ArmSubsystem arm;
+    KArmSubsystem arm;
     ClimbSubsystem climb;
     SwerveSubsystem drivebase;
     EndEffectorSubsystem endEffector;
-    WristSubsystem wrist;
+    KWristSubsystem wrist;
     LEDSubsystem leds;
 
     private CANdi candi = new CANdi(56);
@@ -41,8 +43,8 @@ public class RobotSubsystem extends SubsystemBase {
 
     private Command currentPathCommand;
 
-    public RobotSubsystem(ArmSubsystem arm, ClimbSubsystem clamp, SwerveSubsystem drivebase,
-            EndEffectorSubsystem endEffector, WristSubsystem wrist, LEDSubsystem leds) {
+    public RobotSubsystem(KArmSubsystem arm, ClimbSubsystem clamp, SwerveSubsystem drivebase,
+            EndEffectorSubsystem endEffector, KWristSubsystem wrist, LEDSubsystem leds) {
         this.arm = arm;
         this.climb = clamp;
         this.drivebase = drivebase;
@@ -88,7 +90,7 @@ public class RobotSubsystem extends SubsystemBase {
                 // endEffector.setState(config.endEffectorState);
                 if (drivebase.getDriveState() == DriveState.USER_CONTROLLED &&
                         arm.getState() == ArmState.STATIONARY &&
-                        wrist.getWristState() == WristState.STATIONARY) {
+                        wrist.getState() == WristState.STATIONARY) {
                     // endEffector.setState(config.endEffectorState);
                     robotState = RobotState.I_IDLE;
                 }

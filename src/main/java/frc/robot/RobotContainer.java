@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.io.File;
 
+import com.ctre.phoenix6.hardware.CANdi;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
@@ -25,19 +26,24 @@ import frc.robot.Commands.BasicCmd.EndEffectorCommands;
 import frc.robot.Subsystems.RobotSubsystem;
 import frc.robot.Subsystems.Arm.ClimbSubsystem;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem;
+import frc.robot.Subsystems.Arm.ctre.KArmSubsystem;
+import frc.robot.Subsystems.Arm.ctre.KWristSubsystem;
 import frc.robot.Subsystems.Arm.rev.ArmSubsystem;
 import frc.robot.Subsystems.Arm.rev.WristSubsystem;
 import frc.robot.Subsystems.Drive.SwerveSubsystem;
 import frc.robot.Subsystems.Drive.SwerveSubsystem.DriveState;
 import frc.robot.Subsystems.LEDs.LEDSubsystem;
+import frc.robot.Utils.Constants;
 import frc.robot.Utils.Constants.OperatorConstants;
 import swervelib.SwerveInputStream;
 
 public class RobotContainer {
   // SUBSYSTEM INITS
   final CommandXboxController driverXbox = new CommandXboxController(0);
-  final ArmSubsystem arm = new ArmSubsystem();
-  final WristSubsystem wrist = new WristSubsystem();
+  final CANdi candi = new CANdi(Constants.CANDI_ID);
+  final KArmSubsystem arm = new KArmSubsystem(candi);
+  final KWristSubsystem wrist = new KWristSubsystem(candi);
+
   final EndEffectorSubsystem endEffector = new EndEffectorSubsystem();
   final ClimbSubsystem climb = new ClimbSubsystem();
   final LEDSubsystem leds = new LEDSubsystem();
@@ -125,7 +131,7 @@ public class RobotContainer {
 
     // UTILITY BINDINGS
     driverXbox.start().onTrue(new InstantCommand(drivebase::zeroGyro));
-    driverXbox.back().onTrue(armCmd.toggleArmBrake);
+    //driverXbox.back().onTrue(armCmd.toggleArmBrake);
 
     // DEFAULT DRIVE
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);

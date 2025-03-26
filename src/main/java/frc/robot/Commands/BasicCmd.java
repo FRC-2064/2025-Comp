@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Subsystems.RobotSubsystem;
 import frc.robot.Subsystems.Arm.ClimbSubsystem;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem;
+import frc.robot.Subsystems.Arm.ctre.KArmSubsystem;
+import frc.robot.Subsystems.Arm.ctre.KWristSubsystem;
 import frc.robot.Subsystems.Arm.rev.ArmSubsystem;
 import frc.robot.Subsystems.Arm.rev.WristSubsystem;
 import frc.robot.Utils.Constants.ArmConstants;
@@ -16,8 +18,8 @@ import frc.robot.Utils.Enums.EndEffectorState;
 
 public class BasicCmd {
     public static final frc.robot.Commands.BasicCmd.ArmCommands ArmCommands = null;
-    WristSubsystem wrist;
-    ArmSubsystem arm;
+    KWristSubsystem wrist;
+    KArmSubsystem arm;
     EndEffectorSubsystem endEffector;
     ClimbSubsystem climb;
     RobotSubsystem robot;
@@ -26,7 +28,7 @@ public class BasicCmd {
     public final EndEffectorCommands eeCmd;
     public final ClimbCommands climbCmd;
 
-    public BasicCmd(WristSubsystem wrist, ArmSubsystem arm, EndEffectorSubsystem endEffector, ClimbSubsystem climb, RobotSubsystem robot) {
+    public BasicCmd(KWristSubsystem wrist, KArmSubsystem arm, EndEffectorSubsystem endEffector, ClimbSubsystem climb, RobotSubsystem robot) {
         this.wrist = wrist;
         this.arm = arm;
         this.endEffector = endEffector;
@@ -89,10 +91,10 @@ public class BasicCmd {
                     wrist.setTargetAngle(WristConstants.WRIST_CLIMB_ANGLE);
                 });
 
-        public Command toggleArmBrake = new InstantCommand(() -> {
-            arm.armToggleCoast();
-            wrist.wristToggleCoast();
-        });
+        // public Command toggleArmBrake = new InstantCommand(() -> {
+        //     arm.armToggleCoast();
+        //     wrist.wristToggleCoast();
+        // });
 
         public Command groundIntake = new InstantCommand(() -> {
             arm.setTargetAngle(ArmConstants.ARM_GROUND_INTAKE);

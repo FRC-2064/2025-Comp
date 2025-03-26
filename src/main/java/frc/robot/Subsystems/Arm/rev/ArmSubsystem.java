@@ -3,6 +3,7 @@ package frc.robot.Subsystems.Arm.rev;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
+import com.ctre.phoenix6.hardware.CANdi;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -28,6 +29,8 @@ public class ArmSubsystem extends SubsystemBase {
     private double armAngle;
 
     private ArmState state = ArmState.STATIONARY;
+
+    private CANdi candi = new CANdi(56);
 
 
     public ArmSubsystem() {
@@ -58,7 +61,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        armAngle = armLeader.getAbsoluteEncoder().getPosition() * ArmConstants.DEGREES_PER_ROTATION;
+        armAngle = candi.getPWM1Position().getValueAsDouble() * ArmConstants.DEGREES_PER_ROTATION;
         if (Math.abs(armAngle - armTarget) < ArmConstants.ALLOWED_ERROR_DEGREES) {
             state = ArmState.STATIONARY;
         } else {

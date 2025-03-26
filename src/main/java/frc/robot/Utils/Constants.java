@@ -68,7 +68,6 @@ public class Constants {
         public static final double ARM_L2_FRONT_ANGLE = 45;
         public static final double ARM_L2_BACK_ANGLE = 83;
 
-        // public static final double ARM_L3_BACK_ANGLE = 84;
         public static final double ARM_L3_BACK_ANGLE = 84;
 
         public static final double ARM_L4_BACK_ANGLE = 94;
@@ -89,7 +88,7 @@ public class Constants {
         public static final double DEGREES_PER_ROTATION = 360.0;
         public static final double ALLOWED_ERROR_DEGREES = 1.0;
 
-        public static final double ARM_GEAR_RATIO = 225;
+        public static final double ARM_GEAR_RATIO = (9 * 5 * (60 / 12));
 
     }
     
@@ -117,7 +116,7 @@ public class Constants {
         public static final double WRIST_LOW_ALGAE_REMOVAL_ANGLE = 50;
         public static final double WRIST_HIGH_ALGAE_REMOVAL_ANGLE = 205;
         
-        public static final double WRIST_GROUND_INTAKE = 105;
+        public static final double WRIST_GROUND_INTAKE = 102;
         
         public static final double WRIST_CLIMB_ANGLE = 10;
         
@@ -126,8 +125,10 @@ public class Constants {
         
         public static final double DEGREES_PER_ROTATION = 360.0;
         public static final double ALLOWED_ERROR_DEGREES = 1.0;
+
+        public static final double WRIST_GEAR_RATIO = (4 * 4 * 5 * (34 / 26));
     }
-    
+
         public class EndEffectorConstants {
             //INTAKE
             public static final int EE_TOP_ID = 30;
