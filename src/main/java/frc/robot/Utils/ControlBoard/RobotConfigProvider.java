@@ -5,11 +5,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Subsystems.Arm.EndEffectorSubsystem.EndEffectorState;
 import frc.robot.Utils.Constants.ArmConstants;
 import frc.robot.Utils.Constants.ControlBoardConstants;
 import frc.robot.Utils.Constants.OTFPaths;
 import frc.robot.Utils.Constants.WristConstants;
+import frc.robot.Utils.Enums.EndEffectorState;
 import frc.robot.Utils.ControlBoard.ReefLookup.AlgaeHeight;
 import frc.robot.Utils.ControlBoard.ReefLookup.AlgaePair;
 

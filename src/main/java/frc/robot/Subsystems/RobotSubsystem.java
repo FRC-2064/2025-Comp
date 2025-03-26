@@ -1,5 +1,7 @@
 package frc.robot.Subsystems;
 
+import com.ctre.phoenix6.hardware.CANdi;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -7,19 +9,18 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Robot;
-import frc.robot.Commands.BasicCmd;
-import frc.robot.Subsystems.Arm.ArmSubsystem;
 import frc.robot.Subsystems.Arm.ClimbSubsystem;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem;
-import frc.robot.Subsystems.Arm.WristSubsystem;
-import frc.robot.Subsystems.Arm.ArmSubsystem.ArmState;
-import frc.robot.Subsystems.Arm.EndEffectorSubsystem.EndEffectorState;
-import frc.robot.Subsystems.Arm.WristSubsystem.WristState;
+import frc.robot.Subsystems.Arm.rev.ArmSubsystem;
+import frc.robot.Subsystems.Arm.rev.WristSubsystem;
 import frc.robot.Subsystems.Drive.SwerveSubsystem;
 import frc.robot.Subsystems.Drive.SwerveSubsystem.DriveState;
 import frc.robot.Subsystems.LEDs.LEDSubsystem;
 import frc.robot.Utils.Constants.ArmConstants;
-import frc.robot.Utils.Constants.WristConstants;
+import frc.robot.Utils.Enums.ArmState;
+import frc.robot.Utils.Enums.EndEffectorState;
+import frc.robot.Utils.Enums.RobotState;
+import frc.robot.Utils.Enums.WristState;
 import frc.robot.Utils.ControlBoard.ControlBoardHelpers;
 import frc.robot.Utils.ControlBoard.RobotConfigProvider;
 import frc.robot.Utils.ControlBoard.RobotConfiguration;
@@ -31,6 +32,8 @@ public class RobotSubsystem extends SubsystemBase {
     EndEffectorSubsystem endEffector;
     WristSubsystem wrist;
     LEDSubsystem leds;
+
+    private CANdi candi = new CANdi(56);
 
     private RobotState robotState = RobotState.I_IDLE;
     private RobotState endRobotState = RobotState.I_IDLE;
@@ -127,15 +130,6 @@ public class RobotSubsystem extends SubsystemBase {
 
     }
 
-    // public void goToCage() {
-    // config = RobotConfigProvider.getCageConfiguration();
-    // if (config == null) {
-    // return;
-    // }
-    // endRobotState = RobotState.C_CLIMBING;
-    // robotState = RobotState.T_TRAVELING;
-    // }
-
     public void armToScore() {
         robotState = RobotState.I_IDLE;
         config = RobotConfigProvider
@@ -198,16 +192,5 @@ public class RobotSubsystem extends SubsystemBase {
         }
             
 
-    public enum RobotState {
-        I_IDLE,
-        C_CLIMBING,
-        B_BRAKINGCLIMB,
-        T_TRAVELING,
-        P_PATHING,
-        F_FEEDER,
-        G_GROUND,
-        S_SCORING,
-        M_MANUAL,
-        W_WIN
-    }
+
 }

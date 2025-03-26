@@ -1,7 +1,7 @@
 package frc.robot.Utils.ControlBoard;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import frc.robot.Subsystems.Arm.EndEffectorSubsystem.EndEffectorState;
+import frc.robot.Utils.Enums.EndEffectorState;
 
 public class RobotConfiguration {
     public final Pose2d desiredEndPose;

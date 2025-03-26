@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Utils.Constants.ClampConstants;
+import frc.robot.Utils.Enums.ClimbState;
 import frc.robot.Utils.ControlBoard.ControlBoardHelpers;
 
 public class ClimbSubsystem extends SubsystemBase {
@@ -25,7 +26,6 @@ public class ClimbSubsystem extends SubsystemBase {
     private SparkMaxConfig winchConfig;
 
     private ClimbState currentState = ClimbState.OPEN;
-    private ClimbState desiredState = ClimbState.OPEN;
 
     public ClimbSubsystem() {
         clamp = new SparkMax(ClampConstants.CLAMP_ID, MotorType.kBrushless);
@@ -51,10 +51,6 @@ public class ClimbSubsystem extends SubsystemBase {
         
         winch.configure(winchConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    }
-
-    public void setState(ClimbState state) {
-        desiredState = state;
     }
 
     public ClimbState getState() {
@@ -109,9 +105,5 @@ public class ClimbSubsystem extends SubsystemBase {
     }
 
 
-    public enum ClimbState {
-        OPEN,
-        CLOSED,
-        CLAMPED
-    }
+
 }

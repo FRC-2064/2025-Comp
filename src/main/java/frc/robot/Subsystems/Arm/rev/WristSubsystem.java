@@ -1,4 +1,4 @@
-package frc.robot.Subsystems.Arm;
+package frc.robot.Subsystems.Arm.rev;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -13,6 +13,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Utils.Constants.WristConstants;
+import frc.robot.Utils.Enums.WristState;
 
 public class WristSubsystem extends SubsystemBase {
     SparkMax wristMotor;
@@ -95,8 +96,5 @@ public class WristSubsystem extends SubsystemBase {
             wristMotor.configure(wristConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
-    public enum WristState {
-        MOVING,
-        STATIONARY
-    }
+
 }

@@ -5,20 +5,18 @@ import java.util.EnumMap;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.ctre.phoenix6.hardware.CANrange;
 import com.revrobotics.spark.SparkMax;
 
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Subsystems.DistanceSensorUSB;
 import frc.robot.Utils.Constants.EndEffectorConstants;
+import frc.robot.Utils.Enums.EndEffectorState;
 import frc.robot.Utils.ControlBoard.ControlBoardHelpers;
 
 public class EndEffectorSubsystem extends SubsystemBase {
-    private static final long CORAL_INTAKE_DETECT_DELAY_MS = 500;
     private SparkMax top;
     private SparkMax left;
     private SparkMax right;
@@ -27,6 +25,8 @@ public class EndEffectorSubsystem extends SubsystemBase {
     private SparkMaxConfig leftConfig = new SparkMaxConfig();
     private SparkMaxConfig rightConfig = new SparkMaxConfig();
 
+    private CANrange tof;
+
     private EndEffectorState state = EndEffectorState.STOPPED;
 
     private final EnumMap<EndEffectorState, Runnable> stateActions;
@@ -34,9 +34,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
     public boolean hasCoral = false;
 
     public EndEffectorSubsystem() {
-        top = new SparkMax(EndEffectorConstants.EE_TOP_ID, MotorType.kBrushless);
-        left = new SparkMax(EndEffectorConstants.EE_LEFT_ID, MotorType.kBrushless);
-        right = new SparkMax(EndEffectorConstants.EE_RIGHT_ID, MotorType.kBrushless);
+        tof = new CANrange(EndEffectorConstants.EE_CANRANGE_ID);
 
         stateActions = new EnumMap<>(EndEffectorState.class);
         stateActions.put(EndEffectorState.INTAKING_CORAL, this::intakeCoral);
@@ -47,6 +45,10 @@ public class EndEffectorSubsystem extends SubsystemBase {
         stateActions.put(EndEffectorState.REMOVING_LOW_ALGAE, this::removeLowAlgae);
         stateActions.put(EndEffectorState.OUTTAKING_PEG, this::OuttakePeg);
         stateActions.put(EndEffectorState.STOPPED, this::stop);
+
+        top = new SparkMax(EndEffectorConstants.EE_TOP_ID, MotorType.kBrushless);
+        left = new SparkMax(EndEffectorConstants.EE_LEFT_ID, MotorType.kBrushless);
+        right = new SparkMax(EndEffectorConstants.EE_RIGHT_ID, MotorType.kBrushless);
 
         topConfig.smartCurrentLimit(40).idleMode(IdleMode.kBrake).inverted(false);
         leftConfig.smartCurrentLimit(40).idleMode(IdleMode.kBrake).inverted(true);
@@ -60,8 +62,13 @@ public class EndEffectorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        hasCoral = tof.getIsDetected().getValue();
         ControlBoardHelpers.setHasCoral(hasCoral);
         SmartDashboard.putString("Logging/EE/State", getState().toString());
+        
+        if (hasCoral == true && state == EndEffectorState.INTAKING_CORAL) {
+            setState(EndEffectorState.STOPPED);
+        }
     }
 
     public void setState(EndEffectorState newState) {
@@ -87,9 +94,12 @@ public class EndEffectorSubsystem extends SubsystemBase {
     }
 
     private void intakeCoral() {
+        if (hasCoral) {
+            return;
+        }
         top.set(0.35);
-        left.set(0.35);
-        right.set(0.35);
+        left.set(0.75);
+        right.set(0.25);
     }
 
     private void outtakeCoral() {
@@ -128,14 +138,5 @@ public class EndEffectorSubsystem extends SubsystemBase {
         right.set(-0.75);
     }
 
-    public enum EndEffectorState {
-        INTAKING_CORAL,
-        OUTTAKING_CORAL,
-        INTAKING_ALGAE,
-        OUTTAKING_ALGAE,
-        REMOVING_HIGH_ALGAE,
-        REMOVING_LOW_ALGAE,
-        OUTTAKING_PEG,
-        STOPPED
-    }
+
 }

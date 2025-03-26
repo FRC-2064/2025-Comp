@@ -1,4 +1,4 @@
-package frc.robot.Subsystems.Arm;
+package frc.robot.Subsystems.Arm.rev;
 
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -13,6 +13,7 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Utils.Constants.ArmConstants;
+import frc.robot.Utils.Enums.ArmState;
 
 public class ArmSubsystem extends SubsystemBase {
     private SparkFlex armLeader;
@@ -26,7 +27,7 @@ public class ArmSubsystem extends SubsystemBase {
     private double armTarget;
     private double armAngle;
 
-    private ArmState currentState = ArmState.STATIONARY;
+    private ArmState state = ArmState.STATIONARY;
 
 
     public ArmSubsystem() {
@@ -59,11 +60,11 @@ public class ArmSubsystem extends SubsystemBase {
     public void periodic() {
         armAngle = armLeader.getAbsoluteEncoder().getPosition() * ArmConstants.DEGREES_PER_ROTATION;
         if (Math.abs(armAngle - armTarget) < ArmConstants.ALLOWED_ERROR_DEGREES) {
-            currentState = ArmState.STATIONARY;
+            state = ArmState.STATIONARY;
         } else {
-            currentState = ArmState.MOVING;
+            state = ArmState.MOVING;
         }
-        SmartDashboard.putString("Logging/Arm/State", currentState.toString());
+        SmartDashboard.putString("Logging/Arm/State", state.toString());
         SmartDashboard.putNumber("Logging/Arm/Angle", armAngle);
     }
 
@@ -72,7 +73,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public ArmState getState() {
-        return currentState;
+        return state;
     }
 
     public double getTargetArmAngle() {
@@ -109,9 +110,6 @@ public class ArmSubsystem extends SubsystemBase {
         }
     }
 
-    public enum ArmState {
-        MOVING,
-        STATIONARY
-    }
+
 
 }

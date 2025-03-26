@@ -5,11 +5,13 @@
 package frc.robot;
 
 import com.pathplanner.lib.commands.PathfindingCommand;
+import com.pathplanner.lib.pathfinding.Pathfinding;
 
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Utils.RemoteADStar;
+import frc.robot.Utils.Constants.ControlBoardConstants;
 import frc.robot.Utils.Constants.Limelight1Constants;
 import frc.robot.Utils.Constants.Limelight2Constants;
 import frc.robot.Utils.ControlBoard.AutoPoster;
@@ -24,19 +26,25 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     PathfindingCommand.warmupCommand().schedule();
     AutoPoster.postAutos();
-    // CameraServer.startAutomaticCapture(0);
-    // CameraServer.startAutomaticCapture(1);
   }
 
-  @Override
+  public void robotInit() {
+    Pathfinding.setPathfinder(new RemoteADStar());
+    ControlBoardHelpers.setLevel(ControlBoardConstants.REEF_LEVEL_2);
+    ControlBoardHelpers.setReefLocation(ControlBoardConstants.REEF_LOCATION_A);
+    ControlBoardHelpers.setScoreLocation(ControlBoardConstants.SCORE_REEF);
+
+  }
+
+  @Override 
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
   }
 
   @Override
   public void disabledInit() {
-    LimelightHelpers.SetThrottle(Limelight1Constants.LIMELIGHT_NAME, 200);
-    LimelightHelpers.SetThrottle(Limelight2Constants.LIMELIGHT_NAME, 200);
+    LimelightHelpers.SetThrottle(Limelight1Constants.LIMELIGHT_NAME, 800);
+    LimelightHelpers.SetThrottle(Limelight2Constants.LIMELIGHT_NAME, 800);
   }
 
   @Override

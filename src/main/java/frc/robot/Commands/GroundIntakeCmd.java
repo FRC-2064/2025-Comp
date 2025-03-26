@@ -6,12 +6,12 @@ package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystems.RobotSubsystem;
-import frc.robot.Subsystems.Arm.ArmSubsystem;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem;
-import frc.robot.Subsystems.Arm.WristSubsystem;
-import frc.robot.Subsystems.Arm.EndEffectorSubsystem.EndEffectorState;
+import frc.robot.Subsystems.Arm.rev.ArmSubsystem;
+import frc.robot.Subsystems.Arm.rev.WristSubsystem;
 import frc.robot.Utils.Constants.ArmConstants;
 import frc.robot.Utils.Constants.WristConstants;
+import frc.robot.Utils.Enums.EndEffectorState;
 
 public class GroundIntakeCmd extends Command {
   private ArmSubsystem arm;

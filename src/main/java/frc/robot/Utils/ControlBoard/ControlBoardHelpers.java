@@ -1,7 +1,5 @@
 package frc.robot.Utils.ControlBoard;
 
-import java.util.List;
-
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;

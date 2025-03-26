@@ -23,10 +23,10 @@ import frc.robot.Commands.BasicCmd.ArmCommands;
 import frc.robot.Commands.BasicCmd.ClimbCommands;
 import frc.robot.Commands.BasicCmd.EndEffectorCommands;
 import frc.robot.Subsystems.RobotSubsystem;
-import frc.robot.Subsystems.Arm.ArmSubsystem;
 import frc.robot.Subsystems.Arm.ClimbSubsystem;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem;
-import frc.robot.Subsystems.Arm.WristSubsystem;
+import frc.robot.Subsystems.Arm.rev.ArmSubsystem;
+import frc.robot.Subsystems.Arm.rev.WristSubsystem;
 import frc.robot.Subsystems.Drive.SwerveSubsystem;
 import frc.robot.Subsystems.Drive.SwerveSubsystem.DriveState;
 import frc.robot.Subsystems.LEDs.LEDSubsystem;
@@ -102,8 +102,8 @@ public class RobotContainer {
     // GAME PIECE MANIPULATION
     // driverXbox.leftTrigger().whileTrue(eeCmd.ControlBoardEEOuttake);
     // driverXbox.rightTrigger().whileTrue(eeCmd.ControlBoardEEIntake);
-    driverXbox.leftTrigger().whileTrue(eeCmd.PPOuttakeEE);
-    driverXbox.rightTrigger().whileTrue(eeCmd.PPIntakeEE);
+    driverXbox.leftTrigger().whileTrue(eeCmd.OuttakeEE);
+    driverXbox.rightTrigger().whileTrue(eeCmd.IntakeEE);
     driverXbox.leftBumper().whileTrue(groundIntake);
     
     driverXbox.b().onTrue(new InstantCommand(robot::goToFeeder));
