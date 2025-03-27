@@ -28,8 +28,6 @@ import frc.robot.Subsystems.Arm.ClimbSubsystem;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem;
 import frc.robot.Subsystems.Arm.ctre.KArmSubsystem;
 import frc.robot.Subsystems.Arm.ctre.KWristSubsystem;
-import frc.robot.Subsystems.Arm.rev.ArmSubsystem;
-import frc.robot.Subsystems.Arm.rev.WristSubsystem;
 import frc.robot.Subsystems.Drive.SwerveSubsystem;
 import frc.robot.Subsystems.Drive.SwerveSubsystem.DriveState;
 import frc.robot.Subsystems.LEDs.LEDSubsystem;
