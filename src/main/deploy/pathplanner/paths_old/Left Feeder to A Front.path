@@ -1,0 +1,66 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.638,
+        "y": 7.262
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.798696902421635,
+        "y": 7.453511110779744
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.19405,
+        "y": 4.0259
+      },
+      "prevControl": {
+        "x": 2.94405,
+        "y": 4.0259
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "FrontL1",
+      "waypointRelativePos": 0.48535980148883406,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "FrontL1"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.2,
+    "maxAcceleration": 8.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -0.01650540942818215
+  },
+  "reversed": false,
+  "folder": "Feeder To Reef Front",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 127.52946807651378
+  },
+  "useDefaultConstraints": true
+}

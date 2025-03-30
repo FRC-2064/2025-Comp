@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Side Score Buddy Save"
+            "pathName": "Left buddy Save To J Front"
           }
         },
         {
@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "J Front To Feeder"
+            "pathName": "J Front To Left Feeder"
           }
         },
         {
@@ -43,7 +43,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "K Front To Feeder"
+            "pathName": "K Front To Left Feeder"
           }
         },
         {

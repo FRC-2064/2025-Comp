@@ -1,0 +1,66 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.784,
+        "y": 4.1909
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 8.14125,
+        "y": 7.2425
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.638,
+        "y": 7.262
+      },
+      "prevControl": {
+        "x": 1.8362278410065982,
+        "y": 7.414334247790386
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "FrontFeeder",
+      "waypointRelativePos": 0.3682382133995066,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "FrontFeeder"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.2,
+    "maxAcceleration": 8.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 124.92380352518356
+  },
+  "reversed": false,
+  "folder": "To Feeder Front",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -179.88208555942683
+  },
+  "useDefaultConstraints": true
+}
