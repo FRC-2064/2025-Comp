@@ -25,6 +25,7 @@ public class KWristSubsystem extends SubsystemBase {
 
     private WristState state = WristState.STATIONARY;
 
+    private NeutralModeValue neutralMode = NeutralModeValue.Brake;
 
     public KWristSubsystem(CANdi candi) {
         var slot0 = wristConfig.Slot0;
@@ -58,7 +59,7 @@ public class KWristSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        wristAngle = getMotorPositionAngle();
+        wristAngle = wrist.getPosition().getValueAsDouble() * 360;
         if (Math.abs(wristAngle - wristTarget) < WristConstants.ALLOWED_ERROR_DEGREES) {
             state = WristState.STATIONARY;
         } else {
@@ -80,18 +81,23 @@ public class KWristSubsystem extends SubsystemBase {
         return wristTarget;
     }
 
+    public void toggleWristBrake() {
+        switch (neutralMode) {
+            case Brake:
+                wrist.setNeutralMode(NeutralModeValue.Coast);
+                break;
+        
+            case Coast:
+                wrist.setNeutralMode(NeutralModeValue.Brake);
+                break;
+        }
+    }
+
     public void setTargetAngle(double angle) {
         wristControl.withPosition(angle / 360);
         ControlRequest wcr = wristControl;
 
         wrist.setControl(wcr);
     }
-
-    public Double getMotorPositionAngle() {
-        // TODO: impliment
-        return wrist.getPosition().getValueAsDouble();
-    }
-
-
 
 }

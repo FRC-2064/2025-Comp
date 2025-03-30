@@ -25,7 +25,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "H1 to Left Feeder"
+            "pathName": "H Front to Left Feeder"
           }
         },
         {
@@ -37,7 +37,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Feeder to H1"
+            "pathName": "Left Feeder to H Front"
           }
         },
         {

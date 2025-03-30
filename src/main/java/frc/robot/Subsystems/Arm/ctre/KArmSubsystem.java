@@ -39,6 +39,8 @@ public class KArmSubsystem extends SubsystemBase {
 
     private ArmState state = ArmState.STATIONARY;
 
+    private NeutralModeValue neutralMode = NeutralModeValue.Brake;
+
     public KArmSubsystem(CANdi candi) {
         follower.setControl(new Follower(ArmConstants.ARM_LEADER_ID, true));
 
@@ -108,6 +110,20 @@ public class KArmSubsystem extends SubsystemBase {
 
     public Double getMotorPositionAngle() {
         return leader.getPosition().getValueAsDouble();
+    }
+    
+    public void toggleArmBrake() {
+        switch (neutralMode) {
+            case Brake:
+                leader.setNeutralMode(NeutralModeValue.Coast);
+                follower.setNeutralMode(NeutralModeValue.Coast);
+                break;
+
+            case Coast:
+                leader.setNeutralMode(NeutralModeValue.Brake);
+                follower.setNeutralMode(NeutralModeValue.Brake);
+                break;
+        }
     }
 
 private final SysIdRoutine m_sysIdRoutine =

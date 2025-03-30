@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "F to Feeder"
+            "pathName": "F Front to Right Feeder"
           }
         },
         {
@@ -31,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Feeder to C1"
+            "pathName": "Right Feeder to C Front"
           }
         },
         {
@@ -43,7 +43,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "C to Feeder"
+            "pathName": "C Front to Right Feeder"
           }
         },
         {
@@ -55,7 +55,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Feeder to D1"
+            "pathName": "Feeder to D Front"
           }
         },
         {

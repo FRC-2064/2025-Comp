@@ -5,6 +5,7 @@
 package frc.robot;
 
 import java.io.File;
+import java.util.function.Supplier;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.hardware.CANdi;
@@ -77,6 +78,8 @@ public class RobotContainer {
       .allianceRelativeControl(true);
 
   Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
+  Command driveRobotOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity.copy().allianceRelativeControl(false).robotRelative(true));
+
 
   public RobotContainer() {
     // ARM LOCATIONS
@@ -105,52 +108,46 @@ public class RobotContainer {
 
   private void configureBindings() {
 
-    driverXbox.leftBumper().onTrue(Commands.runOnce(SignalLogger::start));
-    driverXbox.rightBumper().onTrue(Commands.runOnce(SignalLogger::stop));
+    // driverXbox.leftBumper().onTrue(Commands.runOnce(SignalLogger::start));
+    // driverXbox.rightBumper().onTrue(Commands.runOnce(SignalLogger::stop));
     
-    driverXbox.y().whileTrue(arm.sysIdQuasistatic(Direction.kForward));
-    driverXbox.a().whileTrue(arm.sysIdQuasistatic(Direction.kReverse));
-    driverXbox.b().whileTrue(arm.sysIdDynamic(Direction.kForward));
-    driverXbox.x().whileTrue(arm.sysIdDynamic(Direction.kReverse));
+    // driverXbox.y().whileTrue(arm.sysIdQuasistatic(Direction.kForward));
+    // driverXbox.a().whileTrue(arm.sysIdQuasistatic(Direction.kReverse));
+    // driverXbox.b().whileTrue(arm.sysIdDynamic(Direction.kForward));
+    // driverXbox.x().whileTrue(arm.sysIdDynamic(Direction.kReverse));
     
     
 
-    // // GAME PIECE MANIPULATION
-    // driverXbox.leftTrigger().whileTrue(eeCmd.ControlBoardEEOuttake);
-    // driverXbox.rightTrigger().whileTrue(eeCmd.ControlBoardEEIntake);
-    // // driverXbox.leftTrigger().whileTrue(eeCmd.OuttakeEE);
-    // // driverXbox.rightTrigger().whileTrue(eeCmd.IntakeEE);
-    // driverXbox.leftBumper().whileTrue(groundIntake);
+    // GAME PIECE MANIPULATION
+    driverXbox.leftTrigger().whileTrue(eeCmd.ControlBoardEEOuttake);
+    driverXbox.rightTrigger().whileTrue(eeCmd.ControlBoardEEIntake);
+    driverXbox.leftBumper().whileTrue(groundIntake);
     
-    // driverXbox.b().onTrue(new InstantCommand(robot::goToFeeder));
-    // driverXbox.a().onTrue(new InstantCommand(robot::goToScore));
-    // driverXbox.y().onTrue(new InstantCommand(robot::armToScore));
-    // driverXbox.x().onTrue(armCmd.FrontFeeder);
+    driverXbox.b().onTrue(new InstantCommand(robot::goToFeeder));
+    driverXbox.a().onTrue(new InstantCommand(robot::goToScore));
+    driverXbox.y().onTrue(new InstantCommand(robot::armToScore));
+    driverXbox.x().onTrue(armCmd.FrontFeeder);
 
-    // // CLIMB BINDINGS
-    // // driverXbox.povDown().onTrue(armCmd.climbDown);
-    // // driverXbox.povUp().onTrue(armCmd.climbUp);
-    // // driverXbox.povRight().whileTrue(climbCmd.winchIn);
-    // // driverXbox.povLeft().onTrue(climbCmd.toggleClamp);
+    // CLIMB BINDINGS
+    driverXbox.povDown().onTrue(armCmd.climbDown);
+    driverXbox.povUp().onTrue(armCmd.climbUp);
+    driverXbox.povRight().whileTrue(climbCmd.winchIn);
+    driverXbox.povLeft().onTrue(climbCmd.toggleClamp);
 
-    // // TEST BINDINGS FOR NEW HEAD
-    // driverXbox.povDown().onTrue(armCmd.BackL3);
-    // driverXbox.povLeft().onTrue(armCmd.FrontL2);
-    // driverXbox.povUp().onTrue(armCmd.FrontFeeder);
-    // driverXbox.povRight().onTrue(armCmd.groundIntake);
+    // UTILITY BINDINGS
+    driverXbox.start().onTrue(new InstantCommand(drivebase::zeroGyro));
+    driverXbox.back().onTrue(armCmd.toggleArmBrake);
 
-    // // UTILITY BINDINGS
-    // driverXbox.start().onTrue(new InstantCommand(drivebase::zeroGyro));
-    // //driverXbox.back().onTrue(armCmd.toggleArmBrake);
+    // DEFAULT DRIVE
+    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
-    // // DEFAULT DRIVE
-    // drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+    new Trigger(() -> driverXbox.getHID().getRightBumperButton()).whileTrue(driveRobotOrientedAnglularVelocity);
 
-    // // CANCELS OTF WHEN DRIVER MOVES
-    // new Trigger(() -> Math.abs(driverXbox.getLeftY()) > OperatorConstants.DEADBAND ||
-    //               Math.abs(driverXbox.getLeftX()) > OperatorConstants.DEADBAND ||
-    //               Math.abs(driverXbox.getRightX()) > OperatorConstants.DEADBAND)
-    // .onTrue(new InstantCommand(() -> drivebase.setState(DriveState.USER_CONTROLLED), drivebase));
+    // CANCELS OTF WHEN DRIVER MOVES
+    new Trigger(() -> Math.abs(driverXbox.getLeftY()) > OperatorConstants.DEADBAND ||
+                  Math.abs(driverXbox.getLeftX()) > OperatorConstants.DEADBAND ||
+                  Math.abs(driverXbox.getRightX()) > OperatorConstants.DEADBAND)
+    .onTrue(new InstantCommand(() -> drivebase.setState(DriveState.USER_CONTROLLED), drivebase));
    }
 
   public Command getAuto() {

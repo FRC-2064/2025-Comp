@@ -89,10 +89,10 @@ public class BasicCmd {
                     wrist.setTargetAngle(WristConstants.WRIST_CLIMB_ANGLE);
                 });
 
-        // public Command toggleArmBrake = new InstantCommand(() -> {
-        //     arm.armToggleCoast();
-        //     wrist.wristToggleCoast();
-        // });
+        public Command toggleArmBrake = new InstantCommand(() -> {
+            arm.toggleArmBrake();
+            wrist.toggleWristBrake();
+        });
 
         public Command groundIntake = new InstantCommand(() -> {
             arm.setTargetAngle(ArmConstants.ARM_GROUND_INTAKE);

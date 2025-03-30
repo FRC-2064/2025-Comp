@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Start To J1"
+            "pathName": "Left Start To J Front"
           }
         },
         {
@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "J To Feeder"
+            "pathName": "J Front To Feeder"
           }
         },
         {
@@ -31,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Feeder To K1"
+            "pathName": "Left Feeder To K Front"
           }
         },
         {
@@ -43,7 +43,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "K To Feeder"
+            "pathName": "K Front To Feeder"
           }
         },
         {
@@ -55,7 +55,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Feeder to A1"
+            "pathName": "Left Feeder to A Front"
           }
         },
         {
@@ -67,7 +67,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "A1 to Left Feeder"
+            "pathName": "A to Left Feeder"
           }
         },
         {
@@ -79,7 +79,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Feeder to A1"
+            "pathName": "Left Feeder to A Front"
           }
         },
         {
