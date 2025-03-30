@@ -1,5 +1,6 @@
 package frc.robot.Subsystems.Arm.ctre;
 
+import com.ctre.phoenix6.configs.PWM1Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
@@ -45,7 +46,14 @@ public class KWristSubsystem extends SubsystemBase {
         wristConfig.Feedback.withRotorToSensorRatio(WristConstants.WRIST_GEAR_RATIO).withFusedCANdiPwm1(candi);
         
         wrist.getConfigurator().apply(wristConfig);
-    
+
+        PWM1Configs candiConfig = new PWM1Configs();
+        candiConfig.AbsoluteSensorOffset = 0.72;
+        candiConfig.AbsoluteSensorDiscontinuityPoint = 1;
+        candiConfig.SensorDirection = false;
+
+        candi.getConfigurator().apply(candiConfig);
+
     }
 
     @Override

@@ -50,7 +50,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
         left = new SparkMax(EndEffectorConstants.EE_LEFT_ID, MotorType.kBrushless);
         right = new SparkMax(EndEffectorConstants.EE_RIGHT_ID, MotorType.kBrushless);
 
-        topConfig.smartCurrentLimit(40).idleMode(IdleMode.kBrake).inverted(false);
+        topConfig.smartCurrentLimit(40).idleMode(IdleMode.kBrake).inverted(true);
         leftConfig.smartCurrentLimit(40).idleMode(IdleMode.kBrake).inverted(true);
         rightConfig.smartCurrentLimit(40).idleMode(IdleMode.kBrake).inverted(false);
 
@@ -97,15 +97,15 @@ public class EndEffectorSubsystem extends SubsystemBase {
         // if (hasCoral) {
         //     return;
         // }
-        top.set(0.35);
-        left.set(0.75);
-        right.set(0.25);
+        top.set(0.20); //.35
+        left.set(0.25);
+        right.set(0.75);
     }
 
     private void outtakeCoral() {
-        top.set(-1.0);
-        left.set(-1.0);
-        right.set(-1.0);
+        top.set(1.0);
+        left.set(0.25);
+        right.set(0.25);
     }
 
     private void intakeAlgae(){
@@ -121,7 +121,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
     }
 
     private void removeHighAlgae()  {
-        top.set(-0.75);
+        top.set(0.75);
         left.set(0.0);
         right.set(0.0);
     }

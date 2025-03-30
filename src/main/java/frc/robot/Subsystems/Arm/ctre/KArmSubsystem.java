@@ -1,9 +1,15 @@
 package frc.robot.Subsystems.Arm.ctre;
 
+import static edu.wpi.first.units.Units.Second;
+import static edu.wpi.first.units.Units.Volts;
+
+import com.ctre.phoenix6.SignalLogger;
+import com.ctre.phoenix6.configs.PWM2Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
@@ -12,7 +18,9 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Utils.Constants.ArmConstants;
 import frc.robot.Utils.Enums.ArmState;
 
@@ -24,6 +32,7 @@ public class KArmSubsystem extends SubsystemBase {
 
     private TalonFXConfiguration leaderConfig = new TalonFXConfiguration();
 
+    private final VoltageOut m_voltReq = new VoltageOut(0.0);
 
     private double armTarget;
     private double armAngle;
@@ -41,6 +50,7 @@ public class KArmSubsystem extends SubsystemBase {
         slot0.kS = 0.25;
         slot0.kV = 0.12;
         slot0.kA = 0.01;
+
         slot0.GravityType = GravityTypeValue.Arm_Cosine;
         slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseVelocitySign;
 
@@ -56,6 +66,13 @@ public class KArmSubsystem extends SubsystemBase {
         
         leader.getConfigurator().apply(leaderConfig);
     
+        PWM2Configs candiConfig = new PWM2Configs();
+        candiConfig.AbsoluteSensorDiscontinuityPoint = 1;
+        candiConfig.AbsoluteSensorOffset = -0.235;
+        candiConfig.SensorDirection = false;
+
+        candi.getConfigurator().apply(candiConfig);
+
     }
 
         @Override
@@ -92,4 +109,29 @@ public class KArmSubsystem extends SubsystemBase {
     public Double getMotorPositionAngle() {
         return leader.getPosition().getValueAsDouble();
     }
+
+private final SysIdRoutine m_sysIdRoutine =
+   new SysIdRoutine(
+      new SysIdRoutine.Config(
+         Volts.of(0.25).per(Second),        // Use default ramp rate (1 V/s)
+         Volts.of(4), // Reduce dynamic step voltage to 4 to prevent brownout
+         null,        // Use default timeout (10 s)
+                      // Log state with Phoenix SignalLogger class
+         (state) -> SignalLogger.writeString("state", state.toString())
+      ),
+      new SysIdRoutine.Mechanism(
+         (volts) -> leader.setControl(m_voltReq.withOutput(volts.in(Volts))),
+         null,
+         this
+      )
+   );
+
+
+   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+   return m_sysIdRoutine.quasistatic(direction);
+}
+
+public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+   return m_sysIdRoutine.dynamic(direction);
+}
 }

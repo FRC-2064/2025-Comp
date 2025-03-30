@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.io.File;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.hardware.CANdi;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -14,9 +15,11 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Commands.AlgaeIntakeCmd;
 import frc.robot.Commands.BasicCmd;
 import frc.robot.Commands.GroundIntakeCmd;
@@ -28,8 +31,6 @@ import frc.robot.Subsystems.Arm.ClimbSubsystem;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem;
 import frc.robot.Subsystems.Arm.ctre.KArmSubsystem;
 import frc.robot.Subsystems.Arm.ctre.KWristSubsystem;
-import frc.robot.Subsystems.Arm.rev.ArmSubsystem;
-import frc.robot.Subsystems.Arm.rev.WristSubsystem;
 import frc.robot.Subsystems.Drive.SwerveSubsystem;
 import frc.robot.Subsystems.Drive.SwerveSubsystem.DriveState;
 import frc.robot.Subsystems.LEDs.LEDSubsystem;
@@ -43,7 +44,6 @@ public class RobotContainer {
   final CANdi candi = new CANdi(Constants.CANDI_ID);
   final KArmSubsystem arm = new KArmSubsystem(candi);
   final KWristSubsystem wrist = new KWristSubsystem(candi);
-
   final EndEffectorSubsystem endEffector = new EndEffectorSubsystem();
   final ClimbSubsystem climb = new ClimbSubsystem();
   final LEDSubsystem leds = new LEDSubsystem();
@@ -105,43 +105,53 @@ public class RobotContainer {
 
   private void configureBindings() {
 
-    // GAME PIECE MANIPULATION
+    driverXbox.leftBumper().onTrue(Commands.runOnce(SignalLogger::start));
+    driverXbox.rightBumper().onTrue(Commands.runOnce(SignalLogger::stop));
+    
+    driverXbox.y().whileTrue(arm.sysIdQuasistatic(Direction.kForward));
+    driverXbox.a().whileTrue(arm.sysIdQuasistatic(Direction.kReverse));
+    driverXbox.b().whileTrue(arm.sysIdDynamic(Direction.kForward));
+    driverXbox.x().whileTrue(arm.sysIdDynamic(Direction.kReverse));
+    
+    
+
+    // // GAME PIECE MANIPULATION
     // driverXbox.leftTrigger().whileTrue(eeCmd.ControlBoardEEOuttake);
     // driverXbox.rightTrigger().whileTrue(eeCmd.ControlBoardEEIntake);
-    driverXbox.leftTrigger().whileTrue(eeCmd.OuttakeEE);
-    driverXbox.rightTrigger().whileTrue(eeCmd.IntakeEE);
-    driverXbox.leftBumper().whileTrue(groundIntake);
+    // // driverXbox.leftTrigger().whileTrue(eeCmd.OuttakeEE);
+    // // driverXbox.rightTrigger().whileTrue(eeCmd.IntakeEE);
+    // driverXbox.leftBumper().whileTrue(groundIntake);
     
-    driverXbox.b().onTrue(new InstantCommand(robot::goToFeeder));
-    driverXbox.a().onTrue(new InstantCommand(robot::goToScore));
-    driverXbox.y().onTrue(new InstantCommand(robot::armToScore));
-    driverXbox.x().onTrue(armCmd.FrontFeeder);
+    // driverXbox.b().onTrue(new InstantCommand(robot::goToFeeder));
+    // driverXbox.a().onTrue(new InstantCommand(robot::goToScore));
+    // driverXbox.y().onTrue(new InstantCommand(robot::armToScore));
+    // driverXbox.x().onTrue(armCmd.FrontFeeder);
 
     // // CLIMB BINDINGS
-    // driverXbox.povDown().onTrue(armCmd.climbDown);
-    // driverXbox.povUp().onTrue(armCmd.climbUp);
-    // driverXbox.povRight().whileTrue(climbCmd.winchIn);
-    // driverXbox.povLeft().onTrue(climbCmd.toggleClamp);
+    // // driverXbox.povDown().onTrue(armCmd.climbDown);
+    // // driverXbox.povUp().onTrue(armCmd.climbUp);
+    // // driverXbox.povRight().whileTrue(climbCmd.winchIn);
+    // // driverXbox.povLeft().onTrue(climbCmd.toggleClamp);
 
-    // TEST BINDINGS FOR NEW HEAD
-    driverXbox.povDown().onTrue(armCmd.BackL3);
-    driverXbox.povLeft().onTrue(armCmd.FrontL2);
-    driverXbox.povUp().onTrue(armCmd.FrontFeeder);
-    driverXbox.povRight().onTrue(armCmd.groundIntake);
+    // // TEST BINDINGS FOR NEW HEAD
+    // driverXbox.povDown().onTrue(armCmd.BackL3);
+    // driverXbox.povLeft().onTrue(armCmd.FrontL2);
+    // driverXbox.povUp().onTrue(armCmd.FrontFeeder);
+    // driverXbox.povRight().onTrue(armCmd.groundIntake);
 
-    // UTILITY BINDINGS
-    driverXbox.start().onTrue(new InstantCommand(drivebase::zeroGyro));
-    //driverXbox.back().onTrue(armCmd.toggleArmBrake);
+    // // UTILITY BINDINGS
+    // driverXbox.start().onTrue(new InstantCommand(drivebase::zeroGyro));
+    // //driverXbox.back().onTrue(armCmd.toggleArmBrake);
 
-    // DEFAULT DRIVE
-    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+    // // DEFAULT DRIVE
+    // drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
-    // CANCELS OTF WHEN DRIVER MOVES
-    new Trigger(() -> Math.abs(driverXbox.getLeftY()) > OperatorConstants.DEADBAND ||
-                  Math.abs(driverXbox.getLeftX()) > OperatorConstants.DEADBAND ||
-                  Math.abs(driverXbox.getRightX()) > OperatorConstants.DEADBAND)
-    .onTrue(new InstantCommand(() -> drivebase.setState(DriveState.USER_CONTROLLED), drivebase));
-  }
+    // // CANCELS OTF WHEN DRIVER MOVES
+    // new Trigger(() -> Math.abs(driverXbox.getLeftY()) > OperatorConstants.DEADBAND ||
+    //               Math.abs(driverXbox.getLeftX()) > OperatorConstants.DEADBAND ||
+    //               Math.abs(driverXbox.getRightX()) > OperatorConstants.DEADBAND)
+    // .onTrue(new InstantCommand(() -> drivebase.setState(DriveState.USER_CONTROLLED), drivebase));
+   }
 
   public Command getAuto() {
     return autoChooser.getSelected();

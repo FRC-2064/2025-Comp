@@ -35,6 +35,15 @@ public class Constants {
 
     public class Limelight2Constants {
         public static final String LIMELIGHT_NAME = "limelight-two";
+        public static final double FORWARD_OFFSET = Units.inchesToMeters(2);
+        public static final double SIDE_OFFSET = Units.inchesToMeters(13.5);
+        public static final double HEIGHT_OFFSET = Units.inchesToMeters(14);
+        public static final double ROLL_OFFSET = 0.0;
+        public static final double PITCH_OFFSET = 14.34;
+        public static final double YAW_OFFSET = 23.7;
+    }
+    public class Limelight3Constants {
+        public static final String LIMELIGHT_NAME = "limelight-three";
         public static final double FORWARD_OFFSET = Units.inchesToMeters(-14.5);
         public static final double SIDE_OFFSET = Units.inchesToMeters(9.5);
         public static final double HEIGHT_OFFSET = Units.inchesToMeters(8.0);
@@ -62,13 +71,13 @@ public class Constants {
         public static final double ARM_FRONT_INTAKE_ANGLE = 59;
         public static final double ARM_BACK_INTAKE_ANGLE = 123;
         
-        public static final double ARM_TROUGH_FRONT_ANGLE = 35;
+        public static final double ARM_TROUGH_FRONT_ANGLE = 27.03; //35
         public static final double ARM_TROUGH_BACK_ANGLE = 120;
 
         public static final double ARM_L2_FRONT_ANGLE = 45;
         public static final double ARM_L2_BACK_ANGLE = 83;
 
-        public static final double ARM_L3_BACK_ANGLE = 84;
+        public static final double ARM_L3_BACK_ANGLE = 92;
 
         public static final double ARM_L4_BACK_ANGLE = 94;
 
@@ -90,6 +99,8 @@ public class Constants {
 
         public static final double ARM_GEAR_RATIO = (9 * 5 * (60 / 12));
 
+        public static final double ABS_ENCODER_OFFSET = -0.235;
+
     }
     
     public class WristConstants {
@@ -101,22 +112,22 @@ public class Constants {
         public static final double WRIST_FRONT_INTAKE_ANGLE = 102;
         public static final double WRIST_BACK_INTAKE_ANGLE = 220;
         
-        public static final double WRIST_TROUGH_FRONT_ANGLE = 230;
+        public static final double WRIST_TROUGH_FRONT_ANGLE = 266.84; //230
         public static final double WRIST_TROUGH_BACK_ANGLE = 228;
         
-        public static final double WRIST_L2_FRONT_ANGLE = 210;
+        public static final double WRIST_L2_FRONT_ANGLE = 220;
         public static final double WRIST_L2_BACK_ANGLE = 250;
         
-        public static final double WRIST_L3_BACK_ANGLE = 205;
+        public static final double WRIST_L3_BACK_ANGLE = 212;
 
         public static final double WRIST_L4_BACK_ANGLE = 125;
         
         public static final double WRIST_ALGAE_ANGLE = 93;
         
         public static final double WRIST_LOW_ALGAE_REMOVAL_ANGLE = 50;
-        public static final double WRIST_HIGH_ALGAE_REMOVAL_ANGLE = 205;
+        public static final double WRIST_HIGH_ALGAE_REMOVAL_ANGLE = 155;
         
-        public static final double WRIST_GROUND_INTAKE = 102;
+        public static final double WRIST_GROUND_INTAKE = 122; //120 
         
         public static final double WRIST_CLIMB_ANGLE = 10;
         
@@ -127,6 +138,8 @@ public class Constants {
         public static final double ALLOWED_ERROR_DEGREES = 1.0;
 
         public static final double WRIST_GEAR_RATIO = (4 * 4 * 5 * (34 / 26));
+
+        public static final double ABS_ENCODER_OFFSET = 0.8;
     }
 
         public class EndEffectorConstants {
