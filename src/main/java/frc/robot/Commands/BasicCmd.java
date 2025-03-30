@@ -103,7 +103,7 @@ public class BasicCmd {
 
     public class EndEffectorCommands {
         public Command PPOuttakeEE = new SequentialCommandGroup(
-                new InstantCommand(() -> endEffector.setState(EndEffectorState.OUTTAKING_CORAL)),
+                new InstantCommand(() -> endEffector.setState(EndEffectorState.OUTTAKING_TROUGH)),
                 new WaitCommand(0.5),
                 new InstantCommand(() -> endEffector.setState(EndEffectorState.STOPPED))
                 );
@@ -122,12 +122,12 @@ public class BasicCmd {
                 () -> endEffector.setState(EndEffectorState.STOPPED));
 
         public Command OuttakeEE = new StartEndCommand(
-            () -> endEffector.setState(EndEffectorState.OUTTAKING_CORAL),
+            () -> endEffector.setState(EndEffectorState.OUTTAKING_TROUGH),
             () -> endEffector.setState(EndEffectorState.STOPPED),
             endEffector
         );
         public Command IntakeEE = new StartEndCommand(
-            () -> endEffector.setState(EndEffectorState.INTAKING_CORAL),
+            () -> endEffector.setState(EndEffectorState.INTAKING_CORAL_GROUND),
             () -> endEffector.setState(EndEffectorState.STOPPED),
             endEffector
         );

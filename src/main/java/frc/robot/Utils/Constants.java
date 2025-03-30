@@ -25,21 +25,21 @@ public class Constants {
 
     public class Limelight1Constants {
         public static final String LIMELIGHT_NAME = "limelight-one";
-        public static final double FORWARD_OFFSET = Units.inchesToMeters(14.5);
-        public static final double SIDE_OFFSET = Units.inchesToMeters(-9.5);
-        public static final double HEIGHT_OFFSET = Units.inchesToMeters(8.0);
+        public static final double FORWARD_OFFSET = Units.inchesToMeters(-10);
+        public static final double SIDE_OFFSET = Units.inchesToMeters(-13);
+        public static final double HEIGHT_OFFSET = Units.inchesToMeters(14);
         public static final double ROLL_OFFSET = 0.0;
-        public static final double PITCH_OFFSET = 14.15;
-        public static final double YAW_OFFSET = 0.0;
+        public static final double PITCH_OFFSET = 6;
+        public static final double YAW_OFFSET = 225;
     }
 
     public class Limelight2Constants {
         public static final String LIMELIGHT_NAME = "limelight-two";
-        public static final double FORWARD_OFFSET = Units.inchesToMeters(2);
-        public static final double SIDE_OFFSET = Units.inchesToMeters(13.5);
+        public static final double FORWARD_OFFSET = Units.inchesToMeters(1.5);
+        public static final double SIDE_OFFSET = Units.inchesToMeters(12);
         public static final double HEIGHT_OFFSET = Units.inchesToMeters(14);
         public static final double ROLL_OFFSET = 0.0;
-        public static final double PITCH_OFFSET = 14.34;
+        public static final double PITCH_OFFSET = 4;
         public static final double YAW_OFFSET = 23.7;
     }
     public class Limelight3Constants {
@@ -75,7 +75,7 @@ public class Constants {
         public static final double ARM_TROUGH_BACK_ANGLE = 120;
 
         public static final double ARM_L2_FRONT_ANGLE = 45;
-        public static final double ARM_L2_BACK_ANGLE = 83;
+        public static final double ARM_L2_BACK_ANGLE = 85;
 
         public static final double ARM_L3_BACK_ANGLE = 92;
 
@@ -107,7 +107,7 @@ public class Constants {
         //WRIST
         public static final int WRIST_ID = 47;
         
-        public static final double WRIST_HOME_ANGLE = 60;
+        public static final double WRIST_HOME_ANGLE = 220;
         
         public static final double WRIST_FRONT_INTAKE_ANGLE = 102;
         public static final double WRIST_BACK_INTAKE_ANGLE = 220;
@@ -115,8 +115,8 @@ public class Constants {
         public static final double WRIST_TROUGH_FRONT_ANGLE = 266.84; //230
         public static final double WRIST_TROUGH_BACK_ANGLE = 228;
         
-        public static final double WRIST_L2_FRONT_ANGLE = 220;
-        public static final double WRIST_L2_BACK_ANGLE = 250;
+        public static final double WRIST_L2_FRONT_ANGLE = 235;
+        public static final double WRIST_L2_BACK_ANGLE = 265;
         
         public static final double WRIST_L3_BACK_ANGLE = 212;
 
@@ -127,7 +127,7 @@ public class Constants {
         public static final double WRIST_LOW_ALGAE_REMOVAL_ANGLE = 50;
         public static final double WRIST_HIGH_ALGAE_REMOVAL_ANGLE = 155;
         
-        public static final double WRIST_GROUND_INTAKE = 122; //120 
+        public static final double WRIST_GROUND_INTAKE = 120; //120 
         
         public static final double WRIST_CLIMB_ANGLE = 10;
         

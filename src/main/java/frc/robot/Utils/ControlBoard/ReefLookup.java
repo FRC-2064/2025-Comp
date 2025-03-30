@@ -10,6 +10,16 @@ import java.util.HashMap;
 
 public class ReefLookup {
 
+        public static class HeadingResult {
+                public double closestHeading;
+                public boolean adjusted;
+            
+                public HeadingResult(double closestHeading, boolean adjusted) {
+                    this.closestHeading = closestHeading;
+                    this.adjusted = adjusted;
+                }
+            }
+
         // A IS HIGH
         public static class AlgaePair {
                 public final Pose2d endPose;

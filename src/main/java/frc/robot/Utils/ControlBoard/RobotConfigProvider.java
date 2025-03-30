@@ -12,6 +12,7 @@ import frc.robot.Utils.Constants.WristConstants;
 import frc.robot.Utils.Enums.EndEffectorState;
 import frc.robot.Utils.ControlBoard.ReefLookup.AlgaeHeight;
 import frc.robot.Utils.ControlBoard.ReefLookup.AlgaePair;
+import frc.robot.Utils.ControlBoard.ReefLookup.HeadingResult;
 
 public class RobotConfigProvider {
 
@@ -125,8 +126,8 @@ public class RobotConfigProvider {
                                 ArmConstants.ARM_HOME_ANGLE,
                                 WristConstants.WRIST_TROUGH_FRONT_ANGLE,
                                 WristConstants.WRIST_HOME_ANGLE,
-                                EndEffectorState.INTAKING_CORAL,
-                                EndEffectorState.OUTTAKING_CORAL) : null;
+                                EndEffectorState.INTAKING_CORAL_GROUND,
+                                EndEffectorState.OUTTAKING_TROUGH) : null;
         }
 
         /**
@@ -143,18 +144,22 @@ public class RobotConfigProvider {
                 Pose2d endPose = ReefLookup.coralPoses.get(reefLocation);
                 if (endPose == null)
                         return null;
+                
+                HeadingResult headingResult = getClosestHeading(currHeading, endPose.getRotation().getDegrees());
+                 
+                Pose2d adjustedPose = new Pose2d(endPose.getX(), endPose.getY(), Rotation2d.fromDegrees(headingResult.closestHeading));
         
                 SmartDashboard.putNumber("Logging/Heading/targetHeading", endPose.getRotation().getDegrees());
 
                 return new RobotConfiguration(
-                                endPose,
-                                computeStartPose(endPose, true),
+                                adjustedPose,
+                                computeStartPose(adjustedPose, headingResult.adjusted),
                                 ArmConstants.ARM_L2_FRONT_ANGLE,
                                 ArmConstants.ARM_HOME_ANGLE,
                                 WristConstants.WRIST_L2_FRONT_ANGLE,
                                 WristConstants.WRIST_HOME_ANGLE,
-                                EndEffectorState.INTAKING_CORAL,
-                                EndEffectorState.OUTTAKING_PEG);
+                                EndEffectorState.INTAKING_CORAL_GROUND,
+                                EndEffectorState.OUTTAKING_LEVEL_2);
         }
 
         /**
@@ -181,8 +186,8 @@ public class RobotConfigProvider {
                                 ArmConstants.ARM_HOME_ANGLE,
                                 WristConstants.WRIST_L3_BACK_ANGLE,
                                 WristConstants.WRIST_HOME_ANGLE,
-                                EndEffectorState.INTAKING_CORAL,
-                                EndEffectorState.OUTTAKING_PEG);
+                                EndEffectorState.INTAKING_CORAL_GROUND,
+                                EndEffectorState.OUTTAKING_LEVEL_3);
         }
 
         /**
@@ -207,8 +212,8 @@ public class RobotConfigProvider {
                                         ArmConstants.ARM_HOME_ANGLE,
                                         WristConstants.WRIST_FRONT_INTAKE_ANGLE,
                                         WristConstants.WRIST_HOME_ANGLE,
-                                        EndEffectorState.INTAKING_CORAL,
-                                        EndEffectorState.OUTTAKING_CORAL);
+                                        EndEffectorState.INTAKING_CORAL_FEEDER,
+                                        EndEffectorState.OUTTAKING_TROUGH);
 
                 } catch (Exception e) {
                         System.out.println("Error in getFeederConfiguration");
@@ -251,38 +256,6 @@ public class RobotConfigProvider {
         }
 
         /**
-         * Adjusts a base pose by applying a robot-relative translation offset.
-         * <p>
-         * The offset is specified relative to the robot's forward-facing direction. If
-         * the robot is not using its front,
-         * the offset is flipped.
-         * The offset is then rotated by the base pose's rotation to convert it into
-         * field coordinates.
-         *
-         * @param basePose   The base Pose2d before applying the offset.
-         * @param offset     The robot-relative translation offset (assuming the robot
-         *                   is facing forward).
-         * @param usingFront True if the robot is using its front; false if using its
-         *                   back.
-         * @return A new Pose2d with the adjusted position and the same rotation as the
-         *         base pose.
-         */
-        private static Pose2d adjustPoseForOffset(Pose2d basePose, Translation2d offset, Boolean usingFront) {
-                Translation2d effectiveOffset = usingFront ? offset : new Translation2d(-offset.getX(), -offset.getY());
-
-                double theta = basePose.getRotation().getRadians();
-                double fieldOffsetX = effectiveOffset.getX() * Math.cos(theta)
-                                - effectiveOffset.getY() * Math.sin(theta);
-                double fieldOffsetY = effectiveOffset.getX() * Math.sin(theta)
-                                + effectiveOffset.getY() * Math.cos(theta);
-
-                return new Pose2d(
-                                basePose.getX() + fieldOffsetX,
-                                basePose.getY() + fieldOffsetY,
-                                basePose.getRotation());
-        }
-
-        /**
          * Computes a starting pose based on an end pose.
          * <p>
          * The start pose is offset from the end pose by a fixed distance.
@@ -295,8 +268,8 @@ public class RobotConfigProvider {
          */
         private static Pose2d computeStartPose(Pose2d endPose, boolean isUsingFront) {
                 double theta = endPose.getRotation().getRadians();
-                double dx = 0.75 * Math.cos(theta) * (isUsingFront ? 1 : -1);
-                double dy = 0.75 * Math.sin(theta) * (isUsingFront ? 1 : -1);
+                double dx = 0.75 * Math.cos(theta) * (isUsingFront ? 1.5 : -1.5);
+                double dy = 0.75 * Math.sin(theta) * (isUsingFront ? 1.5 : -1.5);
                 return new Pose2d(endPose.getX() - dx, endPose.getY() - dy, endPose.getRotation());
         }
 
@@ -312,7 +285,7 @@ public class RobotConfigProvider {
          * @param targetHeading The target heading in degrees.
          * @return The closest heading in degrees (normalized to the range of [0, 360)).
          */
-        private static double getClosestHeading(double currHeading, double targetHeading) {
+        private static HeadingResult getClosestHeading(double currHeading, double targetHeading) {
                 try {
                         if (DriverStation.getAlliance()
                                         .orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Red) {
@@ -330,7 +303,10 @@ public class RobotConfigProvider {
                 double diffTarget = Math.abs(normalizeAngle(currHeading - targetHeading));
                 double diffInverse = Math.abs(normalizeAngle(currHeading - inverseHeading));
 
-                return (diffTarget <= diffInverse) ? targetHeading : inverseHeading;
+                double closestHeading = (diffTarget <= diffInverse) ? targetHeading : inverseHeading; 
+                boolean usingFront =  (diffTarget <= diffInverse);
+                
+                return new HeadingResult(closestHeading, usingFront);
 
         }
 

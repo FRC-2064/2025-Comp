@@ -404,7 +404,7 @@ public class SwerveSubsystem extends SubsystemBase {
                 new Pose2d(endPose.getX(), endPose.getY(), startRotation.rotateBy(Rotation2d.k180deg)));
 
         PathConstraints constraints = new PathConstraints(
-                swerveDrive.getMaximumChassisVelocity() / 8,
+                swerveDrive.getMaximumChassisVelocity() * 0.5,
                 0.5,
                 swerveDrive.getMaximumChassisAngularVelocity(),
                 Units.degreesToRadians(720));

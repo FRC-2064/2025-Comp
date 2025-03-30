@@ -37,13 +37,15 @@ public class EndEffectorSubsystem extends SubsystemBase {
         tof = new CANrange(EndEffectorConstants.EE_CANRANGE_ID);
 
         stateActions = new EnumMap<>(EndEffectorState.class);
-        stateActions.put(EndEffectorState.INTAKING_CORAL, this::intakeCoral);
-        stateActions.put(EndEffectorState.OUTTAKING_CORAL, this::outtakeCoral);
+        stateActions.put(EndEffectorState.INTAKING_CORAL_GROUND, this::intakeCoralGround);
+        stateActions.put(EndEffectorState.INTAKING_CORAL_FEEDER, this::intakeCoralFeeder);
+        stateActions.put(EndEffectorState.OUTTAKING_TROUGH, this::outtakeTrough);
         stateActions.put(EndEffectorState.INTAKING_ALGAE, this::intakeAlgae);
         stateActions.put(EndEffectorState.OUTTAKING_ALGAE, this::outtakeAlgae);
         stateActions.put(EndEffectorState.REMOVING_HIGH_ALGAE, this::removeHighAlgae);
         stateActions.put(EndEffectorState.REMOVING_LOW_ALGAE, this::removeLowAlgae);
-        stateActions.put(EndEffectorState.OUTTAKING_PEG, this::OuttakePeg);
+        stateActions.put(EndEffectorState.OUTTAKING_LEVEL_2, this::outtakeLevel2);
+        stateActions.put(EndEffectorState.OUTTAKING_LEVEL_3, this::outtakeLevel3);
         stateActions.put(EndEffectorState.STOPPED, this::stop);
 
         top = new SparkMax(EndEffectorConstants.EE_TOP_ID, MotorType.kBrushless);
@@ -66,9 +68,9 @@ public class EndEffectorSubsystem extends SubsystemBase {
         ControlBoardHelpers.setHasCoral(hasCoral);
         SmartDashboard.putString("Logging/EE/State", getState().toString());
         
-        // if (hasCoral == true && state == EndEffectorState.INTAKING_CORAL) {
-        //     setState(EndEffectorState.STOPPED);
-        // }
+        if (hasCoral == true && (state == EndEffectorState.INTAKING_CORAL_FEEDER)) {
+            setState(EndEffectorState.STOPPED);
+        }
     }
 
     public void setState(EndEffectorState newState) {
@@ -93,19 +95,37 @@ public class EndEffectorSubsystem extends SubsystemBase {
         right.set(0.0);
     }
 
-    private void intakeCoral() {
+    private void intakeCoralGround() {
         // if (hasCoral) {
         //     return;
         // }
-        top.set(0.20); //.35
-        left.set(0.25);
-        right.set(0.75);
+        top.set(0.5); //.35
+        left.set(0.5);
+        right.set(0.5);
     }
 
-    private void outtakeCoral() {
+    private void intakeCoralFeeder() {
+        top.set(0.25);
+        left.set(0.25);
+        right.set(0.25);
+    }
+
+    private void outtakeTrough() {
         top.set(1.0);
         left.set(0.25);
         right.set(0.25);
+    }
+
+    private void outtakeLevel2()  {
+        top.set(0.75);
+        left.set(0.75);
+        right.set(0.75);
+    }
+
+    private void outtakeLevel3()  {
+        top.set(-0.75);
+        left.set(-0.75);
+        right.set(-0.75);
     }
 
     private void intakeAlgae(){
@@ -130,12 +150,6 @@ public class EndEffectorSubsystem extends SubsystemBase {
         top.set(-0.75);
         left.set(0.0);
         right.set(0.0);
-    }
-
-    private void OuttakePeg()  {
-        top.set(-0.75);
-        left.set(-0.75);
-        right.set(-0.75);
     }
 
 

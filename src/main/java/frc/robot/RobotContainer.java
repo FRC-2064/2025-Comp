@@ -124,7 +124,7 @@ public class RobotContainer {
     driverXbox.x().onTrue(armCmd.FrontFeeder);
 
     // CLIMB BINDINGS
-    driverXbox.povDown().onTrue(armCmd.climbDown);
+    driverXbox.povDown().onTrue(armCmd.BackL2);
     driverXbox.povUp().onTrue(armCmd.climbUp);
     driverXbox.povRight().whileTrue(climbCmd.winchIn);
     driverXbox.povLeft().onTrue(climbCmd.toggleClamp);

@@ -55,14 +55,9 @@ public class RobotSubsystem extends SubsystemBase {
             case T_TRAVELING:
                 arm.setTargetAngle(config.travelArmAngle);
                 wrist.setTargetAngle(config.travelWristAngle);
-
-                double armAngle = arm.getArmAngle();
-                if ((armAngle >= ArmConstants.ARM_SAFE_MIN_ANGLE && armAngle <= ArmConstants.ARM_SAFE_MAX_ANGLE)
-                        || Robot.isSimulation()) {
-                    currentPathCommand = drivebase.pathfindToOTFPath(config.desiredStartPose, config.desiredEndPose);
-                    currentPathCommand.schedule();
-                    robotState = RobotState.P_PATHING;
-                }
+                currentPathCommand = drivebase.pathfindToOTFPath(config.desiredStartPose, config.desiredEndPose);
+                currentPathCommand.schedule();
+                robotState = RobotState.P_PATHING;
                 break;
 
             case P_PATHING:
@@ -81,11 +76,10 @@ public class RobotSubsystem extends SubsystemBase {
 
             case F_FEEDER:
             case S_SCORING:
-                // endEffector.setState(config.endEffectorState);
                 if (drivebase.getDriveState() == DriveState.USER_CONTROLLED &&
                         arm.getState() == ArmState.STATIONARY &&
                         wrist.getState() == WristState.STATIONARY) {
-                    // endEffector.setState(config.endEffectorState);
+                    // endEffector.setState(config.finalEndEffectorState);
                     robotState = RobotState.I_IDLE;
                 }
 
@@ -163,7 +157,7 @@ public class RobotSubsystem extends SubsystemBase {
 
     public void runIntakeConfig() {
         if (config == null) {
-            endEffector.setState(EndEffectorState.OUTTAKING_CORAL);
+            endEffector.setState(EndEffectorState.OUTTAKING_TROUGH);
             return;
         }
         endEffector.setState(config.startEndEffectorState);
@@ -171,7 +165,7 @@ public class RobotSubsystem extends SubsystemBase {
 
     public void runOuttakeConfig() {
         if (config == null) {
-            endEffector.setState(EndEffectorState.OUTTAKING_CORAL);
+            endEffector.setState(EndEffectorState.OUTTAKING_TROUGH);
             return;
         }
         endEffector.setState(config.finalEndEffectorState);

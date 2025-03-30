@@ -79,7 +79,8 @@ public class KArmSubsystem extends SubsystemBase {
 
         @Override
     public void periodic() {
-        armAngle = getMotorPositionAngle();
+        armAngle = leader.getPosition().getValueAsDouble() * 360;
+        
         if (Math.abs(armAngle - armTarget) < ArmConstants.ALLOWED_ERROR_DEGREES) {
             state = ArmState.STATIONARY;
         } else {
@@ -106,10 +107,6 @@ public class KArmSubsystem extends SubsystemBase {
         ControlRequest acr = armControl;
 
         leader.setControl(acr);
-    }
-
-    public Double getMotorPositionAngle() {
-        return leader.getPosition().getValueAsDouble();
     }
     
     public void toggleArmBrake() {

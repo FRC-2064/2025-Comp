@@ -30,9 +30,9 @@ public class GroundIntakeCmd extends Command {
   public void initialize() {
     arm.setTargetAngle(ArmConstants.ARM_GROUND_INTAKE);
     wrist.setTargetAngle(WristConstants.WRIST_GROUND_INTAKE);
-    endEffector.setState(EndEffectorState.INTAKING_CORAL);;
+    endEffector.setState(EndEffectorState.INTAKING_CORAL_GROUND);;
     if(robot.config != null){
-      robot.config.setFinalEndEffectorState(EndEffectorState.OUTTAKING_CORAL);      
+      robot.config.setFinalEndEffectorState(EndEffectorState.OUTTAKING_TROUGH);      
     }
   }
 

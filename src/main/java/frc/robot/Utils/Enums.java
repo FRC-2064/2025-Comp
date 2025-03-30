@@ -18,13 +18,15 @@ public class Enums {
     }
 
     public enum EndEffectorState {
-        INTAKING_CORAL,
-        OUTTAKING_CORAL,
+        INTAKING_CORAL_GROUND,
+        INTAKING_CORAL_FEEDER,
+        OUTTAKING_TROUGH,
+        OUTTAKING_LEVEL_2,
+        OUTTAKING_LEVEL_3,
         INTAKING_ALGAE,
         OUTTAKING_ALGAE,
         REMOVING_HIGH_ALGAE,
         REMOVING_LOW_ALGAE,
-        OUTTAKING_PEG,
         STOPPED
     }
 
