@@ -9,8 +9,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem;
 import frc.robot.Subsystems.Arm.ctre.KArmSubsystem;
 import frc.robot.Subsystems.Arm.ctre.KWristSubsystem;
-import frc.robot.Subsystems.Arm.rev.ArmSubsystem;
-import frc.robot.Subsystems.Arm.rev.WristSubsystem;
 import frc.robot.Utils.Constants.ArmConstants;
 import frc.robot.Utils.Constants.WristConstants;
 import frc.robot.Utils.Enums.EndEffectorState;

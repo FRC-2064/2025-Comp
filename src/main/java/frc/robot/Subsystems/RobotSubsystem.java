@@ -1,7 +1,5 @@
 package frc.robot.Subsystems;
 
-import com.ctre.phoenix6.hardware.CANdi;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -13,8 +11,6 @@ import frc.robot.Subsystems.Arm.ClimbSubsystem;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem;
 import frc.robot.Subsystems.Arm.ctre.KArmSubsystem;
 import frc.robot.Subsystems.Arm.ctre.KWristSubsystem;
-import frc.robot.Subsystems.Arm.rev.ArmSubsystem;
-import frc.robot.Subsystems.Arm.rev.WristSubsystem;
 import frc.robot.Subsystems.Drive.SwerveSubsystem;
 import frc.robot.Subsystems.Drive.SwerveSubsystem.DriveState;
 import frc.robot.Subsystems.LEDs.LEDSubsystem;
@@ -34,8 +30,6 @@ public class RobotSubsystem extends SubsystemBase {
     EndEffectorSubsystem endEffector;
     KWristSubsystem wrist;
     LEDSubsystem leds;
-
-    private CANdi candi = new CANdi(56);
 
     private RobotState robotState = RobotState.I_IDLE;
     private RobotState endRobotState = RobotState.I_IDLE;
