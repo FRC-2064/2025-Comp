@@ -49,7 +49,7 @@ public class WristSubsystem extends SubsystemBase {
         wrist.getConfigurator().apply(wristConfig);
 
         PWM1Configs candiConfig = new PWM1Configs();
-        candiConfig.AbsoluteSensorOffset = 0.72;
+        candiConfig.AbsoluteSensorOffset = -0.344; //0.72
         candiConfig.AbsoluteSensorDiscontinuityPoint = 1;
         candiConfig.SensorDirection = false;
 
