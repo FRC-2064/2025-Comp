@@ -1,0 +1,121 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right_to_E2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "OuttakeLevel2Front"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "FrontE_to_FeederRight"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeCoralFeeder"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "FeederRight_to_AlgaeEF"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AlgaeRemovalHigh"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AlgaeEF_to_CoralBackE"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "OuttakeLevel3Back"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BackE_to_FeederRight"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeCoralFeeder"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "FeederRight_to_F3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "OuttakeLevel3Back"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BackF_to_FeederRight"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeCoralFeeder"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "FeederRight_to_F2Back"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "OuttakeLevel2Back"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BackF_to_FeederRight"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeCoralFeeder"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

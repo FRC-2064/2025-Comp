@@ -65,7 +65,7 @@ public class SwerveSubsystem extends SubsystemBase {
             throw new RuntimeException(e);
         }
 
-        swerveDrive.setHeadingCorrection(true);
+        swerveDrive.setHeadingCorrection(false);
         swerveDrive.setCosineCompensator(false);
         swerveDrive.setAngularVelocityCompensation(
                 true,
@@ -355,23 +355,6 @@ public class SwerveSubsystem extends SubsystemBase {
         swerveDrive.resetOdometry(resetPose);
     }
 
-    public Command lineUpWithTag(DoubleSupplier tx) {
-        return run(() -> {
-            double ltx = tx.getAsDouble();
-            SmartDashboard.putNumber("LTX", ltx);
-
-            ltx = Math.max(-30, Math.min(30, ltx));
-            double scaledLtx = ltx / 30;
-            scaledLtx = scaledLtx * swerveDrive.getMaximumChassisVelocity() * 0.8;
-
-            swerveDrive.drive(
-                    new Translation2d(0, -scaledLtx),
-                    0,
-                    false,
-                    false);
-        });
-    }
-
     public Command pathfindToPath(PathPlannerPath currPath) {
         PathConstraints constraints = new PathConstraints(
                 swerveDrive.getMaximumChassisVelocity() * 0.4,//.286,
@@ -382,26 +365,14 @@ public class SwerveSubsystem extends SubsystemBase {
         return AutoBuilder.pathfindThenFollowPath(currPath, constraints);
     }
 
-    public Command pathfindToOTFPath(Pose2d startPose, Pose2d endPose) {
-        if (endPose == null) {
+    public Command pathfindToOTFPath(List<Pose2d> pathPoses) {
+        if (pathPoses == null || pathPoses.size() < 2) {
             return new Command() {
             };
         }
         driveState = DriveState.PATHFINDING;
 
-        otfStartPose = startPose;
-        otfEndPose = endPose;
-
-        double dx = endPose.getX() - startPose.getX();
-        double dy = endPose.getY() - startPose.getY();
-        double angleRadians = Math.atan2(dy, dx);
-        Rotation2d startRotation = new Rotation2d(angleRadians);
-
-        // need to find out what angles these should be at, its direction its driving
-        // in, not orientation
-        List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
-                new Pose2d(startPose.getX(), startPose.getY(), startRotation),
-                new Pose2d(endPose.getX(), endPose.getY(), startRotation.rotateBy(Rotation2d.k180deg)));
+        List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(pathPoses);
 
         PathConstraints constraints = new PathConstraints(
                 swerveDrive.getMaximumChassisVelocity() * 0.5,
@@ -413,7 +384,7 @@ public class SwerveSubsystem extends SubsystemBase {
                 waypoints,
                 constraints,
                 null,
-                new GoalEndState(0.0, endPose.getRotation()));
+                new GoalEndState(0.0, pathPoses.get(pathPoses.size() - 1).getRotation()));
 
         var alliance = DriverStation.getAlliance();
 

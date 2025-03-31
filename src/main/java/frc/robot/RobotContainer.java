@@ -23,10 +23,10 @@ import frc.robot.Commands.BasicCmd.ArmCommands;
 import frc.robot.Commands.BasicCmd.ClimbCommands;
 import frc.robot.Commands.BasicCmd.EndEffectorCommands;
 import frc.robot.Subsystems.RobotSubsystem;
+import frc.robot.Subsystems.Arm.ArmSubsystem;
 import frc.robot.Subsystems.Arm.ClimbSubsystem;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem;
-import frc.robot.Subsystems.Arm.ctre.KArmSubsystem;
-import frc.robot.Subsystems.Arm.ctre.KWristSubsystem;
+import frc.robot.Subsystems.Arm.WristSubsystem;
 import frc.robot.Subsystems.Drive.SwerveSubsystem;
 import frc.robot.Subsystems.Drive.SwerveSubsystem.DriveState;
 import frc.robot.Subsystems.LEDs.LEDSubsystem;
@@ -35,11 +35,12 @@ import frc.robot.Utils.Constants.OperatorConstants;
 import swervelib.SwerveInputStream;
 
 public class RobotContainer {
+  public static RobotContainer instance;
   // SUBSYSTEM INITS
   final CommandXboxController driverXbox = new CommandXboxController(0);
   final CANdi candi = new CANdi(Constants.CANDI_ID);
-  final KArmSubsystem arm = new KArmSubsystem(candi);
-  final KWristSubsystem wrist = new KWristSubsystem(candi);
+  final ArmSubsystem arm = new ArmSubsystem(candi);
+  final WristSubsystem wrist = new WristSubsystem(candi);
   final EndEffectorSubsystem endEffector = new EndEffectorSubsystem();
   final ClimbSubsystem climb = new ClimbSubsystem();
   final LEDSubsystem leds = new LEDSubsystem();
@@ -72,11 +73,12 @@ public class RobotContainer {
       .deadband(OperatorConstants.DEADBAND)
       .allianceRelativeControl(true);
 
+
   Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
-  Command driveRobotOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity.copy().allianceRelativeControl(false).robotRelative(true));
 
 
   public RobotContainer() {
+    instance = this;
     // ARM LOCATIONS
     NamedCommands.registerCommand("FrontL1", armCmd.FrontL1);
     NamedCommands.registerCommand("FrontL2", armCmd.FrontL2);
@@ -88,11 +90,14 @@ public class RobotContainer {
     NamedCommands.registerCommand("GroundIntake", groundIntake);
 
     // INTAKE STATES
-    NamedCommands.registerCommand("OuttakeEE", eeCmd.PPOuttakeEE);
-    NamedCommands.registerCommand("IntakeEE", eeCmd.PPIntakeEE);
-    NamedCommands.registerCommand("HighEE", eeCmd.PPHighEE);
-    NamedCommands.registerCommand("LowEE", eeCmd.PPLowEE);
-    NamedCommands.registerCommand("StopEE", eeCmd.PPStopEE);
+    NamedCommands.registerCommand("IntakeCoralGround", eeCmd.PPIntakeCoralGround);
+    NamedCommands.registerCommand("IntakeCoralFeeder", eeCmd.PPIntakeCoralFeeder);
+    NamedCommands.registerCommand("OuttakeTrough", eeCmd.PPOuttakeTrough);
+    NamedCommands.registerCommand("OuttakeLevel2Front", eeCmd.PPOuttakeLevel2Front);
+    NamedCommands.registerCommand("OuttakeLevel2Back", eeCmd.PPOuttakeLevel2Back);
+    NamedCommands.registerCommand("OuttakeLevel3Back", eeCmd.PPOuttakeLevel3);
+    NamedCommands.registerCommand("AlgaeRemovalHigh", eeCmd.PPRemoveHighAlgae);
+    NamedCommands.registerCommand("AlgaeRemovalLow", eeCmd.PPRemoveLowAlgae);
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -101,16 +106,7 @@ public class RobotContainer {
 
   }
 
-  private void configureBindings() {
-
-    // driverXbox.leftBumper().onTrue(Commands.runOnce(SignalLogger::start));
-    // driverXbox.rightBumper().onTrue(Commands.runOnce(SignalLogger::stop));
-    
-    // driverXbox.y().whileTrue(arm.sysIdQuasistatic(Direction.kForward));
-    // driverXbox.a().whileTrue(arm.sysIdQuasistatic(Direction.kReverse));
-    // driverXbox.b().whileTrue(arm.sysIdDynamic(Direction.kForward));
-    // driverXbox.x().whileTrue(arm.sysIdDynamic(Direction.kReverse));
-    
+  private void configureBindings() {    
     
 
     // GAME PIECE MANIPULATION
@@ -136,7 +132,6 @@ public class RobotContainer {
     // DEFAULT DRIVE
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
-    new Trigger(() -> driverXbox.getHID().getRightBumperButton()).whileTrue(driveRobotOrientedAnglularVelocity);
 
     // CANCELS OTF WHEN DRIVER MOVES
     new Trigger(() -> Math.abs(driverXbox.getLeftY()) > OperatorConstants.DEADBAND ||
@@ -148,5 +143,12 @@ public class RobotContainer {
   public Command getAuto() {
     return autoChooser.getSelected();
   }
+
+  public static boolean isDriverInputDetected() {
+    return Math.abs(instance.driverXbox.getLeftY()) > OperatorConstants.DEADBAND ||
+           Math.abs(instance.driverXbox.getLeftX()) > OperatorConstants.DEADBAND ||
+           Math.abs(instance.driverXbox.getRightX()) > OperatorConstants.DEADBAND;
+}
+
 
 }

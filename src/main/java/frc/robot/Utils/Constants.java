@@ -148,6 +148,13 @@ public class Constants {
             public static final int EE_LEFT_ID = 28;
             public static final int EE_RIGHT_ID = 29;
             public static final int EE_CANRANGE_ID = 55;
+
+            //ENDEFFECTOR RUN TIMES
+            public static final double EE_TROUGH_OUTTAKE_TIME = 0.5;
+            public static final double EE_LEVEL_2_OUTTAKE_TIME = 0.2;
+            public static final double EE_LEVEL_3_OUTTAKE_TIME = 0.2;
+            public static final double EE_HIGH_ALGAE_REMOVAL_TIME = 0.75;
+            public static final double EE_LOW_ALGAE_REMOVAL_TIME = 0.75;
         }
     
     public class ControlBoardConstants {

@@ -6,18 +6,19 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Subsystems.RobotSubsystem;
+import frc.robot.Subsystems.Arm.ArmSubsystem;
 import frc.robot.Subsystems.Arm.ClimbSubsystem;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem;
-import frc.robot.Subsystems.Arm.ctre.KArmSubsystem;
-import frc.robot.Subsystems.Arm.ctre.KWristSubsystem;
+import frc.robot.Subsystems.Arm.WristSubsystem;
 import frc.robot.Utils.Constants.ArmConstants;
+import frc.robot.Utils.Constants.EndEffectorConstants;
 import frc.robot.Utils.Constants.WristConstants;
 import frc.robot.Utils.Enums.EndEffectorState;
 
 public class BasicCmd {
     public static final frc.robot.Commands.BasicCmd.ArmCommands ArmCommands = null;
-    KWristSubsystem wrist;
-    KArmSubsystem arm;
+    WristSubsystem wrist;
+    ArmSubsystem arm;
     EndEffectorSubsystem endEffector;
     ClimbSubsystem climb;
     RobotSubsystem robot;
@@ -26,7 +27,7 @@ public class BasicCmd {
     public final EndEffectorCommands eeCmd;
     public final ClimbCommands climbCmd;
 
-    public BasicCmd(KWristSubsystem wrist, KArmSubsystem arm, EndEffectorSubsystem endEffector, ClimbSubsystem climb, RobotSubsystem robot) {
+    public BasicCmd(WristSubsystem wrist, ArmSubsystem arm, EndEffectorSubsystem endEffector, ClimbSubsystem climb, RobotSubsystem robot) {
         this.wrist = wrist;
         this.arm = arm;
         this.endEffector = endEffector;
@@ -102,32 +103,59 @@ public class BasicCmd {
     }
 
     public class EndEffectorCommands {
-        public Command PPOuttakeEE = new SequentialCommandGroup(
-                new InstantCommand(() -> endEffector.setState(EndEffectorState.OUTTAKING_TROUGH)),
-                new WaitCommand(0.5),
-                new InstantCommand(() -> endEffector.setState(EndEffectorState.STOPPED))
-                );
-        public Command PPIntakeEE = new AutoIntake(endEffector);
-        public Command PPHighEE = new SequentialCommandGroup(
+        // AUTO COMMANDS
+        public Command PPOuttakeTrough = new SequentialCommandGroup(
+            new InstantCommand(() -> endEffector.setState(EndEffectorState.OUTTAKING_TROUGH)),
+            new WaitCommand(EndEffectorConstants.EE_TROUGH_OUTTAKE_TIME),
+            new InstantCommand(() -> endEffector.setState(EndEffectorState.STOPPED))
+    );
+    
+    public Command PPOuttakeLevel2Front = new SequentialCommandGroup(
+            new InstantCommand(() -> endEffector.setState(EndEffectorState.OUTTAKING_LEVEL_2_FRONT)),
+            new WaitCommand(EndEffectorConstants.EE_LEVEL_2_OUTTAKE_TIME),
+            new InstantCommand(() -> endEffector.setState(EndEffectorState.STOPPED))
+    );
+    
+    public Command PPOuttakeLevel2Back = new SequentialCommandGroup(
+            new InstantCommand(() -> endEffector.setState(EndEffectorState.OUTTAKING_LEVEL_2_BACK)),
+            new WaitCommand(EndEffectorConstants.EE_LEVEL_2_OUTTAKE_TIME),
+            new InstantCommand(() -> endEffector.setState(EndEffectorState.STOPPED))
+    );
+    
+    public Command PPOuttakeLevel3 = new SequentialCommandGroup(
+            new InstantCommand(() -> endEffector.setState(EndEffectorState.OUTTAKING_LEVEL_3)),
+            new WaitCommand(EndEffectorConstants.EE_LEVEL_3_OUTTAKE_TIME),
+            new InstantCommand(() -> endEffector.setState(EndEffectorState.STOPPED))
+    );
+    
+    public Command PPIntakeCoralGround = new GroundIntakeCmd(arm, wrist, endEffector, robot);
+    
+    public Command PPIntakeCoralFeeder = new FeederIntakeCmd(endEffector);
+    
+    public Command PPRemoveHighAlgae = new SequentialCommandGroup(
             new InstantCommand(() -> endEffector.setState(EndEffectorState.REMOVING_HIGH_ALGAE)),
-            new WaitCommand(0.5),
+            new WaitCommand(EndEffectorConstants.EE_HIGH_ALGAE_REMOVAL_TIME),
             new InstantCommand(() -> endEffector.setState(EndEffectorState.STOPPED))
-            );
-        public Command PPLowEE = new SequentialCommandGroup(
+    );
+    
+    public Command PPRemoveLowAlgae = new SequentialCommandGroup(
             new InstantCommand(() -> endEffector.setState(EndEffectorState.REMOVING_LOW_ALGAE)),
-            new WaitCommand(0.85),
+            new WaitCommand(EndEffectorConstants.EE_LOW_ALGAE_REMOVAL_TIME),
             new InstantCommand(() -> endEffector.setState(EndEffectorState.STOPPED))
-            );
-        public Command PPStopEE = new InstantCommand(
-                () -> endEffector.setState(EndEffectorState.STOPPED));
+    );
+    
+    public Command PPStopEE = new InstantCommand(
+            () -> endEffector.setState(EndEffectorState.STOPPED)
+    );
 
+        // MANUAL COMMANDS
         public Command OuttakeEE = new StartEndCommand(
             () -> endEffector.setState(EndEffectorState.OUTTAKING_TROUGH),
             () -> endEffector.setState(EndEffectorState.STOPPED),
             endEffector
         );
         public Command IntakeEE = new StartEndCommand(
-            () -> endEffector.setState(EndEffectorState.INTAKING_CORAL_GROUND),
+            () -> endEffector.setState(EndEffectorState.INTAKING_CORAL_FEEDER),
             () -> endEffector.setState(EndEffectorState.STOPPED),
             endEffector
         );
@@ -152,13 +180,7 @@ public class BasicCmd {
             robot::runOuttakeConfig,
             () -> endEffector.setState(EndEffectorState.STOPPED), 
              robot, endEffector
-             );
-
-        // public Command StopEE = new StartEndCommand(
-        //     () -> endEffector.setState(EndEffectorState.STOPPED), 
-        //     () -> endEffector.setState(EndEffectorState.STOPPED),
-        //     endEffector);
-       
+             );      
 
     }
 

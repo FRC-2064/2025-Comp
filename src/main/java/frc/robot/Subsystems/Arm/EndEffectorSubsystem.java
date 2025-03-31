@@ -44,7 +44,8 @@ public class EndEffectorSubsystem extends SubsystemBase {
         stateActions.put(EndEffectorState.OUTTAKING_ALGAE, this::outtakeAlgae);
         stateActions.put(EndEffectorState.REMOVING_HIGH_ALGAE, this::removeHighAlgae);
         stateActions.put(EndEffectorState.REMOVING_LOW_ALGAE, this::removeLowAlgae);
-        stateActions.put(EndEffectorState.OUTTAKING_LEVEL_2, this::outtakeLevel2);
+        stateActions.put(EndEffectorState.OUTTAKING_LEVEL_2_FRONT, this::outtakeLevel2Front);
+        stateActions.put(EndEffectorState.OUTTAKING_LEVEL_2_BACK, this::outtakeLevel2Back);
         stateActions.put(EndEffectorState.OUTTAKING_LEVEL_3, this::outtakeLevel3);
         stateActions.put(EndEffectorState.STOPPED, this::stop);
 
@@ -116,10 +117,16 @@ public class EndEffectorSubsystem extends SubsystemBase {
         right.set(0.25);
     }
 
-    private void outtakeLevel2()  {
+    private void outtakeLevel2Front()  {
         top.set(0.75);
         left.set(0.75);
         right.set(0.75);
+    }
+
+    private void outtakeLevel2Back()  {
+        top.set(-0.75);
+        left.set(-0.75);
+        right.set(-0.75);
     }
 
     private void outtakeLevel3()  {

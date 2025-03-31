@@ -1,0 +1,37 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Center_to_AlgaeGH"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AlgaeRemovalLow"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AlgaeGH_to_CoralBackH"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "OuttakeLevel3Back"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

@@ -1,11 +1,12 @@
 package frc.robot.Utils.ControlBoard;
 
+import java.util.List;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.Utils.Enums.EndEffectorState;
 
 public class RobotConfiguration {
-    public final Pose2d desiredEndPose;
-    public final Pose2d desiredStartPose;
+    public final List<Pose2d> pathPoses;
     public final double finalArmAngle;
     public final double travelArmAngle;
     public final double finalWristAngle;
@@ -15,8 +16,7 @@ public class RobotConfiguration {
 
     
     public RobotConfiguration(
-        Pose2d desiredEndPose,
-        Pose2d desiredStartPose,
+        List<Pose2d> pathPoses,
         double finalArmAngle, 
         double travelArmAngle, 
         double finalWristAngle,  
@@ -24,8 +24,7 @@ public class RobotConfiguration {
         EndEffectorState startEndEffectorState,
         EndEffectorState finalEndEffectorState) {
 
-        this.desiredEndPose = desiredEndPose;
-        this.desiredStartPose = desiredStartPose;
+        this.pathPoses = pathPoses;
         this.finalArmAngle = finalArmAngle;
         this.travelArmAngle = travelArmAngle;
         this.finalWristAngle = finalWristAngle;

@@ -1,5 +1,7 @@
 package frc.robot.Utils.ControlBoard;
 
+import java.util.List;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -30,16 +32,16 @@ public class RobotConfigProvider {
          * @return A RobotConfiguration object representing the desired configuration,
          *         or null if an error occurs.
          */
-        public static RobotConfiguration getGameScoreConfiguration(double currHeading) {
+        public static RobotConfiguration getGameScoreConfiguration(Pose2d currPose, double currHeading) {
                 try {
                         String scoreLocation = ControlBoardHelpers.getScoreLocation();
 
                         if (scoreLocation.equals(ControlBoardConstants.SCORE_PROCESSOR)) {
-                                return createProcessorConfiguration();
+                                return createProcessorConfiguration(currPose);
                         }
 
                         if (scoreLocation.equals(ControlBoardConstants.SCORE_CAGE)) {
-                                return getCageConfiguration();
+                                return getCageConfiguration(currPose);
                         }
 
                         String reefLocation = ControlBoardHelpers.getReefLocation();
@@ -51,13 +53,13 @@ public class RobotConfigProvider {
 
                         return switch (reefLevel) {
                                 case ControlBoardConstants.REEF_LEVEL_ALGAE ->
-                                        createAlgaeRemovalConfiguration(reefLocation);
+                                        createAlgaeRemovalConfiguration(reefLocation, currPose);
                                 case ControlBoardConstants.REEF_LEVEL_TROUGH ->
-                                        createTroughScoringConfiguration(reefLocation);
+                                        createTroughScoringConfiguration(reefLocation, currPose);
                                 case ControlBoardConstants.REEF_LEVEL_2 ->
-                                        createLevel2ScoringConfiguration(reefLocation, currHeading);
+                                        createLevel2ScoringConfiguration(reefLocation, currPose, currHeading);
                                 case ControlBoardConstants.REEF_LEVEL_3 ->
-                                        createLevel3ScoringConfiguration(reefLocation);
+                                        createLevel3ScoringConfiguration(reefLocation, currPose);
                                 default -> null;
                         };
 
@@ -73,10 +75,9 @@ public class RobotConfigProvider {
          *
          * @return A RobotConfiguration object for the processor location.
          */
-        private static RobotConfiguration createProcessorConfiguration() {
+        private static RobotConfiguration createProcessorConfiguration(Pose2d currPose) {
                 return new RobotConfiguration(
-                                OTFPaths.PROCESSOR,
-                                computeStartPose(OTFPaths.PROCESSOR, true),
+                                computePathPoses(OTFPaths.PROCESSOR, currPose, true),
                                 ArmConstants.ARM_ALGAE_CARRY_ANGLE,
                                 ArmConstants.ARM_ALGAE_CARRY_ANGLE,
                                 WristConstants.WRIST_ALGAE_ANGLE,
@@ -91,13 +92,12 @@ public class RobotConfigProvider {
          * @param reefLocation The reef location identifier.
          * @return A RobotConfiguration object for algae removal.
          */
-        private static RobotConfiguration createAlgaeRemovalConfiguration(String reefLocation) {
+        private static RobotConfiguration createAlgaeRemovalConfiguration(String reefLocation, Pose2d currPose) {
                 AlgaePair pair = ReefLookup.algaePoses.get(reefLocation);
                 boolean isHighAlgae = (pair.algaeHeight == AlgaeHeight.HIGH);
 
                 return new RobotConfiguration(
-                                pair.endPose,
-                                computeStartPose(pair.endPose, !isHighAlgae),
+                                computePathPoses(pair.endPose, currPose, !isHighAlgae),
                                 isHighAlgae ? ArmConstants.ARM_HIGH_ALGAE_REMOVAL_ANGLE
                                                 : ArmConstants.ARM_LOW_ALGAE_REMOVAL_ANGLE,
                                 ArmConstants.ARM_HOME_ANGLE,
@@ -117,11 +117,10 @@ public class RobotConfigProvider {
          * @return A RobotConfiguration object for trough scoring, or null if the
          *         location is not defined.
          */
-        private static RobotConfiguration createTroughScoringConfiguration(String reefLocation) {
+        private static RobotConfiguration createTroughScoringConfiguration(String reefLocation, Pose2d currPose) {
                 Pose2d endPose = ReefLookup.coralPoses.get(reefLocation);
                 return (endPose != null) ? new RobotConfiguration(
-                                endPose,
-                                computeStartPose(endPose, true),
+                                computePathPoses(endPose, currPose, true),
                                 ArmConstants.ARM_TROUGH_FRONT_ANGLE,
                                 ArmConstants.ARM_HOME_ANGLE,
                                 WristConstants.WRIST_TROUGH_FRONT_ANGLE,
@@ -140,26 +139,27 @@ public class RobotConfigProvider {
          * @return A RobotConfiguration object for level 2 scoring, or null if the reef
          *         location is not defined.
          */
-        private static RobotConfiguration createLevel2ScoringConfiguration(String reefLocation, double currHeading) {
+        private static RobotConfiguration createLevel2ScoringConfiguration(String reefLocation, Pose2d currPose,
+                        double currHeading) {
                 Pose2d endPose = ReefLookup.coralPoses.get(reefLocation);
                 if (endPose == null)
                         return null;
-                
+
                 HeadingResult headingResult = getClosestHeading(currHeading, endPose.getRotation().getDegrees());
-                 
-                Pose2d adjustedPose = new Pose2d(endPose.getX(), endPose.getY(), Rotation2d.fromDegrees(headingResult.closestHeading));
-        
+
+                Pose2d adjustedPose = new Pose2d(endPose.getX(), endPose.getY(),
+                                Rotation2d.fromDegrees(headingResult.closestHeading));
+
                 SmartDashboard.putNumber("Logging/Heading/targetHeading", endPose.getRotation().getDegrees());
 
                 return new RobotConfiguration(
-                                adjustedPose,
-                                computeStartPose(adjustedPose, headingResult.adjusted),
+                                computePathPoses(adjustedPose, currPose, headingResult.adjusted),
                                 ArmConstants.ARM_L2_FRONT_ANGLE,
                                 ArmConstants.ARM_HOME_ANGLE,
                                 WristConstants.WRIST_L2_FRONT_ANGLE,
                                 WristConstants.WRIST_HOME_ANGLE,
                                 EndEffectorState.INTAKING_CORAL_GROUND,
-                                EndEffectorState.OUTTAKING_LEVEL_2);
+                                EndEffectorState.OUTTAKING_LEVEL_2_FRONT);
         }
 
         /**
@@ -171,7 +171,7 @@ public class RobotConfigProvider {
          * @return A RobotConfiguration object for level 3 scoring, or null if the reef
          *         location is not defined.
          */
-        private static RobotConfiguration createLevel3ScoringConfiguration(String reefLocation) {
+        private static RobotConfiguration createLevel3ScoringConfiguration(String reefLocation, Pose2d currPose) {
                 Pose2d endPose = ReefLookup.coralPoses.get(reefLocation);
                 if (endPose == null)
                         return null;
@@ -180,8 +180,7 @@ public class RobotConfigProvider {
                                 endPose.getRotation().rotateBy(Rotation2d.fromDegrees(180)));
 
                 return new RobotConfiguration(
-                                basePose,
-                                computeStartPose(basePose, false),
+                                computePathPoses(basePose, currPose, false),
                                 ArmConstants.ARM_L3_BACK_ANGLE,
                                 ArmConstants.ARM_HOME_ANGLE,
                                 WristConstants.WRIST_L3_BACK_ANGLE,
@@ -198,7 +197,7 @@ public class RobotConfigProvider {
          * @return A RobotConfiguration object representing the feeder configuration, or
          *         null if an error occurs.
          */
-        public static RobotConfiguration getFeederConfiguration() {
+        public static RobotConfiguration getFeederConfiguration(Pose2d currPose) {
                 try {
                         String feeder = ControlBoardHelpers.getFeeder();
                         Pose2d endPose = feeder.equals(ControlBoardConstants.FEEDER_LEFT)
@@ -206,8 +205,7 @@ public class RobotConfigProvider {
                                         : OTFPaths.FEEDER_LOCATION_RIGHT;
 
                         return new RobotConfiguration(
-                                        endPose,
-                                        computeStartPose(endPose, true),
+                                        computePathPoses(endPose, currPose, true),
                                         ArmConstants.ARM_FRONT_INTAKE_ANGLE,
                                         ArmConstants.ARM_HOME_ANGLE,
                                         WristConstants.WRIST_FRONT_INTAKE_ANGLE,
@@ -228,7 +226,7 @@ public class RobotConfigProvider {
          * @return A RobotConfiguration object representing the cage configuration, or
          *         null if an error occurs.
          */
-        public static RobotConfiguration getCageConfiguration() {
+        public static RobotConfiguration getCageConfiguration(Pose2d currPose) {
                 try {
                         String cage = ControlBoardHelpers.getCage();
                         Pose2d cagePose = switch (cage) {
@@ -239,8 +237,7 @@ public class RobotConfigProvider {
                         };
 
                         return (cagePose != null) ? new RobotConfiguration(
-                                        cagePose,
-                                        computeStartPose(cagePose, false),
+                                        computePathPoses(cagePose, currPose, false),
                                         ArmConstants.ARM_CLIMB_DOWN_ANGLE,
                                         ArmConstants.ARM_CLIMB_DOWN_ANGLE,
                                         WristConstants.WRIST_CLIMB_ANGLE,
@@ -266,11 +263,17 @@ public class RobotConfigProvider {
          *                     back.
          * @return A new Pose2d representing the computed start pose.
          */
-        private static Pose2d computeStartPose(Pose2d endPose, boolean isUsingFront) {
-                double theta = endPose.getRotation().getRadians();
-                double dx = 0.75 * Math.cos(theta) * (isUsingFront ? 1.5 : -1.5);
-                double dy = 0.75 * Math.sin(theta) * (isUsingFront ? 1.5 : -1.5);
-                return new Pose2d(endPose.getX() - dx, endPose.getY() - dy, endPose.getRotation());
+        private static List<Pose2d> computePathPoses(Pose2d endPose, Pose2d currentPose, boolean isUsingFront) {
+
+                double approachDistance = 1.0 * (isUsingFront ? -1.0 : 1.0);
+                Translation2d offset = new Translation2d(approachDistance, 0).rotateBy(endPose.getRotation());
+
+                Pose2d startApproachPose = new Pose2d(
+                                endPose.getX() + offset.getX(),
+                                endPose.getY() + offset.getY(),
+                                endPose.getRotation());
+
+                return List.of(startApproachPose, endPose);
         }
 
         /**
@@ -303,9 +306,9 @@ public class RobotConfigProvider {
                 double diffTarget = Math.abs(normalizeAngle(currHeading - targetHeading));
                 double diffInverse = Math.abs(normalizeAngle(currHeading - inverseHeading));
 
-                double closestHeading = (diffTarget <= diffInverse) ? targetHeading : inverseHeading; 
-                boolean usingFront =  (diffTarget <= diffInverse);
-                
+                double closestHeading = (diffTarget <= diffInverse) ? targetHeading : inverseHeading;
+                boolean usingFront = (diffTarget <= diffInverse);
+
                 return new HeadingResult(closestHeading, usingFront);
 
         }

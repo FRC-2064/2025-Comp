@@ -3,14 +3,16 @@ package frc.robot.Subsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Robot;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.RobotContainer;
+import frc.robot.Subsystems.Arm.ArmSubsystem;
 import frc.robot.Subsystems.Arm.ClimbSubsystem;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem;
-import frc.robot.Subsystems.Arm.ctre.KArmSubsystem;
-import frc.robot.Subsystems.Arm.ctre.KWristSubsystem;
+import frc.robot.Subsystems.Arm.WristSubsystem;
 import frc.robot.Subsystems.Drive.SwerveSubsystem;
 import frc.robot.Subsystems.Drive.SwerveSubsystem.DriveState;
 import frc.robot.Subsystems.LEDs.LEDSubsystem;
@@ -24,11 +26,11 @@ import frc.robot.Utils.ControlBoard.RobotConfigProvider;
 import frc.robot.Utils.ControlBoard.RobotConfiguration;
 
 public class RobotSubsystem extends SubsystemBase {
-    KArmSubsystem arm;
+    ArmSubsystem arm;
     ClimbSubsystem climb;
     SwerveSubsystem drivebase;
     EndEffectorSubsystem endEffector;
-    KWristSubsystem wrist;
+    WristSubsystem wrist;
     LEDSubsystem leds;
 
     private RobotState robotState = RobotState.I_IDLE;
@@ -37,8 +39,8 @@ public class RobotSubsystem extends SubsystemBase {
 
     private Command currentPathCommand;
 
-    public RobotSubsystem(KArmSubsystem arm, ClimbSubsystem clamp, SwerveSubsystem drivebase,
-            EndEffectorSubsystem endEffector, KWristSubsystem wrist, LEDSubsystem leds) {
+    public RobotSubsystem(ArmSubsystem arm, ClimbSubsystem clamp, SwerveSubsystem drivebase,
+            EndEffectorSubsystem endEffector, WristSubsystem wrist, LEDSubsystem leds) {
         this.arm = arm;
         this.climb = clamp;
         this.drivebase = drivebase;
@@ -55,8 +57,15 @@ public class RobotSubsystem extends SubsystemBase {
             case T_TRAVELING:
                 arm.setTargetAngle(config.travelArmAngle);
                 wrist.setTargetAngle(config.travelWristAngle);
-                currentPathCommand = drivebase.pathfindToOTFPath(config.desiredStartPose, config.desiredEndPose);
-                currentPathCommand.schedule();
+                if (currentPathCommand == null || !currentPathCommand.isScheduled()) {
+                    Command otfPath = drivebase.pathfindToOTFPath(config.pathPoses);
+                    Command driverCancel = new WaitUntilCommand(() -> RobotContainer.isDriverInputDetected());
+                    currentPathCommand = new ParallelRaceGroup(otfPath, driverCancel)
+                        .andThen(new InstantCommand(() -> {
+                            drivebase.setState(DriveState.USER_CONTROLLED);
+                        }, drivebase));
+                    currentPathCommand.schedule();
+                }
                 robotState = RobotState.P_PATHING;
                 break;
 
@@ -101,7 +110,7 @@ public class RobotSubsystem extends SubsystemBase {
     }
 
     public void goToFeeder() {
-        config = RobotConfigProvider.getFeederConfiguration();
+        config = RobotConfigProvider.getFeederConfiguration(drivebase.getPose());
         if (config == null) {
             return;
         }
@@ -110,7 +119,7 @@ public class RobotSubsystem extends SubsystemBase {
     }
 
     public void goToScore() {
-        config = RobotConfigProvider.getGameScoreConfiguration(drivebase.getHeading().getDegrees());
+        config = RobotConfigProvider.getGameScoreConfiguration(drivebase.getPose(), drivebase.getHeading().getDegrees());
         if (config == null) {
             return;
         }
@@ -123,7 +132,7 @@ public class RobotSubsystem extends SubsystemBase {
     public void armToScore() {
         robotState = RobotState.I_IDLE;
         config = RobotConfigProvider
-                .getGameScoreConfiguration(drivebase.getHeading().getDegrees());
+                .getGameScoreConfiguration(drivebase.getPose(), drivebase.getHeading().getDegrees());
         if (config == null) {
             return;
         }
@@ -139,7 +148,7 @@ public class RobotSubsystem extends SubsystemBase {
     public void armToFeeder() {
         robotState = RobotState.I_IDLE;
         config = RobotConfigProvider
-                .getFeederConfiguration();
+                .getFeederConfiguration(drivebase.getPose());
         if (config == null) {
             return;
         }
