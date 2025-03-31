@@ -1,0 +1,71 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.5372869318181819,
+        "y": 2.662215909090909
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.551065340909091,
+        "y": 3.8588068181818183
+      },
+      "isLocked": false,
+      "linkedName": "RightGroundCoral"
+    },
+    {
+      "anchor": {
+        "x": 3.194,
+        "y": 3.861
+      },
+      "prevControl": {
+        "x": 2.2186789772727273,
+        "y": 3.867116477272727
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "B"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.42595584275713144,
+      "rotationDegrees": 180.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "BackL2",
+      "waypointRelativePos": 0.5,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "BackL2"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.2,
+    "maxAcceleration": 8.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": "Ground Corals",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -125.00000000000001
+  },
+  "useDefaultConstraints": true
+}

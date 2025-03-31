@@ -1,0 +1,82 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.10954081632653,
+        "y": 0.613494897959182
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.497680020871984,
+        "y": 0.49715967068645395
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.220612244897959,
+        "y": 2.010331632653059
+      },
+      "prevControl": {
+        "x": 2.2564285714285712,
+        "y": 1.5805357142857122
+      },
+      "nextControl": {
+        "x": 2.144696900819565,
+        "y": 2.921315761593778
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.19405,
+        "y": 4.0259
+      },
+      "prevControl": {
+        "x": 2.5874448863636363,
+        "y": 4.009280681818182
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "HighAlgae",
+      "waypointRelativePos": 1.5,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "HighAlgae"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.2,
+    "maxAcceleration": 8.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": "Starts",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": true
+}

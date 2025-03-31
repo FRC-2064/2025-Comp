@@ -3,6 +3,7 @@
   "robotLength": 1.016,
   "holonomicMode": true,
   "pathFolders": [
+    "Ground Corals",
     "Starts"
   ],
   "autoFolders": [],
