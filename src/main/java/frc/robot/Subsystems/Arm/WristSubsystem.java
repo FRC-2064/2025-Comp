@@ -94,7 +94,9 @@ public class WristSubsystem extends SubsystemBase {
     }
 
     public void setTargetAngle(double angle) {
-        wristControl.withPosition(angle / 360);
+        double positionTarget = (angle / 360) + WristConstants.ABS_ENCODER_COMPENSATION;
+        wristTarget = positionTarget;
+        wristControl.withPosition(positionTarget);
         ControlRequest wcr = wristControl;
 
         wrist.setControl(wcr);

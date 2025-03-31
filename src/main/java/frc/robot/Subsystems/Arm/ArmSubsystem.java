@@ -103,7 +103,9 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void setTargetAngle(double angle) {
-        armControl.withPosition(angle / 360);
+        double positionTarget = (angle / 360) + ArmConstants.ABS_ENCODER_COMPENSATION;
+        armTarget = positionTarget;
+        armControl.withPosition(positionTarget);
         ControlRequest acr = armControl;
 
         leader.setControl(acr);

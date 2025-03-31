@@ -99,7 +99,9 @@ public class Constants {
 
         public static final double ARM_GEAR_RATIO = (9 * 5 * (60 / 12));
 
-        public static final double ABS_ENCODER_OFFSET = -0.235;
+        public static final double ABS_ENCODER_OFFSET = -0.335;
+
+        public static final double ABS_ENCODER_COMPENSATION = 0.1;
 
     }
     
@@ -139,7 +141,9 @@ public class Constants {
 
         public static final double WRIST_GEAR_RATIO = (4 * 4 * 5 * (34 / 26));
 
-        public static final double ABS_ENCODER_OFFSET = 0.8;
+        public static final double ABS_ENCODER_OFFSET = 0.7;
+
+        public static final double ABS_ENCODER_COMPENSATION = 0.1;
     }
 
         public class EndEffectorConstants {
