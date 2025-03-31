@@ -101,8 +101,8 @@ public class EndEffectorSubsystem extends SubsystemBase {
         //     return;
         // }
         top.set(0.5); //.35
-        left.set(0.5);
-        right.set(0.5);
+        left.set(0.35);
+        right.set(0.35);
     }
 
     private void intakeCoralFeeder() {

@@ -70,7 +70,7 @@ public class ArmSubsystem extends SubsystemBase {
     
         PWM2Configs candiConfig = new PWM2Configs();
         candiConfig.AbsoluteSensorDiscontinuityPoint = 1;
-        candiConfig.AbsoluteSensorOffset = -0.235;
+        candiConfig.AbsoluteSensorOffset = -0.135;
         candiConfig.SensorDirection = false;
 
         candi.getConfigurator().apply(candiConfig);

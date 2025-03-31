@@ -29,7 +29,7 @@ public class Robot extends TimedRobot {
   }
 
   public void robotInit() {
-    Pathfinding.setPathfinder(new RemoteADStar());
+    // Pathfinding.setPathfinder(new RemoteADStar());
     ControlBoardHelpers.setLevel(ControlBoardConstants.REEF_LEVEL_2);
     ControlBoardHelpers.setReefLocation(ControlBoardConstants.REEF_LOCATION_A);
     ControlBoardHelpers.setScoreLocation(ControlBoardConstants.SCORE_REEF);
