@@ -153,13 +153,16 @@ public class RobotConfigProvider {
                 SmartDashboard.putNumber("Logging/Heading/targetHeading", endPose.getRotation().getDegrees());
 
                 return new RobotConfiguration(
-                                computePathPoses(adjustedPose, currPose, headingResult.adjusted),
-                                ArmConstants.ARM_L2_FRONT_ANGLE,
+                                computePathPoses(adjustedPose, currPose, headingResult.usingFront),
+                                (headingResult.usingFront ? ArmConstants.ARM_L2_FRONT_ANGLE
+                                                : ArmConstants.ARM_L2_BACK_ANGLE),
                                 ArmConstants.ARM_HOME_ANGLE,
-                                WristConstants.WRIST_L2_FRONT_ANGLE,
+                                (headingResult.usingFront ? WristConstants.WRIST_L2_FRONT_ANGLE
+                                                : WristConstants.WRIST_L2_BACK_ANGLE),
                                 WristConstants.WRIST_HOME_ANGLE,
                                 EndEffectorState.INTAKING_CORAL_GROUND,
-                                EndEffectorState.OUTTAKING_LEVEL_2_FRONT);
+                                (headingResult.usingFront ? EndEffectorState.OUTTAKING_LEVEL_2_FRONT
+                                                : EndEffectorState.OUTTAKING_LEVEL_2_BACK));
         }
 
         /**
@@ -265,7 +268,7 @@ public class RobotConfigProvider {
          */
         private static List<Pose2d> computePathPoses(Pose2d endPose, Pose2d currentPose, boolean isUsingFront) {
 
-                double approachDistance = 1.0 * (isUsingFront ? -1.0 : 1.0);
+                double approachDistance = 0.5 * (isUsingFront ? -1.0 : 1.0);
                 Translation2d offset = new Translation2d(approachDistance, 0).rotateBy(endPose.getRotation());
 
                 Pose2d startApproachPose = new Pose2d(

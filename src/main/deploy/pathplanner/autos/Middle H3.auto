@@ -11,21 +11,27 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "AlgaeRemovalLow"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "AlgaeGH_to_CoralBackH"
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "OuttakeLevel3Back"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BackH_to_Safe"
           }
         }
       ]

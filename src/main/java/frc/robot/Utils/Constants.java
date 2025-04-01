@@ -7,7 +7,7 @@ import edu.wpi.first.math.util.Units;
 import swervelib.math.Matter;
 
 public class Constants {
-    public static final double DRIVESTATE_ALLOWED_ERROR = 2.0;
+    public static final double DRIVESTATE_ALLOWED_ERROR = 4.0;
 
     public static final double ROBOT_MASS = 100;
     public static final Matter CHASSIS = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
@@ -20,6 +20,12 @@ public class Constants {
         public static final double LEFT_Y_DEADBAND = 0.1;
         public static final double RIGHT_X_DEADBAND = 0.1;
         public static final double TURN_CONSTANT = 6;
+        
+    }
+
+    public class LEDConstants {
+        public static final int CANDLE_ID = 59;
+
         
     }
 
@@ -44,12 +50,12 @@ public class Constants {
     }
     public class Limelight3Constants {
         public static final String LIMELIGHT_NAME = "limelight-three";
-        public static final double FORWARD_OFFSET = Units.inchesToMeters(-14.5);
-        public static final double SIDE_OFFSET = Units.inchesToMeters(9.5);
-        public static final double HEIGHT_OFFSET = Units.inchesToMeters(8.0);
+        public static final double FORWARD_OFFSET = Units.inchesToMeters(-8.5);
+        public static final double SIDE_OFFSET = Units.inchesToMeters(12);
+        public static final double HEIGHT_OFFSET = Units.inchesToMeters(14);
         public static final double ROLL_OFFSET = 0.0;
-        public static final double PITCH_OFFSET = 14.15;
-        public static final double YAW_OFFSET = 180.0;
+        public static final double PITCH_OFFSET = 6;
+        public static final double YAW_OFFSET = 135;
     }
 
     public class ClampConstants {
@@ -68,7 +74,7 @@ public class Constants {
         public static final int ARM_FOLLOWER_ID = 26;
         
         public static final double ARM_HOME_ANGLE = 45;
-        public static final double ARM_FRONT_INTAKE_ANGLE = 59;
+        public static final double ARM_FRONT_INTAKE_ANGLE = 62;
         public static final double ARM_BACK_INTAKE_ANGLE = 123;
         
         public static final double ARM_TROUGH_FRONT_ANGLE = 27.03; //35
@@ -83,7 +89,7 @@ public class Constants {
 
         public static final double ARM_ALGAE_CARRY_ANGLE = 23;
 
-        public static final double ARM_LOW_ALGAE_REMOVAL_ANGLE = 53;
+        public static final double ARM_LOW_ALGAE_REMOVAL_ANGLE = 45;
         public static final double ARM_HIGH_ALGAE_REMOVAL_ANGLE = 95;
 
         public static final double ARM_CLIMB_UP_ANGLE = 85;
@@ -99,7 +105,7 @@ public class Constants {
 
         public static final double ARM_GEAR_RATIO = (9 * 5 * (60 / 12));
 
-        public static final double ABS_ENCODER_OFFSET = -0.335;
+        public static final double ABS_ENCODER_OFFSET = -0.135;
 
         public static final double ABS_ENCODER_COMPENSATION = 0.1;
 
@@ -126,7 +132,7 @@ public class Constants {
         
         public static final double WRIST_ALGAE_ANGLE = 93;
         
-        public static final double WRIST_LOW_ALGAE_REMOVAL_ANGLE = 50;
+        public static final double WRIST_LOW_ALGAE_REMOVAL_ANGLE = 115;
         public static final double WRIST_HIGH_ALGAE_REMOVAL_ANGLE = 155;
         
         public static final double WRIST_GROUND_INTAKE = 120; //120 
@@ -141,7 +147,7 @@ public class Constants {
 
         public static final double WRIST_GEAR_RATIO = (4 * 4 * 5 * (34 / 26));
 
-        public static final double ABS_ENCODER_OFFSET = 0.7;
+        public static final double ABS_ENCODER_OFFSET = -0.344;
 
         public static final double ABS_ENCODER_COMPENSATION = 0.1;
     }
@@ -158,7 +164,7 @@ public class Constants {
             public static final double EE_LEVEL_2_OUTTAKE_TIME = 0.2;
             public static final double EE_LEVEL_3_OUTTAKE_TIME = 0.2;
             public static final double EE_HIGH_ALGAE_REMOVAL_TIME = 0.75;
-            public static final double EE_LOW_ALGAE_REMOVAL_TIME = 0.75;
+            public static final double EE_LOW_ALGAE_REMOVAL_TIME = 0.5;
         }
     
     public class ControlBoardConstants {

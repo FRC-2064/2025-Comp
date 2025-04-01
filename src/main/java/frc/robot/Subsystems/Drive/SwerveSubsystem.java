@@ -36,6 +36,7 @@ import frc.robot.Robot;
 import frc.robot.Utils.Constants;
 import frc.robot.Utils.Constants.Limelight1Constants;
 import frc.robot.Utils.Constants.Limelight2Constants;
+import frc.robot.Utils.Constants.Limelight3Constants;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.math.SwerveMath;
@@ -109,7 +110,7 @@ public class SwerveSubsystem extends SubsystemBase {
         swerveDrive.updateOdometry();
         swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
         if (Robot.isReal()) {
-            // LIMELIGHT 1 : FONT
+            // LIMELIGHT 1 : BACK
             // boolean doRejectUpdate = false;
             double degrees = swerveDrive.getOdometryHeading().getDegrees();
             LimelightHelpers.SetRobotOrientation(
@@ -123,7 +124,7 @@ public class SwerveSubsystem extends SubsystemBase {
                 swerveDrive.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
             }
 
-            // LIMELIGHT 2 : BACK
+            // LIMELIGHT 2 : FRONT
             // doRejectUpdate = false;
             LimelightHelpers.SetRobotOrientation(
                     Limelight2Constants.LIMELIGHT_NAME,
@@ -132,6 +133,19 @@ public class SwerveSubsystem extends SubsystemBase {
 
             mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(
                     Limelight2Constants.LIMELIGHT_NAME);
+            if (mt2 != null && mt2.tagCount != 0) {
+                swerveDrive.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
+            }
+
+            // LIMELIGHT 3 : BACK
+            // doRejectUpdate = false;
+            LimelightHelpers.SetRobotOrientation(
+                    Limelight3Constants.LIMELIGHT_NAME,
+                    degrees,
+                    0, 0, 0, 0, 0);
+
+            mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(
+                    Limelight3Constants.LIMELIGHT_NAME);
             if (mt2 != null && mt2.tagCount != 0) {
                 swerveDrive.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
             }
@@ -375,7 +389,7 @@ public class SwerveSubsystem extends SubsystemBase {
         List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(pathPoses);
 
         PathConstraints constraints = new PathConstraints(
-                swerveDrive.getMaximumChassisVelocity() * 0.5,
+                swerveDrive.getMaximumChassisVelocity() * 0.25,
                 0.5,
                 swerveDrive.getMaximumChassisAngularVelocity(),
                 Units.degreesToRadians(720));

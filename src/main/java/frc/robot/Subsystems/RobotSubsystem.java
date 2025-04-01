@@ -81,6 +81,8 @@ public class RobotSubsystem extends SubsystemBase {
                     robotState = RobotState.I_IDLE;
                 }
 
+                leds.setCandleOn();
+
                 break;
 
             case F_FEEDER:
@@ -103,6 +105,7 @@ public class RobotSubsystem extends SubsystemBase {
                 // do win stuff {}
                 robotState = RobotState.I_IDLE;
             case I_IDLE:
+            leds.setCandleOff();
             default:
                 break;
         }

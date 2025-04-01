@@ -29,9 +29,9 @@ public class WristSubsystem extends SubsystemBase {
 
     public WristSubsystem(CANdi candi) {
         var slot0 = wristConfig.Slot0;
-        slot0.kP = 60;
+        slot0.kP = 80;
         slot0.kI = 0;
-        slot0.kD = 0.1;
+        slot0.kD = 0.0;
         slot0.kS = 0.25;
         slot0.kV = 0.12;
         slot0.kA = 0.01;
@@ -40,17 +40,16 @@ public class WristSubsystem extends SubsystemBase {
         var mmc = wristConfig.MotionMagic;
         mmc.MotionMagicCruiseVelocity = 80;
         mmc.MotionMagicAcceleration = 200;
-        mmc.MotionMagicJerk = 300;
+        mmc.MotionMagicJerk = 1600;
 
         wristConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
-        wristConfig.Feedback.withRotorToSensorRatio(WristConstants.WRIST_GEAR_RATIO).withFusedCANdiPwm1(candi);
+        wristConfig.Feedback.withRotorToSensorRatio(WristConstants.WRIST_GEAR_RATIO).withSyncCANdiPwm1(candi);
         
         wrist.getConfigurator().apply(wristConfig);
 
         PWM1Configs candiConfig = new PWM1Configs();
-        candiConfig.AbsoluteSensorOffset = -0.344; //0.72
-        candiConfig.AbsoluteSensorDiscontinuityPoint = 1;
+        candiConfig.AbsoluteSensorOffset = WristConstants.ABS_ENCODER_OFFSET; //0.72
         candiConfig.SensorDirection = false;
 
         candi.getConfigurator().apply(candiConfig);

@@ -7,37 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right_to_E2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "OuttakeLevel2Front"
+            "pathName": "Right_to_AlgaeAB"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "FrontE_to_FeederRight"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "IntakeCoralFeeder"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "FeederRight_to_AlgaeEF"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "AlgaeEF_to_CoralBackE"
+            "pathName": "AlgaeAB_to_CoralBackA"
           }
         },
         {
@@ -49,19 +25,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BackE_to_FeederRight"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "IntakeCoralFeeder"
+            "pathName": "BackA_to_CenterGroundCoral"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "FeederRight_to_F3"
+            "pathName": "CenterGroundCoral_to_B3"
           }
         },
         {
@@ -73,19 +43,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BackF_to_FeederRight"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "IntakeCoralFeeder"
+            "pathName": "BackB_to_RightGroundCoral"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "FeederRight_to_F2Back"
+            "pathName": "RightGroundCoral_to_B2Back"
           }
         },
         {
@@ -97,13 +61,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BackF_to_FeederRight"
+            "pathName": "B2Back_to_LeftGroundCoral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeftGroundCoral_to_A2Back"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "IntakeCoralFeeder"
+            "name": "OuttakeLevel2Back"
           }
         }
       ]
