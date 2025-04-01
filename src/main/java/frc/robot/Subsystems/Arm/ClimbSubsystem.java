@@ -47,8 +47,8 @@ public class ClimbSubsystem extends SubsystemBase {
         clampController = clamp.getClosedLoopController();
 
         winchConfig.idleMode(IdleMode.kBrake).smartCurrentLimit(20);
-        winchConfig.absoluteEncoder.inverted(false);
-        
+        winchConfig.inverted(true);
+
         winch.configure(winchConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     }
@@ -69,11 +69,11 @@ public class ClimbSubsystem extends SubsystemBase {
         switch (currentState) {
             case OPEN:
                 close();
-            break;
-        
+                break;
+
             case CLOSED:
                 open();
-            break;
+                break;
             default:
                 break;
         }
@@ -92,18 +92,15 @@ public class ClimbSubsystem extends SubsystemBase {
     }
 
     // negative speed is winch in!!!
-    public void winchIn(){
+    public void winchIn() {
         if (DriverStation.getMatchTime() > 30) {
             return;
         }
         winch.set(0.25);
     }
 
-
-    public void winchStop(){
+    public void winchStop() {
         winch.set(0);
     }
-
-
 
 }
