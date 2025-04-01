@@ -96,14 +96,11 @@ public class RobotSubsystem extends SubsystemBase {
                 }
 
             case C_CLIMBING:
-                // do climb stuff {}
-                // if robot has climbed then brake climb
                 robotState = RobotState.B_BRAKINGCLIMB;
             case B_BRAKINGCLIMB:
-                // if braking is complete
                 robotState = RobotState.W_WIN;
             case W_WIN:
-                // do win stuff {}
+                leds.setState(LEDState.CLIMBED);
                 robotState = RobotState.I_IDLE;
             case I_IDLE:
             leds.setState(LEDState.OFF);
@@ -190,7 +187,8 @@ public class RobotSubsystem extends SubsystemBase {
             new WaitCommand(0.75),
             new InstantCommand(climb::toggleClamp),
             new WaitCommand(0.2),
-            new InstantCommand(() -> arm.setTargetAngle(ArmConstants.ARM_CLIMB_DOWN_ANGLE))
+            new InstantCommand(() -> arm.setTargetAngle(ArmConstants.ARM_CLIMB_DOWN_ANGLE)),
+            new InstantCommand(() -> robotState = RobotState.C_CLIMBING)
         ).schedule();
         }
             
