@@ -31,6 +31,14 @@ public class Enums {
         STOPPED
     }
 
+    public enum LEDState {
+        OFF,
+        LIGHTBAR,
+        HAS_PIECE,
+        NO_PIECE,
+        CLIMBED
+    }
+
     public enum RobotState {
         I_IDLE,
         C_CLIMBING,

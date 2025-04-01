@@ -25,7 +25,9 @@ public class Constants {
 
     public class LEDConstants {
         public static final int CANDLE_ID = 59;
-
+        private static final int ROWS = 8;
+        private static final int COLS = 15;
+        public static final int NUM_LEDS = ROWS * COLS;
         
     }
 

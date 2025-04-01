@@ -385,6 +385,7 @@ public class SwerveSubsystem extends SubsystemBase {
             };
         }
         driveState = DriveState.PATHFINDING;
+        otfStartPose = pathPoses.get(0);
 
         List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(pathPoses);
 
