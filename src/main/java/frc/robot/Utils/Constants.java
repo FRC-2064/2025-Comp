@@ -26,7 +26,7 @@ public class Constants {
     public class LEDConstants {
         public static final int CANDLE_ID = 59;
         private static final int ROWS = 8;
-        private static final int COLS = 15;
+        private static final int COLS = 32 * 2;
         public static final int NUM_LEDS = ROWS * COLS;
         
     }
@@ -52,8 +52,8 @@ public class Constants {
     }
     public class Limelight3Constants {
         public static final String LIMELIGHT_NAME = "limelight-three";
-        public static final double FORWARD_OFFSET = Units.inchesToMeters(-8.5);
-        public static final double SIDE_OFFSET = Units.inchesToMeters(12);
+        public static final double FORWARD_OFFSET = Units.inchesToMeters(-27.5);
+        public static final double SIDE_OFFSET = Units.inchesToMeters(8.5);
         public static final double HEIGHT_OFFSET = Units.inchesToMeters(14);
         public static final double ROLL_OFFSET = 0.0;
         public static final double PITCH_OFFSET = 6;
@@ -85,7 +85,7 @@ public class Constants {
         public static final double ARM_L2_FRONT_ANGLE = 45;
         public static final double ARM_L2_BACK_ANGLE = 85;
 
-        public static final double ARM_L3_BACK_ANGLE = 92;
+        public static final double ARM_L3_BACK_ANGLE = 87.18; //92
 
         public static final double ARM_L4_BACK_ANGLE = 94;
 
@@ -107,9 +107,9 @@ public class Constants {
 
         public static final double ARM_GEAR_RATIO = (9 * 5 * (60 / 12));
 
-        public static final double ABS_ENCODER_OFFSET = -0.135;
+        public static final double ABS_ENCODER_OFFSET = -0.737;
 
-        public static final double ABS_ENCODER_COMPENSATION = 0.1;
+        public static final double ABS_ENCODER_COMPENSATION = 0.0;
 
     }
     
@@ -128,18 +128,18 @@ public class Constants {
         public static final double WRIST_L2_FRONT_ANGLE = 235;
         public static final double WRIST_L2_BACK_ANGLE = 265;
         
-        public static final double WRIST_L3_BACK_ANGLE = 212;
+        public static final double WRIST_L3_BACK_ANGLE = 212; //212
 
         public static final double WRIST_L4_BACK_ANGLE = 125;
         
         public static final double WRIST_ALGAE_ANGLE = 93;
         
         public static final double WRIST_LOW_ALGAE_REMOVAL_ANGLE = 115;
-        public static final double WRIST_HIGH_ALGAE_REMOVAL_ANGLE = 155;
+        public static final double WRIST_HIGH_ALGAE_REMOVAL_ANGLE = 145;
         
-        public static final double WRIST_GROUND_INTAKE = 120; //120 
+        public static final double WRIST_GROUND_INTAKE = 115; //120 
         
-        public static final double WRIST_CLIMB_ANGLE = 10;
+        public static final double WRIST_CLIMB_ANGLE = 75;
         
         public static final double WRIST_SAFE_MIN_ANGLE = 10;
         public static final double WRIST_SAFE_MAX_ANGLE = 200;
@@ -149,9 +149,9 @@ public class Constants {
 
         public static final double WRIST_GEAR_RATIO = (4 * 4 * 5 * (34 / 26));
 
-        public static final double ABS_ENCODER_OFFSET = -0.344;
+        public static final double ABS_ENCODER_OFFSET = -.95;
 
-        public static final double ABS_ENCODER_COMPENSATION = 0.1;
+        public static final double ABS_ENCODER_COMPENSATION = 0.08;
     }
 
         public class EndEffectorConstants {
@@ -217,7 +217,7 @@ public class Constants {
         public static final Pose2d ALGAE_LOCATION_AB = new Pose2d(3.19405, 4.0259, Rotation2d.fromDegrees(180.0)); // tag 18
         public static final Pose2d ALGAE_LOCATION_CD = new Pose2d(3.842131, 2.904871924, Rotation2d.fromDegrees(60.0)); // tag 17
         public static final Pose2d ALGAE_LOCATION_EF = new Pose2d(5.136515, 2.904871924, Rotation2d.fromDegrees(300)); // tag 22
-        public static final Pose2d ALGAE_LOCATION_GH = new Pose2d(5.784596, 4.0259, Rotation2d.fromDegrees(180.0)); // tag 21
+        public static final Pose2d ALGAE_LOCATION_GH = new Pose2d(5.856, 4.0259, Rotation2d.fromDegrees(180.0)); // tag 21
         public static final Pose2d ALGAE_LOCATION_IJ = new Pose2d(5.136515, 5.146928076, Rotation2d.fromDegrees(60.0)); // tag 20
         public static final Pose2d ALGAE_LOCATION_KL = new Pose2d(3.842131, 5.146928076, Rotation2d.fromDegrees(300.0)); // tag 19
         

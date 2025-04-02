@@ -37,38 +37,45 @@ public class LEDSubsystem extends SubsystemBase {
   private void setAnimationForState(LEDState state) {
     switch (state) {
       case OFF:
+        // Clear any animations and turn off LEDs
         candle.clearAnimation(animChannel);
-        candle.setLEDs(0, 0, 0);
+        candle.setLEDs(0, 0, 0); // Set LEDs to off (black)
         currentAnimation = null;
         break;
+        
       case LIGHTBAR:
-       candle.setLEDs(255,255,255);
-        currentAnimation = null;
+        // Ensure lightbar is fully lit up (white color)
+        candle.clearAnimation(animChannel);
+
+        candle.setLEDs(255, 255, 255); // Set LEDs to white (full brightness)
+        currentAnimation = null; // No animation needed here
         break;
+
       case HAS_PIECE:
         animChannel = 1;
+        // Fire animation for "has piece"
         currentAnimation = new FireAnimation(0.5, 0.7, LEDConstants.NUM_LEDS, 0.8, 0.5, false, 0);
         break;
+
       case NO_PIECE:
         animChannel = 2;
+        // Twinkle animation for "no piece"
         currentAnimation = new TwinkleAnimation(30, 70, LEDConstants.NUM_LEDS, 0, 0.4, LEDConstants.NUM_LEDS, TwinkleAnimation.TwinklePercent.Percent42, 0);
         break;
+
       case CLIMBED:
         animChannel = 3;
+        // Rainbow animation for "climbed"
         currentAnimation = new RainbowAnimation(1, 0.7, LEDConstants.NUM_LEDS, false, 0);
         break;
+
       default:
-        candle.clearAnimation(animChannel);
-        candle.setLEDs(0, 0, 0);
-        currentAnimation = null;
         break;
     }
-  }
-
-  @Override
-  public void periodic() {
+    
+    // Only animate if there's an animation set
     if (currentAnimation != null) {
-      candle.animate(currentAnimation, animChannel);
+      candle.animate(currentAnimation);
     }
   }
 

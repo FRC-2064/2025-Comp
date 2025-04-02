@@ -81,7 +81,7 @@ public class ArmSubsystem extends SubsystemBase {
 
         @Override
     public void periodic() {
-        armAngle = leader.getPosition().getValueAsDouble() * 360;
+        armAngle = (leader.getPosition().getValueAsDouble() + 0.5) * 360;
         
         if (Math.abs(armAngle - armTarget) < ArmConstants.ALLOWED_ERROR_DEGREES) {
             state = ArmState.STATIONARY;
@@ -105,8 +105,8 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void setTargetAngle(double angle) {
-        double positionTarget = (angle / 360) + ArmConstants.ABS_ENCODER_COMPENSATION - 0.5; // -0.5 TO 0.5
-        armTarget = positionTarget;
+        double positionTarget = (angle / 360) - 0.5; // -0.5 TO 0.5
+        armTarget = angle;
         armControl.withPosition(positionTarget);
         ControlRequest acr = armControl;
 
@@ -116,11 +116,13 @@ public class ArmSubsystem extends SubsystemBase {
     public void toggleArmBrake() {
         switch (neutralMode) {
             case Brake:
+                neutralMode = NeutralModeValue.Coast;
                 leader.setNeutralMode(NeutralModeValue.Coast);
                 follower.setNeutralMode(NeutralModeValue.Coast);
                 break;
 
             case Coast:
+                neutralMode = NeutralModeValue.Brake;
                 leader.setNeutralMode(NeutralModeValue.Brake);
                 follower.setNeutralMode(NeutralModeValue.Brake);
                 break;

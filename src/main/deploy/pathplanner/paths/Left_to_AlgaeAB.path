@@ -61,7 +61,7 @@
     },
     {
       "name": "AlgaeRemovalHigh",
-      "waypointRelativePos": 1.7,
+      "waypointRelativePos": 1.9,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

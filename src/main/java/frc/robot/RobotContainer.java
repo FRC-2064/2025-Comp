@@ -5,6 +5,8 @@
 package frc.robot;
 
 import java.io.File;
+import java.sql.Driver;
+
 import com.ctre.phoenix6.hardware.CANdi;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -32,6 +34,7 @@ import frc.robot.Subsystems.Drive.SwerveSubsystem.DriveState;
 import frc.robot.Subsystems.LEDs.LEDSubsystem;
 import frc.robot.Utils.Constants;
 import frc.robot.Utils.Constants.OperatorConstants;
+import frc.robot.Utils.Enums.LEDState;
 import swervelib.SwerveInputStream;
 
 public class RobotContainer {
@@ -124,6 +127,16 @@ public class RobotContainer {
     driverXbox.povUp().onTrue(armCmd.climbUp);
     driverXbox.povRight().whileTrue(climbCmd.winchIn);
     driverXbox.povLeft().onTrue(climbCmd.toggleClamp);
+
+    // driverXbox.povDown().onTrue(armCmd.groundIntake);
+    // driverXbox.povUp().onTrue(armCmd.BackL3);
+    // driverXbox.povRight().whileTrue(armCmd.FrontL2);
+    // driverXbox.povLeft().onTrue(climbCmd.toggleClamp);
+
+    // driverXbox.povLeft().onTrue(new InstantCommand(() -> leds.setState(LEDState.OFF)));
+    // driverXbox.povUp().onTrue(new InstantCommand(() -> leds.setState(LEDState.LIGHTBAR)));
+    // driverXbox.povRight().onTrue(new InstantCommand(() -> leds.setState(LEDState.HAS_PIECE)));
+    // driverXbox.povDown().onTrue(new InstantCommand(() -> leds.setState(LEDState.CLIMBED)));
 
     // UTILITY BINDINGS
     driverXbox.start().onTrue(new InstantCommand(drivebase::zeroGyro));

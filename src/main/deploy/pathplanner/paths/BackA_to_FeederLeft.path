@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.0080039786,
-        "y": 6.2273085298
+        "x": 2.12378731978829,
+        "y": 5.7541541537406555
       },
       "isLocked": false,
       "linkedName": null
@@ -20,8 +20,8 @@
         "y": 7.021460172
       },
       "prevControl": {
-        "x": 3.0080039786,
-        "y": 6.2273085298
+        "x": 1.903466649636367,
+        "y": 5.977259447277928
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,7 +34,7 @@
   "eventMarkers": [
     {
       "name": "FrontFeeder",
-      "waypointRelativePos": 0.7,
+      "waypointRelativePos": 0.25,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

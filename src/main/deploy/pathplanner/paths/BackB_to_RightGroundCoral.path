@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 1.5372869318181819,
-        "y": 2.662215909090909
+        "x": 1.4159659090909091,
+        "y": 2.4644460227272726
       },
       "prevControl": {
-        "x": 2.5676846590909093,
-        "y": 3.9585227272727264
+        "x": 2.446363636363637,
+        "y": 3.76075284090909
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,7 +39,7 @@
   "eventMarkers": [
     {
       "name": "GroundIntake",
-      "waypointRelativePos": 0,
+      "waypointRelativePos": 0.05,
       "endWaypointRelativePos": null,
       "command": {
         "type": "race",
@@ -63,8 +63,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 1.5,
-    "maxAcceleration": 4.0,
+    "maxVelocity": 0.75,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,

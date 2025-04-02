@@ -66,7 +66,7 @@ public class SwerveSubsystem extends SubsystemBase {
             throw new RuntimeException(e);
         }
 
-        swerveDrive.setHeadingCorrection(false);
+        swerveDrive.setHeadingCorrection(true);
         swerveDrive.setCosineCompensator(false);
         swerveDrive.setAngularVelocityCompensation(
                 true,
@@ -96,6 +96,16 @@ public class SwerveSubsystem extends SubsystemBase {
                 Limelight2Constants.PITCH_OFFSET, // Pitch (degrees)
                 Limelight2Constants.YAW_OFFSET // Yaw (degrees)
         );
+
+        LimelightHelpers.setCameraPose_RobotSpace(
+            Limelight3Constants.LIMELIGHT_NAME,
+            Limelight3Constants.FORWARD_OFFSET, // Forward offset (meters)
+            Limelight3Constants.SIDE_OFFSET, // Side offset (meters)
+            Limelight3Constants.HEIGHT_OFFSET, // Height offset (meters)
+            Limelight3Constants.ROLL_OFFSET, // Roll (degrees)
+            Limelight3Constants.PITCH_OFFSET, // Pitch (degrees)
+            Limelight3Constants.YAW_OFFSET // Yaw (degrees)
+    );
 
         setupPathPlanner();
     }
@@ -386,6 +396,7 @@ public class SwerveSubsystem extends SubsystemBase {
         }
         driveState = DriveState.PATHFINDING;
         otfStartPose = pathPoses.get(0);
+        otfEndPose = pathPoses.get(1);
 
         List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(pathPoses);
 

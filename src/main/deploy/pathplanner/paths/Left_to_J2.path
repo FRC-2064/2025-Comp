@@ -34,7 +34,7 @@
   "eventMarkers": [
     {
       "name": "FrontL2",
-      "waypointRelativePos": 0.7,
+      "waypointRelativePos": 0.25,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
