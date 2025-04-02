@@ -105,24 +105,28 @@ public class BasicCmd {
     public class EndEffectorCommands {
         // AUTO COMMANDS
         public Command PPOuttakeTrough = new SequentialCommandGroup(
+            new WaitCommand(EndEffectorConstants.EE_TROUGH_WAIT_TIME),
             new InstantCommand(() -> endEffector.setState(EndEffectorState.OUTTAKING_TROUGH)),
             new WaitCommand(EndEffectorConstants.EE_TROUGH_OUTTAKE_TIME),
             new InstantCommand(() -> endEffector.setState(EndEffectorState.STOPPED))
     );
     
     public Command PPOuttakeLevel2Front = new SequentialCommandGroup(
+            new WaitCommand(EndEffectorConstants.EE_LEVEL_2_WAIT_TIME),
             new InstantCommand(() -> endEffector.setState(EndEffectorState.OUTTAKING_LEVEL_2_FRONT)),
             new WaitCommand(EndEffectorConstants.EE_LEVEL_2_OUTTAKE_TIME),
             new InstantCommand(() -> endEffector.setState(EndEffectorState.STOPPED))
     );
     
     public Command PPOuttakeLevel2Back = new SequentialCommandGroup(
+            new WaitCommand(EndEffectorConstants.EE_LEVEL_2_WAIT_TIME),
             new InstantCommand(() -> endEffector.setState(EndEffectorState.OUTTAKING_LEVEL_2_BACK)),
             new WaitCommand(EndEffectorConstants.EE_LEVEL_2_OUTTAKE_TIME),
             new InstantCommand(() -> endEffector.setState(EndEffectorState.STOPPED))
     );
     
     public Command PPOuttakeLevel3 = new SequentialCommandGroup(
+            new WaitCommand(EndEffectorConstants.EE_LEVEL_3_WAIT_TIME),
             new InstantCommand(() -> endEffector.setState(EndEffectorState.OUTTAKING_LEVEL_3)),
             new WaitCommand(EndEffectorConstants.EE_LEVEL_3_OUTTAKE_TIME),
             new InstantCommand(() -> endEffector.setState(EndEffectorState.STOPPED))
