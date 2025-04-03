@@ -19,6 +19,7 @@ import frc.robot.Subsystems.LEDs.LEDSubsystem;
 import frc.robot.Utils.Constants.ArmConstants;
 import frc.robot.Utils.Enums.ArmState;
 import frc.robot.Utils.Enums.EndEffectorState;
+import frc.robot.Utils.Enums.LEDState;
 import frc.robot.Utils.Enums.RobotState;
 import frc.robot.Utils.Enums.WristState;
 import frc.robot.Utils.ControlBoard.ControlBoardHelpers;
@@ -61,9 +62,9 @@ public class RobotSubsystem extends SubsystemBase {
                     Command otfPath = drivebase.pathfindToOTFPath(config.pathPoses);
                     Command driverCancel = new WaitUntilCommand(() -> RobotContainer.isDriverInputDetected());
                     currentPathCommand = new ParallelRaceGroup(otfPath, driverCancel)
-                        .andThen(new InstantCommand(() -> {
-                            drivebase.setState(DriveState.USER_CONTROLLED);
-                        }, drivebase));
+                            .andThen(new InstantCommand(() -> {
+                                drivebase.setState(DriveState.USER_CONTROLLED);
+                            }, drivebase));
                     currentPathCommand.schedule();
                 }
                 robotState = RobotState.P_PATHING;
@@ -81,6 +82,8 @@ public class RobotSubsystem extends SubsystemBase {
                     robotState = RobotState.I_IDLE;
                 }
 
+                leds.setState(LEDState.LIGHTBAR);
+
                 break;
 
             case F_FEEDER:
@@ -88,21 +91,25 @@ public class RobotSubsystem extends SubsystemBase {
                 if (drivebase.getDriveState() == DriveState.USER_CONTROLLED &&
                         arm.getState() == ArmState.STATIONARY &&
                         wrist.getState() == WristState.STATIONARY) {
-                    // endEffector.setState(config.finalEndEffectorState);
+                    Command cmd = new SequentialCommandGroup(
+                            new InstantCommand(
+                                    () -> endEffector.setState(config.finalEndEffectorState)),
+                            new WaitCommand(0.5),
+                            new InstantCommand(
+                                    () -> endEffector.setState(EndEffectorState.STOPPED)));
+                    cmd.schedule();
                     robotState = RobotState.I_IDLE;
                 }
 
             case C_CLIMBING:
-                // do climb stuff {}
-                // if robot has climbed then brake climb
                 robotState = RobotState.B_BRAKINGCLIMB;
             case B_BRAKINGCLIMB:
-                // if braking is complete
                 robotState = RobotState.W_WIN;
             case W_WIN:
-                // do win stuff {}
+                leds.setState(LEDState.CLIMBED);
                 robotState = RobotState.I_IDLE;
             case I_IDLE:
+                leds.setState(LEDState.OFF);
             default:
                 break;
         }
@@ -119,7 +126,8 @@ public class RobotSubsystem extends SubsystemBase {
     }
 
     public void goToScore() {
-        config = RobotConfigProvider.getGameScoreConfiguration(drivebase.getPose(), drivebase.getHeading().getDegrees());
+        config = RobotConfigProvider.getGameScoreConfiguration(drivebase.getPose(),
+                drivebase.getHeading().getDegrees());
         if (config == null) {
             return;
         }
@@ -138,7 +146,7 @@ public class RobotSubsystem extends SubsystemBase {
         }
         if (config.finalArmAngle == ArmConstants.ARM_CLIMB_DOWN_ANGLE
                 && arm.getTargetArmAngle() == ArmConstants.ARM_CLIMB_DOWN_ANGLE) {
-                climbSequence();
+            climbSequence();
             return;
         }
         arm.setTargetAngle(config.finalArmAngle);
@@ -180,16 +188,14 @@ public class RobotSubsystem extends SubsystemBase {
         endEffector.setState(config.finalEndEffectorState);
     }
 
-        public void climbSequence(){
-         new SequentialCommandGroup(
-            new InstantCommand(() -> arm.setTargetAngle(ArmConstants.ARM_CLIMB_UP_ANGLE)),
-            new WaitCommand(0.75),
-            new InstantCommand(climb::toggleClamp),
-            new WaitCommand(0.2),
-            new InstantCommand(() -> arm.setTargetAngle(ArmConstants.ARM_CLIMB_DOWN_ANGLE))
-        ).schedule();
-        }
-            
-
+    public void climbSequence() {
+        new SequentialCommandGroup(
+                new InstantCommand(() -> arm.setTargetAngle(ArmConstants.ARM_CLIMB_UP_ANGLE)),
+                new WaitCommand(0.75),
+                new InstantCommand(climb::toggleClamp),
+                new WaitCommand(0.2),
+                new InstantCommand(() -> arm.setTargetAngle(ArmConstants.ARM_CLIMB_DOWN_ANGLE)),
+                new InstantCommand(() -> robotState = RobotState.C_CLIMBING)).schedule();
+    }
 
 }

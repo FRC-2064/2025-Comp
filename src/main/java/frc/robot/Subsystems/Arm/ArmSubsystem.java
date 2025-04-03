@@ -31,6 +31,8 @@ public class ArmSubsystem extends SubsystemBase {
     private final MotionMagicVoltage armControl = new MotionMagicVoltage(0.0);
 
     private TalonFXConfiguration leaderConfig = new TalonFXConfiguration();
+    private TalonFXConfiguration followerConfig = new TalonFXConfiguration();
+    
 
     private final VoltageOut m_voltReq = new VoltageOut(0.0);
 
@@ -42,8 +44,9 @@ public class ArmSubsystem extends SubsystemBase {
     private NeutralModeValue neutralMode = NeutralModeValue.Brake;
 
     public ArmSubsystem(CANdi candi) {
+        followerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        follower.getConfigurator().apply(followerConfig);
         follower.setControl(new Follower(ArmConstants.ARM_LEADER_ID, true));
-
 
         var slot0 = leaderConfig.Slot0;
         slot0.kP = 80;
@@ -58,8 +61,8 @@ public class ArmSubsystem extends SubsystemBase {
 
         var mmc = leaderConfig.MotionMagic;
         mmc.MotionMagicCruiseVelocity = 80;
-        mmc.MotionMagicAcceleration = 200;
-        mmc.MotionMagicJerk = 400;
+        mmc.MotionMagicAcceleration = 160;
+        mmc.MotionMagicJerk = 500;
 
         leaderConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         leaderConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -69,8 +72,7 @@ public class ArmSubsystem extends SubsystemBase {
         leader.getConfigurator().apply(leaderConfig);
     
         PWM2Configs candiConfig = new PWM2Configs();
-        candiConfig.AbsoluteSensorDiscontinuityPoint = 1;
-        candiConfig.AbsoluteSensorOffset = -0.135;
+        candiConfig.AbsoluteSensorOffset = ArmConstants.ABS_ENCODER_OFFSET;
         candiConfig.SensorDirection = false;
 
         candi.getConfigurator().apply(candiConfig);
@@ -79,7 +81,7 @@ public class ArmSubsystem extends SubsystemBase {
 
         @Override
     public void periodic() {
-        armAngle = leader.getPosition().getValueAsDouble() * 360;
+        armAngle = (leader.getPosition().getValueAsDouble() + 0.5) * 360;
         
         if (Math.abs(armAngle - armTarget) < ArmConstants.ALLOWED_ERROR_DEGREES) {
             state = ArmState.STATIONARY;
@@ -103,8 +105,11 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void setTargetAngle(double angle) {
-        double positionTarget = (angle / 360) + ArmConstants.ABS_ENCODER_COMPENSATION;
-        armTarget = positionTarget;
+        if (angle < 27) {
+            angle = 27;
+        }
+        double positionTarget = (angle / 360) - 0.5; // -0.5 TO 0.5
+        armTarget = angle;
         armControl.withPosition(positionTarget);
         ControlRequest acr = armControl;
 
@@ -114,11 +119,13 @@ public class ArmSubsystem extends SubsystemBase {
     public void toggleArmBrake() {
         switch (neutralMode) {
             case Brake:
+                neutralMode = NeutralModeValue.Coast;
                 leader.setNeutralMode(NeutralModeValue.Coast);
                 follower.setNeutralMode(NeutralModeValue.Coast);
                 break;
 
             case Coast:
+                neutralMode = NeutralModeValue.Brake;
                 leader.setNeutralMode(NeutralModeValue.Brake);
                 follower.setNeutralMode(NeutralModeValue.Brake);
                 break;

@@ -29,18 +29,17 @@ public class WristSubsystem extends SubsystemBase {
 
     public WristSubsystem(CANdi candi) {
         var slot0 = wristConfig.Slot0;
-        slot0.kP = 60;
-        slot0.kI = 0;
-        slot0.kD = 0.1;
-        slot0.kS = 0.25;
-        slot0.kV = 0.12;
-        slot0.kA = 0.01;
+        slot0.kP = 80;
+        slot0.kD = 0.0;
+        slot0.kS = 0.15;
+        slot0.kV = 0.65;
+        slot0.kA = 0.03;
+        slot0.kG = 0.4;
         slot0.GravityType = GravityTypeValue.Arm_Cosine;
 
         var mmc = wristConfig.MotionMagic;
-        mmc.MotionMagicCruiseVelocity = 80;
-        mmc.MotionMagicAcceleration = 200;
-        mmc.MotionMagicJerk = 300;
+        mmc.MotionMagicCruiseVelocity = 5;
+        mmc.MotionMagicAcceleration = 4;
 
         wristConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
@@ -49,8 +48,7 @@ public class WristSubsystem extends SubsystemBase {
         wrist.getConfigurator().apply(wristConfig);
 
         PWM1Configs candiConfig = new PWM1Configs();
-        candiConfig.AbsoluteSensorOffset = -0.344; //0.72
-        candiConfig.AbsoluteSensorDiscontinuityPoint = 1;
+        candiConfig.AbsoluteSensorOffset = WristConstants.ABS_ENCODER_OFFSET; //0.72
         candiConfig.SensorDirection = false;
 
         candi.getConfigurator().apply(candiConfig);
@@ -59,7 +57,7 @@ public class WristSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        wristAngle = wrist.getPosition().getValueAsDouble() * 360;
+        wristAngle = (wrist.getPosition().getValueAsDouble() + 0.5) * 360;
         if (Math.abs(wristAngle - wristTarget) < WristConstants.ALLOWED_ERROR_DEGREES) {
             state = WristState.STATIONARY;
         } else {
@@ -84,17 +82,19 @@ public class WristSubsystem extends SubsystemBase {
     public void toggleWristBrake() {
         switch (neutralMode) {
             case Brake:
+                neutralMode = NeutralModeValue.Coast;
                 wrist.setNeutralMode(NeutralModeValue.Coast);
                 break;
         
             case Coast:
+                neutralMode = NeutralModeValue.Brake;
                 wrist.setNeutralMode(NeutralModeValue.Brake);
                 break;
         }
     }
 
     public void setTargetAngle(double angle) {
-        double positionTarget = (angle / 360) + WristConstants.ABS_ENCODER_COMPENSATION;
+        double positionTarget = (angle / 360) - 0.5; // -0.5 TO 0.5
         wristTarget = positionTarget;
         wristControl.withPosition(positionTarget);
         ControlRequest wcr = wristControl;

@@ -12,11 +12,11 @@ public class ReefLookup {
 
         public static class HeadingResult {
                 public double closestHeading;
-                public boolean adjusted;
+                public boolean usingFront;
             
-                public HeadingResult(double closestHeading, boolean adjusted) {
+                public HeadingResult(double closestHeading, boolean usingFront) {
                     this.closestHeading = closestHeading;
-                    this.adjusted = adjusted;
+                    this.usingFront = usingFront;
                 }
             }
 

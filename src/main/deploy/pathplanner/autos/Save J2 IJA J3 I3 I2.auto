@@ -35,12 +35,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "AlgaeRemovalHigh"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "AlgaeIJ_to_CoralBackJ"

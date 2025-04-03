@@ -1,0 +1,85 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right_to_AlgaeAB"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AlgaeAB_to_CoralBackA"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "OuttakeLevel3Back"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BackA_to_CenterGroundCoral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CenterGroundCoral_to_B3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "OuttakeLevel3Back"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BackB_to_RightGroundCoral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightGroundCoral_to_B2Back"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "OuttakeLevel2Back"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "B2Back_to_LeftGroundCoral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeftGroundCoral_to_A2Back"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "OuttakeLevel2Back"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

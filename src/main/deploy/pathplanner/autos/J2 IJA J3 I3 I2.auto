@@ -7,37 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left_to_J2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "OuttakeLevel2Front"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "FrontJ_to_FeederLeft"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "IntakeCoralFeeder"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "FeederLeft_to_AlgaeIJ"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AlgaeRemovalHigh"
+            "pathName": "Left_to_AlgaeIJ"
           }
         },
         {
@@ -65,9 +35,33 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BackJ_to_FeederLeft"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeCoralFeeder"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "FeederLeft_to_I3"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
           }
         },
         {
@@ -92,6 +86,12 @@
           "type": "path",
           "data": {
             "pathName": "FeederLeft_to_I2Back"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
           }
         },
         {

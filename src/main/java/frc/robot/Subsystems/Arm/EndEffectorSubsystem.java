@@ -97,12 +97,9 @@ public class EndEffectorSubsystem extends SubsystemBase {
     }
 
     private void intakeCoralGround() {
-        // if (hasCoral) {
-        //     return;
-        // }
-        top.set(0.5); //.35
-        left.set(0.35);
-        right.set(0.35);
+        top.set(0.35);
+        left.set(0.2);
+        right.set(0.2);
     }
 
     private void intakeCoralFeeder() {

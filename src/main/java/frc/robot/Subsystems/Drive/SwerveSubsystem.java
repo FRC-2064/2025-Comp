@@ -36,6 +36,7 @@ import frc.robot.Robot;
 import frc.robot.Utils.Constants;
 import frc.robot.Utils.Constants.Limelight1Constants;
 import frc.robot.Utils.Constants.Limelight2Constants;
+import frc.robot.Utils.Constants.Limelight3Constants;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.math.SwerveMath;
@@ -65,7 +66,7 @@ public class SwerveSubsystem extends SubsystemBase {
             throw new RuntimeException(e);
         }
 
-        swerveDrive.setHeadingCorrection(false);
+        swerveDrive.setHeadingCorrection(true);
         swerveDrive.setCosineCompensator(false);
         swerveDrive.setAngularVelocityCompensation(
                 true,
@@ -96,6 +97,16 @@ public class SwerveSubsystem extends SubsystemBase {
                 Limelight2Constants.YAW_OFFSET // Yaw (degrees)
         );
 
+        LimelightHelpers.setCameraPose_RobotSpace(
+            Limelight3Constants.LIMELIGHT_NAME,
+            Limelight3Constants.FORWARD_OFFSET, // Forward offset (meters)
+            Limelight3Constants.SIDE_OFFSET, // Side offset (meters)
+            Limelight3Constants.HEIGHT_OFFSET, // Height offset (meters)
+            Limelight3Constants.ROLL_OFFSET, // Roll (degrees)
+            Limelight3Constants.PITCH_OFFSET, // Pitch (degrees)
+            Limelight3Constants.YAW_OFFSET // Yaw (degrees)
+    );
+
         setupPathPlanner();
     }
 
@@ -109,7 +120,7 @@ public class SwerveSubsystem extends SubsystemBase {
         swerveDrive.updateOdometry();
         swerveDrive.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
         if (Robot.isReal()) {
-            // LIMELIGHT 1 : FONT
+            // LIMELIGHT 1 : BACK
             // boolean doRejectUpdate = false;
             double degrees = swerveDrive.getOdometryHeading().getDegrees();
             LimelightHelpers.SetRobotOrientation(
@@ -123,7 +134,7 @@ public class SwerveSubsystem extends SubsystemBase {
                 swerveDrive.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
             }
 
-            // LIMELIGHT 2 : BACK
+            // LIMELIGHT 2 : FRONT
             // doRejectUpdate = false;
             LimelightHelpers.SetRobotOrientation(
                     Limelight2Constants.LIMELIGHT_NAME,
@@ -135,30 +146,22 @@ public class SwerveSubsystem extends SubsystemBase {
             if (mt2 != null && mt2.tagCount != 0) {
                 swerveDrive.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
             }
+
+            // LIMELIGHT 3 : BACK
+            // doRejectUpdate = false;
+            LimelightHelpers.SetRobotOrientation(
+                    Limelight3Constants.LIMELIGHT_NAME,
+                    degrees,
+                    0, 0, 0, 0, 0);
+
+            mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(
+                    Limelight3Constants.LIMELIGHT_NAME);
+            if (mt2 != null && mt2.tagCount != 0) {
+                swerveDrive.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
+            }
         }
     }
 
-    public Command driveDirectAngle(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier headingX,
-            DoubleSupplier headingY) {
-        swerveDrive.setHeadingCorrection(true);
-        return run(() -> {
-
-            Translation2d scaledInputs = SwerveMath.scaleTranslation(
-                    new Translation2d(
-                            translationX.getAsDouble(),
-                            translationY.getAsDouble()),
-                    0.8);
-
-            driveFieldOriented(
-                    swerveDrive.swerveController.getTargetSpeeds(
-                            scaledInputs.getX(),
-                            scaledInputs.getY(),
-                            headingX.getAsDouble(),
-                            headingY.getAsDouble(),
-                            swerveDrive.getOdometryHeading().getRadians(),
-                            swerveDrive.getMaximumChassisVelocity()));
-        });
-    }
 
     public void setupPathPlanner() {
         RobotConfig config;
@@ -203,19 +206,6 @@ public class SwerveSubsystem extends SubsystemBase {
         return new PathPlannerAuto(pathName);
     }
 
-    public Command driveToPose(Pose2d pose) {
-        PathConstraints constraints = new PathConstraints(
-                swerveDrive.getMaximumChassisVelocity(),
-                4.0,
-                swerveDrive.getMaximumChassisAngularVelocity(),
-                Units.degreesToRadians(720));
-
-        return AutoBuilder.pathfindToPose(
-                pose,
-                constraints,
-                edu.wpi.first.units.Units.MetersPerSecond.of(0));
-    }
-
     public Command centerModules() {
         return run(
                 () -> Arrays.asList(
@@ -248,6 +238,13 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public void drive(ChassisSpeeds velocity) {
         swerveDrive.drive(velocity);
+    }
+
+    public Command driveRobotOriented(Supplier<ChassisSpeeds> velocity) {
+        return run(
+                () -> {
+                    swerveDrive.drive(velocity.get());
+                });
     }
 
     public SwerveDriveKinematics getKinematics() {
@@ -371,11 +368,13 @@ public class SwerveSubsystem extends SubsystemBase {
             };
         }
         driveState = DriveState.PATHFINDING;
+        otfStartPose = pathPoses.get(0);
+        otfEndPose = pathPoses.get(1);
 
         List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(pathPoses);
 
         PathConstraints constraints = new PathConstraints(
-                swerveDrive.getMaximumChassisVelocity() * 0.5,
+                swerveDrive.getMaximumChassisVelocity() * 0.25,
                 0.5,
                 swerveDrive.getMaximumChassisAngularVelocity(),
                 Units.degreesToRadians(720));
