@@ -98,7 +98,7 @@ public class ClimbSubsystem extends SubsystemBase {
         if (DriverStation.getMatchTime() > 30) {
             return;
         }
-        winch.set(0.25);
+        winch.set(-0.25);
     }
 
     public void winchStop() {
