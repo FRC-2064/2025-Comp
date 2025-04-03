@@ -160,6 +160,11 @@ public class Constants {
             public static final int EE_RIGHT_ID = 29;
             public static final int EE_CANRANGE_ID = 55;
 
+            //ENDEFFECTOR WAIT TIMES
+            public static final double EE_TROUGH_WAIT_TIME = 0.3;
+            public static final double EE_LEVEL_2_WAIT_TIME = 0.3;
+            public static final double EE_LEVEL_3_WAIT_TIME = 0.3;
+
             //ENDEFFECTOR RUN TIMES
             public static final double EE_TROUGH_OUTTAKE_TIME = 0.5;
             public static final double EE_LEVEL_2_OUTTAKE_TIME = 0.2;
