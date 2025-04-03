@@ -33,31 +33,31 @@ public class Constants {
 
     public class Limelight1Constants {
         public static final String LIMELIGHT_NAME = "limelight-one";
-        public static final double FORWARD_OFFSET = Units.inchesToMeters(-10);
-        public static final double SIDE_OFFSET = Units.inchesToMeters(-13);
-        public static final double HEIGHT_OFFSET = Units.inchesToMeters(14);
-        public static final double ROLL_OFFSET = 0.0;
-        public static final double PITCH_OFFSET = 6;
-        public static final double YAW_OFFSET = 225;
+        public static final double FORWARD_OFFSET = Units.inchesToMeters(-8);
+        public static final double SIDE_OFFSET = Units.inchesToMeters(-12);
+        public static final double HEIGHT_OFFSET = Units.inchesToMeters(14.5);
+        public static final double ROLL_OFFSET = -0.60;
+        public static final double PITCH_OFFSET = 20.98;
+        public static final double YAW_OFFSET = -140.14;
     }
 
     public class Limelight2Constants {
         public static final String LIMELIGHT_NAME = "limelight-two";
-        public static final double FORWARD_OFFSET = Units.inchesToMeters(1.5);
-        public static final double SIDE_OFFSET = Units.inchesToMeters(12);
-        public static final double HEIGHT_OFFSET = Units.inchesToMeters(14);
-        public static final double ROLL_OFFSET = 0.0;
-        public static final double PITCH_OFFSET = 4;
-        public static final double YAW_OFFSET = 23.7;
+        public static final double FORWARD_OFFSET = Units.inchesToMeters(4);
+        public static final double SIDE_OFFSET = Units.inchesToMeters(10.5);
+        public static final double HEIGHT_OFFSET = Units.inchesToMeters(14.5);
+        public static final double ROLL_OFFSET = -1.18;
+        public static final double PITCH_OFFSET = 20.1;
+        public static final double YAW_OFFSET = 45.8;
     }
     public class Limelight3Constants {
         public static final String LIMELIGHT_NAME = "limelight-three";
-        public static final double FORWARD_OFFSET = Units.inchesToMeters(-27.5);
-        public static final double SIDE_OFFSET = Units.inchesToMeters(8.5);
-        public static final double HEIGHT_OFFSET = Units.inchesToMeters(14);
-        public static final double ROLL_OFFSET = 0.0;
-        public static final double PITCH_OFFSET = 6;
-        public static final double YAW_OFFSET = 135;
+        public static final double FORWARD_OFFSET = Units.inchesToMeters(-8);
+        public static final double SIDE_OFFSET = Units.inchesToMeters(12);
+        public static final double HEIGHT_OFFSET = Units.inchesToMeters(14.5);
+        public static final double ROLL_OFFSET = -0.55;
+        public static final double PITCH_OFFSET = 14.45;
+        public static final double YAW_OFFSET = 144.34;
     }
 
     public class ClampConstants {
