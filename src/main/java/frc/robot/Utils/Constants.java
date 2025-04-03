@@ -80,7 +80,6 @@ public class Constants {
         public static final double ARM_BACK_INTAKE_ANGLE = 123;
         
         public static final double ARM_TROUGH_FRONT_ANGLE = 27.03; //35
-        public static final double ARM_TROUGH_BACK_ANGLE = 120;
 
         public static final double ARM_L2_FRONT_ANGLE = 45;
         public static final double ARM_L2_BACK_ANGLE = 85;

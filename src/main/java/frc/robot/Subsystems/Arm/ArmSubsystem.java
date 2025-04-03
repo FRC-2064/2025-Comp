@@ -105,6 +105,9 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void setTargetAngle(double angle) {
+        if (angle < 27) {
+            angle = 27;
+        }
         double positionTarget = (angle / 360) - 0.5; // -0.5 TO 0.5
         armTarget = angle;
         armControl.withPosition(positionTarget);

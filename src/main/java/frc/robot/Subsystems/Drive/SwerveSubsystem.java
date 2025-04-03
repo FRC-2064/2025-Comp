@@ -162,27 +162,6 @@ public class SwerveSubsystem extends SubsystemBase {
         }
     }
 
-    public Command driveDirectAngle(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier headingX,
-            DoubleSupplier headingY) {
-        swerveDrive.setHeadingCorrection(true);
-        return run(() -> {
-
-            Translation2d scaledInputs = SwerveMath.scaleTranslation(
-                    new Translation2d(
-                            translationX.getAsDouble(),
-                            translationY.getAsDouble()),
-                    0.8);
-
-            driveFieldOriented(
-                    swerveDrive.swerveController.getTargetSpeeds(
-                            scaledInputs.getX(),
-                            scaledInputs.getY(),
-                            headingX.getAsDouble(),
-                            headingY.getAsDouble(),
-                            swerveDrive.getOdometryHeading().getRadians(),
-                            swerveDrive.getMaximumChassisVelocity()));
-        });
-    }
 
     public void setupPathPlanner() {
         RobotConfig config;
@@ -227,19 +206,6 @@ public class SwerveSubsystem extends SubsystemBase {
         return new PathPlannerAuto(pathName);
     }
 
-    public Command driveToPose(Pose2d pose) {
-        PathConstraints constraints = new PathConstraints(
-                swerveDrive.getMaximumChassisVelocity(),
-                4.0,
-                swerveDrive.getMaximumChassisAngularVelocity(),
-                Units.degreesToRadians(720));
-
-        return AutoBuilder.pathfindToPose(
-                pose,
-                constraints,
-                edu.wpi.first.units.Units.MetersPerSecond.of(0));
-    }
-
     public Command centerModules() {
         return run(
                 () -> Arrays.asList(
@@ -272,6 +238,13 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public void drive(ChassisSpeeds velocity) {
         swerveDrive.drive(velocity);
+    }
+
+    public Command driveRobotOriented(Supplier<ChassisSpeeds> velocity) {
+        return run(
+                () -> {
+                    swerveDrive.drive(velocity.get());
+                });
     }
 
     public SwerveDriveKinematics getKinematics() {

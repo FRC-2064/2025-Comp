@@ -95,10 +95,10 @@ public class BasicCmd {
             wrist.toggleWristBrake();
         });
 
-        public Command groundIntake = new InstantCommand(() -> {
-            arm.setTargetAngle(ArmConstants.ARM_GROUND_INTAKE);
-            wrist.setTargetAngle(WristConstants.WRIST_GROUND_INTAKE);
-        });
+        // public Command groundIntake = new InstantCommand(() -> {
+        //     arm.setTargetAngle(ArmConstants.ARM_GROUND_INTAKE);
+        //     wrist.setTargetAngle(WristConstants.WRIST_GROUND_INTAKE);
+        // });
 
     }
 
@@ -128,7 +128,7 @@ public class BasicCmd {
             new InstantCommand(() -> endEffector.setState(EndEffectorState.STOPPED))
     );
     
-    public Command PPIntakeCoralGround = new GroundIntakeCmd(arm, wrist, endEffector, robot);
+    // public Command PPIntakeCoralGround = new GroundIntakeCmd(arm, wrist, endEffector, robot);
     
     public Command PPIntakeCoralFeeder = new FeederIntakeCmd(endEffector);
     

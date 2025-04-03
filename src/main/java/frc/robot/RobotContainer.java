@@ -5,8 +5,6 @@
 package frc.robot;
 
 import java.io.File;
-import java.sql.Driver;
-
 import com.ctre.phoenix6.hardware.CANdi;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -20,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Commands.AlgaeIntakeCmd;
 import frc.robot.Commands.BasicCmd;
-import frc.robot.Commands.GroundIntakeCmd;
+// import frc.robot.Commands.GroundIntakeCmd;
 import frc.robot.Commands.BasicCmd.ArmCommands;
 import frc.robot.Commands.BasicCmd.ClimbCommands;
 import frc.robot.Commands.BasicCmd.EndEffectorCommands;
@@ -34,7 +32,6 @@ import frc.robot.Subsystems.Drive.SwerveSubsystem.DriveState;
 import frc.robot.Subsystems.LEDs.LEDSubsystem;
 import frc.robot.Utils.Constants;
 import frc.robot.Utils.Constants.OperatorConstants;
-import frc.robot.Utils.Enums.LEDState;
 import swervelib.SwerveInputStream;
 
 public class RobotContainer {
@@ -55,7 +52,7 @@ public class RobotContainer {
           final RobotSubsystem robot = new RobotSubsystem(arm, climb, drivebase, endEffector, wrist, leds);
           
           // CUSTOM COMMANDS
-          final GroundIntakeCmd groundIntake = new GroundIntakeCmd(arm, wrist, endEffector, robot);
+          // final GroundIntakeCmd groundIntake = new GroundIntakeCmd(arm, wrist, endEffector, robot);
           final AlgaeIntakeCmd algaeIntake = new AlgaeIntakeCmd(arm, wrist, endEffector);
           
           // BASIC COMMANDS
@@ -70,12 +67,13 @@ public class RobotContainer {
   // DRIVE COMMANDS
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(
       drivebase.getSwerveDrive(),
-      () -> driverXbox.getLeftY() * -1 * (driverXbox.getHID().getRightBumperButton() ? 0.25 : 0.75),
-      () -> driverXbox.getLeftX() * -1 * (driverXbox.getHID().getRightBumperButton() ? 0.25 : 0.75))
-      .withControllerRotationAxis(() -> -driverXbox.getRightX() * (driverXbox.getHID().getRightBumperButton() ? 0.25 : 0.75))
+      () -> driverXbox.getLeftY() * -1,
+      () -> driverXbox.getLeftX() * -1)
+      .withControllerRotationAxis(() -> -driverXbox.getRightX())
+      .scaleTranslation(driverXbox.getHID().getRightBumperButton() ? 0.25 : 0.75)
+      .scaleRotation(driverXbox.getHID().getRightBumperButton() ? 0.25 : 0.75)
       .deadband(OperatorConstants.DEADBAND)
       .allianceRelativeControl(true);
-
 
   Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
 
@@ -90,10 +88,10 @@ public class RobotContainer {
     NamedCommands.registerCommand("FrontFeeder", armCmd.FrontFeeder);
     NamedCommands.registerCommand("HighAlgae", armCmd.HighAlgae);
     NamedCommands.registerCommand("LowAlgae", armCmd.LowAlgae);
-    NamedCommands.registerCommand("GroundIntake", groundIntake);
+    // NamedCommands.registerCommand("GroundIntake", groundIntake);
 
     // INTAKE STATES
-    NamedCommands.registerCommand("IntakeCoralGround", eeCmd.PPIntakeCoralGround);
+    // NamedCommands.registerCommand("IntakeCoralGround", eeCmd.PPIntakeCoralGround);
     NamedCommands.registerCommand("IntakeCoralFeeder", eeCmd.PPIntakeCoralFeeder);
     NamedCommands.registerCommand("OuttakeTrough", eeCmd.PPOuttakeTrough);
     NamedCommands.registerCommand("OuttakeLevel2Front", eeCmd.PPOuttakeLevel2Front);
@@ -115,7 +113,7 @@ public class RobotContainer {
     // GAME PIECE MANIPULATION
     driverXbox.leftTrigger().whileTrue(eeCmd.ControlBoardEEOuttake);
     driverXbox.rightTrigger().whileTrue(eeCmd.ControlBoardEEIntake);
-    driverXbox.leftBumper().whileTrue(groundIntake);
+    // driverXbox.leftBumper().whileTrue(groundIntake);
     
     driverXbox.b().onTrue(new InstantCommand(robot::goToFeeder));
     driverXbox.a().onTrue(new InstantCommand(robot::goToScore));
@@ -151,7 +149,7 @@ public class RobotContainer {
                   Math.abs(driverXbox.getLeftX()) > OperatorConstants.DEADBAND ||
                   Math.abs(driverXbox.getRightX()) > OperatorConstants.DEADBAND)
     .onTrue(new InstantCommand(() -> drivebase.setState(DriveState.USER_CONTROLLED), drivebase));
-   }
+  }
 
   public Command getAuto() {
     return autoChooser.getSelected();
