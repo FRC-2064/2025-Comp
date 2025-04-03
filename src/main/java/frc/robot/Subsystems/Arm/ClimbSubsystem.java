@@ -4,10 +4,12 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -22,17 +24,17 @@ public class ClimbSubsystem extends SubsystemBase {
     private SparkClosedLoopController clampController;
     private SparkMaxConfig clampConfig;
 
-    private SparkMax winch;
-    private SparkMaxConfig winchConfig;
+    private SparkFlex winch;
+    private SparkFlexConfig winchConfig;
 
     private ClimbState currentState = ClimbState.OPEN;
 
     public ClimbSubsystem() {
         clamp = new SparkMax(ClampConstants.CLAMP_ID, MotorType.kBrushless);
-        winch = new SparkMax(ClampConstants.WINCH_ID, MotorType.kBrushless);
+        winch = new SparkFlex(ClampConstants.WINCH_ID, MotorType.kBrushless);
 
         clampConfig = new SparkMaxConfig();
-        winchConfig = new SparkMaxConfig();
+        winchConfig = new SparkFlexConfig();
 
         clampConfig
                 .idleMode(IdleMode.kBrake)

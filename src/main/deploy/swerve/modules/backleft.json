@@ -5,12 +5,12 @@
   },
   "absoluteEncoderOffset": 287.8417969,
   "drive": {
-    "type": "sparkmax_neo",
+    "type": "sparkflex_vortex",
     "id": 14,
     "canbus": null
   },
   "angle": {
-    "type": "sparkmax_neo",
+    "type": "sparkflex_vortex",
     "id": 13,
     "canbus": null
   },

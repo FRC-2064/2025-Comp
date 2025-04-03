@@ -10,6 +10,7 @@ import frc.robot.Subsystems.Arm.ArmSubsystem;
 import frc.robot.Subsystems.Arm.ClimbSubsystem;
 import frc.robot.Subsystems.Arm.EndEffectorSubsystem;
 import frc.robot.Subsystems.Arm.WristSubsystem;
+import frc.robot.Subsystems.LEDs.LEDSubsystem;
 import frc.robot.Utils.Constants.ArmConstants;
 import frc.robot.Utils.Constants.EndEffectorConstants;
 import frc.robot.Utils.Constants.WristConstants;
@@ -21,17 +22,19 @@ public class BasicCmd {
     ArmSubsystem arm;
     EndEffectorSubsystem endEffector;
     ClimbSubsystem climb;
+    LEDSubsystem leds;
     RobotSubsystem robot;
 
     public final ArmCommands armCmd;
     public final EndEffectorCommands eeCmd;
     public final ClimbCommands climbCmd;
 
-    public BasicCmd(WristSubsystem wrist, ArmSubsystem arm, EndEffectorSubsystem endEffector, ClimbSubsystem climb, RobotSubsystem robot) {
+    public BasicCmd(WristSubsystem wrist, ArmSubsystem arm, EndEffectorSubsystem endEffector, ClimbSubsystem climb, LEDSubsystem leds, RobotSubsystem robot) {
         this.wrist = wrist;
         this.arm = arm;
         this.endEffector = endEffector;
         this.climb = climb;
+        this.leds = leds;
         this.robot = robot;
 
 
@@ -190,7 +193,10 @@ public class BasicCmd {
 
     public class ClimbCommands {
         public Command winchIn = new StartEndCommand(
-                climb::winchIn,
+                () -> {
+                    climb.winchIn();
+                    leds.climbed();
+                },
                 climb::winchStop,
                 climb);
 

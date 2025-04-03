@@ -56,7 +56,7 @@ public class RobotContainer {
           final AlgaeIntakeCmd algaeIntake = new AlgaeIntakeCmd(arm, wrist, endEffector);
           
           // BASIC COMMANDS
-          final BasicCmd base = new BasicCmd(wrist, arm, endEffector, climb, robot);
+          final BasicCmd base = new BasicCmd(wrist, arm, endEffector, climb, leds, robot);
           final ArmCommands armCmd = base.armCmd;
           final EndEffectorCommands eeCmd = base.eeCmd;
           final ClimbCommands climbCmd = base.climbCmd;

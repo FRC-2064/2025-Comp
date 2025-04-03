@@ -76,7 +76,7 @@ public class Constants {
         public static final int ARM_FOLLOWER_ID = 26;
         
         public static final double ARM_HOME_ANGLE = 45;
-        public static final double ARM_FRONT_INTAKE_ANGLE = 62;
+        public static final double ARM_FRONT_INTAKE_ANGLE = 60;
         public static final double ARM_BACK_INTAKE_ANGLE = 123;
         
         public static final double ARM_TROUGH_FRONT_ANGLE = 27.03; //35
@@ -118,7 +118,7 @@ public class Constants {
         
         public static final double WRIST_HOME_ANGLE = 220;
         
-        public static final double WRIST_FRONT_INTAKE_ANGLE = 102;
+        public static final double WRIST_FRONT_INTAKE_ANGLE = 104;
         public static final double WRIST_BACK_INTAKE_ANGLE = 220;
         
         public static final double WRIST_TROUGH_FRONT_ANGLE = 266.84; //230

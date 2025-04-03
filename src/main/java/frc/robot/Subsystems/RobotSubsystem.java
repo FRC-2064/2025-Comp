@@ -81,9 +81,7 @@ public class RobotSubsystem extends SubsystemBase {
                     currentPathCommand.cancel();
                     robotState = RobotState.I_IDLE;
                 }
-
-                leds.setState(LEDState.LIGHTBAR);
-
+                
                 break;
 
             case F_FEEDER:
@@ -106,10 +104,8 @@ public class RobotSubsystem extends SubsystemBase {
             case B_BRAKINGCLIMB:
                 robotState = RobotState.W_WIN;
             case W_WIN:
-                leds.setState(LEDState.CLIMBED);
                 robotState = RobotState.I_IDLE;
             case I_IDLE:
-                leds.setState(LEDState.OFF);
             default:
                 break;
         }
