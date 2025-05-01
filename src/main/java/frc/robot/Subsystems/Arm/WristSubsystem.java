@@ -1,10 +1,10 @@
 package frc.robot.Subsystems.Arm;
 
-import com.ctre.phoenix6.configs.PWM1Configs;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.hardware.CANdi;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -15,7 +15,8 @@ import frc.robot.Utils.Constants.WristConstants;
 import frc.robot.Utils.Enums.WristState;
 
 public class WristSubsystem extends SubsystemBase {
-    private TalonFX wrist = new TalonFX(WristConstants.WRIST_ID);;
+    private TalonFX wrist = new TalonFX(WristConstants.WRIST_ID);
+    private CANcoder encoder = new CANcoder(WristConstants.WRIST_ENCODER_ID);
 
     private TalonFXConfiguration wristConfig = new TalonFXConfiguration();
 
@@ -27,7 +28,7 @@ public class WristSubsystem extends SubsystemBase {
 
     private NeutralModeValue neutralMode = NeutralModeValue.Brake;
 
-    public WristSubsystem(CANdi candi) {
+    public WristSubsystem() {
         var slot0 = wristConfig.Slot0;
         slot0.kP = 80;
         slot0.kD = 0.0;
@@ -43,15 +44,13 @@ public class WristSubsystem extends SubsystemBase {
 
         wristConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
-        wristConfig.Feedback.withRotorToSensorRatio(WristConstants.WRIST_GEAR_RATIO).withFusedCANdiPwm1(candi);
+        wristConfig.Feedback.withRotorToSensorRatio(WristConstants.WRIST_GEAR_RATIO).withFusedCANcoder(encoder);
         
         wrist.getConfigurator().apply(wristConfig);
 
-        PWM1Configs candiConfig = new PWM1Configs();
-        candiConfig.AbsoluteSensorOffset = WristConstants.ABS_ENCODER_OFFSET; //0.72
-        candiConfig.SensorDirection = false;
+        CANcoderConfiguration cancoderConfig = new CANcoderConfiguration();
 
-        candi.getConfigurator().apply(candiConfig);
+        cancoderConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
 
     }
 

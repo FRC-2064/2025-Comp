@@ -4,13 +4,13 @@ import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.SignalLogger;
-import com.ctre.phoenix6.configs.PWM2Configs;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.hardware.CANdi;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -27,6 +27,7 @@ import frc.robot.Utils.Enums.ArmState;
 public class ArmSubsystem extends SubsystemBase {
     private TalonFX leader = new TalonFX(ArmConstants.ARM_LEADER_ID);
     private TalonFX follower = new TalonFX(ArmConstants.ARM_FOLLOWER_ID);
+    private CANcoder encoder = new CANcoder(ArmConstants.ARM_ENCODER_ID);
 
     private final MotionMagicVoltage armControl = new MotionMagicVoltage(0.0);
 
@@ -43,7 +44,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     private NeutralModeValue neutralMode = NeutralModeValue.Brake;
 
-    public ArmSubsystem(CANdi candi) {
+    public ArmSubsystem() {
         followerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         follower.getConfigurator().apply(followerConfig);
         follower.setControl(new Follower(ArmConstants.ARM_LEADER_ID, true));
@@ -67,15 +68,13 @@ public class ArmSubsystem extends SubsystemBase {
         leaderConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         leaderConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
-        leaderConfig.Feedback.withRotorToSensorRatio(ArmConstants.ARM_GEAR_RATIO).withFusedCANdiPwm2(candi);
+        leaderConfig.Feedback.withRotorToSensorRatio(ArmConstants.ARM_GEAR_RATIO).withFusedCANcoder(encoder);
         
         leader.getConfigurator().apply(leaderConfig);
-    
-        PWM2Configs candiConfig = new PWM2Configs();
-        candiConfig.AbsoluteSensorOffset = ArmConstants.ABS_ENCODER_OFFSET;
-        candiConfig.SensorDirection = false;
 
-        candi.getConfigurator().apply(candiConfig);
+        CANcoderConfiguration cancoderConfig = new CANcoderConfiguration();
+
+        cancoderConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
 
     }
 

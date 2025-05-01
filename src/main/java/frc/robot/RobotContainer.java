@@ -5,7 +5,6 @@
 package frc.robot;
 
 import java.io.File;
-import com.ctre.phoenix6.hardware.CANdi;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
@@ -30,7 +29,6 @@ import frc.robot.Subsystems.Arm.WristSubsystem;
 import frc.robot.Subsystems.Drive.SwerveSubsystem;
 import frc.robot.Subsystems.Drive.SwerveSubsystem.DriveState;
 import frc.robot.Subsystems.LEDs.LEDSubsystem;
-import frc.robot.Utils.Constants;
 import frc.robot.Utils.Constants.OperatorConstants;
 import swervelib.SwerveInputStream;
 
@@ -38,9 +36,8 @@ public class RobotContainer {
   public static RobotContainer instance;
   // SUBSYSTEM INITS
   final CommandXboxController driverXbox = new CommandXboxController(0);
-  final CANdi candi = new CANdi(Constants.CANDI_ID);
-  final ArmSubsystem arm = new ArmSubsystem(candi);
-  final WristSubsystem wrist = new WristSubsystem(candi);
+  final ArmSubsystem arm = new ArmSubsystem();
+  final WristSubsystem wrist = new WristSubsystem();
   final EndEffectorSubsystem endEffector = new EndEffectorSubsystem();
   final ClimbSubsystem climb = new ClimbSubsystem();
   final LEDSubsystem leds = new LEDSubsystem();

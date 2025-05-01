@@ -5,7 +5,6 @@ import static edu.wpi.first.units.Units.Meter;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;

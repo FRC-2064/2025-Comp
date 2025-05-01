@@ -74,6 +74,7 @@ public class Constants {
         //ARM
         public static final int ARM_LEADER_ID = 27;
         public static final int ARM_FOLLOWER_ID = 26;
+        public static final int ARM_ENCODER_ID = 25;
         
         public static final double ARM_HOME_ANGLE = 45;
         public static final double ARM_FRONT_INTAKE_ANGLE = 60;
@@ -115,6 +116,7 @@ public class Constants {
     public class WristConstants {
         //WRIST
         public static final int WRIST_ID = 47;
+        public static final int WRIST_ENCODER_ID = 48;
         
         public static final double WRIST_HOME_ANGLE = 220;
         
